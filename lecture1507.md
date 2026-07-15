@@ -67,3 +67,44 @@ class Main {
         t.teach(s);
     }
 }
+
+🌟Aggregation - It is more stronger and one object contains another object and the contained object can live independently.
+
+for exmample - department ◊---------  professor
+
+class Professor{
+    String name;
+    Professor(String name){
+        this.name = name;
+    }
+}
+class Department{
+    String name;
+    List<Professor> professors;
+    Department(String name, List<Professor>professors){
+        this.name = name;
+        this.professors = professors;
+    }
+}
+
+Professor p1 = new Professor("A");
+Professor p1 = new Professor("B");
+Department cs = new Department("CS",List.of(p1,p2));
+
+🌟Composition - it is the strongest relationship and the whole object creates and owns the part and if 
+                whole dies then the part also dies.
+
+class Engine{
+    Engine(){
+        System.out.println("Engine created");
+    }
+}
+class Car{
+    private Engine engine;
+    Car(){
+        engine = new Engine();
+    }
+}
+Car car = new Car();
+
+/// here the engine is created inside the car.
