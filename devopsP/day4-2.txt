@@ -1,0 +1,16 @@
+Why is less preferred over cat for large files?
+answer - because it easy to view the logs with the lots of options available which make the view of logs easy.
+
+What happens if you run:
+echo "New Line" > notes.txt
+when notes.txt already contains five lines?
+answer - this command will overrides the content of the notes.txt with this latest text.
+
+Explain tail -f to someone who has never used Linux.
+answer - this command will show us the real time logs during the production which means you can view the live logs like user logined or user 	logout.
+
+Give one real-world example where a pipe (|) is useful.
+answer - like sorting the data of the factory or anything else.
+
+Why did you get Permission denied when creating LogsLab under /?
+answer - because it the root users directory which means i am not the current user of this directory.

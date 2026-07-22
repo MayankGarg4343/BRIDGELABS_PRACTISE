@@ -1,0 +1,26 @@
+What is Linux?
+answer - A Linux is an open source operating system kernel. Kernel is the component that sits between the architecture and the component.
+	Linux plays a very important in the devops as we used to carryout most of the work through Linux. Linux architecture have the 	following things.
+	application -> shell -> kernel -> hardware.
+
+What is the Linux kernel?
+answer - kernel is the heart of the operating system without this we can do work efficiently. Kernel manages all of the things and it used 	to manage memory management and it communicates with the CPU, RAM and the other drivers.
+
+What is Bash?
+answer - I think the bask is the command interpreter where we used to type the commands inorder to achieve the results.
+
+What is the CLI?
+answer - it stands for the command line interface and it is the place we used to see our complete output and it is very fast but it does not 
+	have the graphic interfaces.
+
+What does pwd do?
+answer - It tells about the current user directory in which the user is present.
+
+What does ls -la show?
+answer - it will show us the complete long listing of the files along with the hidden files.
+
+What is the difference between echo $HOME and pwd?
+answer - $HOME is an environment variable and it returns the path of the home directory and pwd tells us the present working directory.
+
+What does uname -a display?
+answer - it will display the name and the version of the kernel along with the device architecture and timestamps and other data.

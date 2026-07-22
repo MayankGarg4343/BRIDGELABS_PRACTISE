@@ -1,0 +1,30 @@
+What is the difference between / and /root?
+answer - / here is the root directory and the /root is the root user directory as they both are completely different from eachother.
+
+Why is /etc important?
+answer - /etc is important because all of the configuration files are stored here and whenever we have to make the changes in the servies
+	 we will come here only and edit these files.
+
+Where are log files generally stored?
+answer - log files are stores inside the /var.
+
+What is the purpose of /tmp?
+answer - it is used to store the temporary files and sometimes applications uses it as the temporary storage.
+
+What is the difference between an absolute path and a relative path?
+answer - absolute path are those path which are stating from the root(/) as the relative paths are starting from your current working 	directory.
+
+What do . and .. represent?
+answer - . represents the present working directory and the .. represents the parent directory.
+
+What does cd - do?
+answer - it helps us to toogle the current and the previous directory as it make the work fast and easy to shift.
+
+Where would you expect SSH configuration files to be stored?
+answer - in /etc
+
+Where would you investigate if an application is failing and you want to check its logs?
+answer - in /var
+
+Which directory contains user home folders?
+answer - /home

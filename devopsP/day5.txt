@@ -1,0 +1,31 @@
+What is the difference between grep and find?
+answer - grep command is used to find the files with the following some pattern. Find command is used to find the files directories by 	either by their name or by their type.
+
+Why do we use grep -i?
+answer - we use to neglect the case sensitive part like ERROR or error both works the same by using this.
+
+What is the difference between wc -l and grep "ERROR" file | wc -l?
+answer - wc -l gives you the total number of lines present in the file and the other command gives you the count of those lines which are 	having the error.
+
+Why do we use sort before uniq?
+answer - we sort it because uniq only removes the adjacent duplicate elements so inorder to get the accurate result we first sort the data.
+
+Explain a real production example where grep could save time.
+answer - grep "ERROR" application.log this helps to see only the error part so that our work completes fast.
+
+Interview Questions
+
+How would you count the number of errors in a log file?
+answer - grep "ERROR" application.log | wc -l this will to count the number of error in the log file.
+
+How would you find every .conf file inside /etc?
+answer - find /etc -name "*.conf"
+
+Why is grep one of the most important Linux commands?
+answer - because it helps us to find the errors fastly and also files which we need to correct.
+
+What is the purpose of uniq?
+answer - it helps us to remove the adjacent duplicate data.
+
+What's the difference between sort and sort -n?
+answer - sort command used to sort the data on the basis of the string and the sort -n sorts the data on the basis of the numbers.

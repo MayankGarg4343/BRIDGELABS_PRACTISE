@@ -1,0 +1,124 @@
+mayank@MayankGarg4343:/$ sudo mkdir -p Devops-Lab/{Projects/{Jenkins,Docker,Kubernetes},Config,Backu
+p}
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+├── Config
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+7 directories, 0 files
+mayank@MayankGarg4343:/$ cd Devops-Lab/Config/
+mayank@MayankGarg4343:/Devops-Lab/Config$ sudo touch nginx.conf apache.conf docker-compose.yml
+mayank@MayankGarg4343:/Devops-Lab/Config$ cd..
+trcd..: command not found
+mayank@MayankGarg4343:/Devops-Lab/Config$ cd ..
+mayank@MayankGarg4343:/Devops-Lab$ cd ..
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+├── Config
+│   ├── apache.conf
+│   ├── docker-compose.yml
+│   └── nginx.conf
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+7 directories, 3 files
+mayank@MayankGarg4343:/$ sudo cp Devops-Lab/Config/nginx.conf ../Backup
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+├── Config
+│   ├── apache.conf
+│   ├── docker-compose.yml
+│   └── nginx.conf
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+7 directories, 3 files
+mayank@MayankGarg4343:/$ sudo mv Devops-Lab/Config/apache.conf Devops-Lab/Config/httpd.conf
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+├── Config
+│   ├── docker-compose.yml
+│   ├── httpd.conf
+│   └── nginx.conf
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+7 directories, 3 files
+mayank@MayankGarg4343:/$ sudo cp -r Devops-Lab/Projects/ ../Backup
+cp: cannot overwrite non-directory '../Backup' with directory 'Devops-Lab/Projects/'
+mayank@MayankGarg4343:/$ sudo cp -r Devops-Lab/Projects/ Devops-Lab/Backup
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+│   └── Projects
+│       ├── Docker
+│       ├── Jenkins
+│       └── Kubernetes
+├── Config
+│   ├── docker-compose.yml
+│   ├── httpd.conf
+│   └── nginx.conf
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+11 directories, 3 files
+mayank@MayankGarg4343:/$ sudo rm -r Devops-Lab/Backup/Projects/
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+├── Config
+│   ├── docker-compose.yml
+│   ├── httpd.conf
+│   └── nginx.conf
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+7 directories, 3 files
+mayank@MayankGarg4343:/$ sudo rm Devops-Lab/Config/docker-compose.yml
+mayank@MayankGarg4343:/$ tree Devops-Lab/
+Devops-Lab/
+├── Backup
+├── Config
+│   ├── httpd.conf
+│   └── nginx.conf
+└── Projects
+    ├── Docker
+    ├── Jenkins
+    └── Kubernetes
+
+7 directories, 2 files
+mayank@MayankGarg4343:/$
+
+Answer these questions in your own words:
+
+What is the difference between cp and mv?
+answer - In the cp command the data is copied to the destination file or folder but the previous file still exists and in the mv command 	the data is moved to the destination file or folder but the previous file deletes.
+ 
+Why do we use mkdir -p?
+answer - by using the -p with the mkdir we can make the easily make the sub folder, directories or files easily mainly we call it brace 	expansion.
+
+Why is rm -rf considered dangerous?
+answer - it is very dangerous because it delates all of the files and folder forcefully without asking.
+
+When would you use touch in a real project?
+answer - we use it because if sometimes the file is not present then it automatically creates the file.
+
+What is the difference between rmdir and rm -r?
+answer - rmdir removes the complete directory and rm -r recursively removes the files from the non empty folder.

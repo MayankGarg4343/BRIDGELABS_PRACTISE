@@ -1,0 +1,102 @@
+mayank@MayankGarg4343:/$ mkdir LogsLab
+mkdir: cannot create directory ‘LogsLab’: Permission denied
+mayank@MayankGarg4343:/$ ls
+Backup      bin.usr-is-merged  home        lib.usr-is-merged  mnt   run                 srv  var
+Devops-Lab  boot               httpd.conf  lib64              opt   sbin                sys
+Docker      dev                init        lost+found         proc  sbin.usr-is-merged  tmp
+bin         etc                lib         media              root  snap                usr
+mayank@MayankGarg4343:/$ cd /home
+mayank@MayankGarg4343:/home$ cd mayank/
+mayank@MayankGarg4343:~$ mkdir LogsLab
+mayank@MayankGarg4343:~$ cd LogsLab/
+mayank@MayankGarg4343:~/LogsLab$ touch application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "INFO Server Started" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "INFO User Login" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "ERROR Database Connection Failed" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "INFO Payment Successfull" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "WARNING Disk space Low" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "ERROR API Timeout" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ echo "ERROR Logout Successfull" >> application.log
+mayank@MayankGarg4343:~/LogsLab$ cat application.log
+INFO Server Started
+INFO User Login
+ERROR Database Connection Failed
+INFO Payment Successfull
+WARNING Disk space Low
+ERROR API Timeout
+ERROR Logout Successfull
+mayank@MayankGarg4343:~/LogsLab$ cat -n application.log
+     1  INFO Server Started
+     2  INFO User Login
+     3  ERROR Database Connection Failed
+     4  INFO Payment Successfull
+     5  WARNING Disk space Low
+     6  ERROR API Timeout
+     7  ERROR Logout Successfull
+mayank@MayankGarg4343:~/LogsLab$ head application.log
+INFO Server Started
+INFO User Login
+ERROR Database Connection Failed
+INFO Payment Successfull
+WARNING Disk space Low
+ERROR API Timeout
+ERROR Logout Successfull
+mayank@MayankGarg4343:~/LogsLab$ head -3 application.log
+INFO Server Started
+INFO User Login
+ERROR Database Connection Failed
+mayank@MayankGarg4343:~/LogsLab$ tail application.log
+INFO Server Started
+INFO User Login
+ERROR Database Connection Failed
+INFO Payment Successfull
+WARNING Disk space Low
+ERROR API Timeout
+ERROR Logout Successfull
+mayank@MayankGarg4343:~/LogsLab$ tail -2 application.log
+ERROR API Timeout
+ERROR Logout Successfull
+mayank@MayankGarg4343:~/LogsLab$ less application.log
+mayank@MayankGarg4343:~/LogsLab$
+mayank@MayankGarg4343:~/LogsLab$ less application.log
+mayank@MayankGarg4343:~/LogsLab$ tail -f application.log
+INFO Server Started
+INFO User Login
+ERROR Database Connection Failed
+INFO Payment Successfull
+WARNING Disk space Low
+ERROR API Timeout
+ERROR Logout Successfull
+^C
+mayank@MayankGarg4343:~/LogsLab$ less application.log
+mayank@MayankGarg4343:~/LogsLab$ date > today.txt
+mayank@MayankGarg4343:~/LogsLab$ cat today.txt
+Wed Jul 22 10:42:20 IST 2026
+mayank@MayankGarg4343:~/LogsLab$ echo "Linux" > notes.txt
+mayank@MayankGarg4343:~/LogsLab$ echo "DevOps" >> notes.txt
+mayank@MayankGarg4343:~/LogsLab$ echo "Azure" >> notes.txt
+mayank@MayankGarg4343:~/LogsLab$ cat notes.txt
+Linux
+DevOps
+Azure
+mayank@MayankGarg4343:~/LogsLab$ cat application.log | less
+mayank@MayankGarg4343:~/LogsLab$ ls | less
+mayank@MayankGarg4343:~/LogsLab$
+
+
+Answer these after completing the lab:
+
+What is the difference between cat and less?
+answer - cat displays the whole content of the file directly on the screen and less used to display the content but also provides the 	various options to navigate the data line n nor next page and b for back page and we also view the content line by line.
+
+When would you use tail -f?
+answer - we will use this command to see the latest logs during the production and we call it live monitoring.
+
+What is the difference between > and >>?
+answer - > overwrites the content in the file and >> appends the content in the file.
+
+What is a pipe (|)?
+answer - it is used for passing the one commands data to the next command. Example -> command A | command B.
+
+Why shouldn't you use cat on a huge log file?
+answer - because it provides you the whole data directly and it is not manageable to read that lots of data.
