@@ -1,0 +1,148 @@
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f1 employees.csv
+101
+102
+103
+104
+105
+
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f2 employees.csv
+Mayank
+Rohan
+Ankit
+Deepak
+Mayank
+
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f3 employees.csv
+DevOps
+Developer
+Tester
+Cloud
+DevOps
+
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f1,2 employees.csv
+101,Mayank
+102,Rohan
+103,Ankit
+104,Deepak
+105,Mayank
+
+mayank@MayankGarg4343:~/Day6Lab$ echo "linux devops" | tr 'a-z' 'A-Z'
+LINUX DEVOPS
+mayank@MayankGarg4343:~/Day6Lab$ echo "LINUX DEVOPS" | tr 'A-Z' 'a-z'
+linux devops
+mayank@MayankGarg4343:~/Day6Lab$ echo "MayankGarg1234" | tr '0-9'
+tr: missing operand after ‘0-9’
+Two strings must be given when translating.
+Try 'tr --help' for more information.
+mayank@MayankGarg4343:~/Day6Lab$ echo "MayankGarg1234" | tr -d '0-9'
+MayankGarg
+mayank@MayankGarg4343:~/Day6Lab$ echo "Mayank Garg 1234" | tr -d ' '
+MayankGarg1234
+mayank@MayankGarg4343:~/Day6Lab$ cat config.txt
+server=oldserver
+database=mysql
+mayank@MayankGarg4343:~/Day6Lab$ sed -i 's/oldserver/newserver' > config.txt
+sed: -e expression #1, char 21: unterminated `s' command
+mayank@MayankGarg4343:~/Day6Lab$ sed -i 's/oldserver/newserver'
+sed: -e expression #1, char 21: unterminated `s' command
+mayank@MayankGarg4343:~/Day6Lab$ sed -i 's/oldserver/newserver' config.txt
+sed: -e expression #1, char 21: unterminated `s' command
+mayank@MayankGarg4343:~/Day6Lab$ sed -i '/oldserver/newserver' config.txt
+sed: -e expression #1, char 13: extra characters after command
+mayank@MayankGarg4343:~/Day6Lab$ sed -i '/oldserver/newserver/' config.txt
+sed: -e expression #1, char 13: extra characters after command
+mayank@MayankGarg4343:~/Day6Lab$ sed -i 's/oldserver/newserver/' config.txt
+mayank@MayankGarg4343:~/Day6Lab$ cat config.txt
+mayank@MayankGarg4343:~/Day6Lab$ echo "server=oldserver" > config.txt
+mayank@MayankGarg4343:~/Day6Lab$ echo "database=mysql" >> config.txt
+mayank@MayankGarg4343:~/Day6Lab$ sed -i 's/oldserver/newserver/' config.txt
+mayank@MayankGarg4343:~/Day6Lab$ cat config.txt
+server=newserver
+database=mysql
+mayank@MayankGarg4343:~/Day6Lab$ sed -i 's/mysql/postgresql/' config.txt
+mayank@MayankGarg4343:~/Day6Lab$ cat config.txt
+server=newserver
+database=postgresql
+mayank@MayankGarg4343:~/Day6Lab$ awk '{print $1}' employees.txt
+101
+102
+103
+104
+105
+
+mayank@MayankGarg4343:~/Day6Lab$ awk '{print $2}' employees.txt
+Mayank
+Rohan
+Ankit
+Deepak
+Mayank
+
+mayank@MayankGarg4343:~/Day6Lab$ awk '{print $1,$2}' employees.txt
+101 Mayank
+102 Rohan
+103 Ankit
+104 Deepak
+105 Mayank
+
+mayank@MayankGarg4343:~/Day6Lab$ awk '{print NF}' employees.txt
+3
+3
+3
+3
+3
+0
+mayank@MayankGarg4343:~/Day6Lab$ awk '{print NR}' employees.txt
+1
+2
+3
+4
+5
+6
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f2 employees.csv | tr 'a-z' 'A-Z'
+MAYANK
+ROHAN
+ANKIT
+DEEPAK
+MAYANK
+
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f2 employees.csv | sort | uniq
+
+Ankit
+Deepak
+Mayank
+Rohan
+mayank@MayankGarg4343:~/Day6Lab$ cut -d "," -f2 employees.csv | sort | uniq | wc -l
+5
+mayank@MayankGarg4343:~/Day6Lab$
+
+
+What is the difference between cut and awk?
+answer - cut used to extract specific character or field from the specific line and awk used to check or work 
+        according to the columns.
+
+What does tr do?
+answer - it used to delete the text and also helps in conversions from lowercase to uppercase and uppercase to lowercase.
+
+What is the difference between sed and a text editor like nano?
+answer - sed used to update the data without opening the editor and nano command opens the editor to edit any file.
+
+Why is sed -i used carefully?
+answer - because it makes the permanent changes to the file.
+
+Give one real-world example where awk is useful.
+answer - awk '{print $2}' /var/log/syslog.1 it will print the hostname of mine.
+
+How would you extract usernames from /etc/passwd?
+answer - i will use the awk command to find the usernames field.
+
+Which command converts lowercase text to uppercase?
+answer - tr command.
+
+How would you replace every occurrence of "localhost" with "server01" in a configuration file?
+answer - i will use the sed command to replace the every occurence like this echo "localhost localhost" | sed 's/localhost/server01/g'
+
+What is the difference between cut and grep?
+answer - cut used to give the specific field or character from each line and grep used to gives the matching pattern from the complete file.
+
+Why is awk considered one of the most powerful Linux commands?
+answer - it is considered most powerfull command because it used to verify the logs and the matrices and also processes column by column.
