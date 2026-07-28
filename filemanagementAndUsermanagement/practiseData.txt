@@ -1,0 +1,2852 @@
+LINUX PRACTICE NOTES
+====================
+
+mayank@MayankGarg4343:/$ getent group linuxteam
+linuxteam:x:1005:
+mayank@MayankGarg4343:/$ grep "^linuxteam:" /etc/group
+linuxteam:x:1005:
+mayank@MayankGarg4343:/$ sudo grep "^linuxteam:" /etc/gshadow
+[sudo] password for mayank:
+Sorry, try again.
+[sudo] password for mayank:
+Sorry, try again.
+[sudo] password for mayank:
+linuxteam:!::
+mayank@MayankGarg4343:/$ getent group developer
+mayank@MayankGarg4343:/$ getent group linuxgroup
+mayank@MayankGarg4343:/$ getent group linuxteam
+linuxteam:x:1005:
+mayank@MayankGarg4343:/$
+mayank@MayankGarg4343:/$ sudo groupadd developers
+[sudo] password for mayank:
+Sorry, try again.
+[sudo] password for mayank:
+mayank@MayankGarg4343:/$ sudo gpasswd -a mayank developers
+Adding user mayank to group developers
+mayank@MayankGarg4343:/$ sudo gpasswd -a rahul developers
+Adding user rahul to group developers
+mayank@MayankGarg4343:/$ sudo gpasswd -d rahul developers
+Removing user rahul from group developers
+mayank@MayankGarg4343:/$ sudo gpasswd -M mayank,user100 developers
+mayank@MayankGarg4343:/$ sudo groupadd developers
+groupadd: group 'developers' already exists
+mayank@MayankGarg4343:/$ sudo groupadd -f developers
+mayank@MayankGarg4343:/$ cat /home
+cat: /home: Is a directory
+mayank@MayankGarg4343:/$ cd /home
+mayank@MayankGarg4343:/home$ ls
+a.sh  mayank  user100  user200
+mayank@MayankGarg4343:/home$ groups
+mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker
+mayank@MayankGarg4343:/home$ cd /
+mayank@MayankGarg4343:/$ groups
+mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker
+mayank@MayankGarg4343:/$ sudo gpasswd developers
+Changing the password for group developers
+New Password:
+Re-enter new password:
+mayank@MayankGarg4343:/$ newgrp develop
+newgrp: group 'develop' does not exist
+mayank@MayankGarg4343:/$ sudo newgrp develop
+newgrp: group 'develop' does not exist
+mayank@MayankGarg4343:/$ sudo newgrp developers
+root@MayankGarg4343:/# group
+Command 'group' not found, did you mean:
+  command 'grop' from deb grop (2:0.10-1.2)
+  command 'groups' from deb coreutils (9.4-3ubuntu6.2)
+Try: apt install <deb name>
+root@MayankGarg4343:/# groups
+developers root
+root@MayankGarg4343:/# find / -type f -exec du -sh {} + | sort -rh | head -5
+find: File system loop detected; ‘/sys/kernel/debug/device_component’ is part of the same file system loop as ‘/sys/kernel/debug’.
+find: ‘/mnt/d/$RECYCLE.BIN/S-1-5-18’: Permission denied
+du: cannot access '/proc/6807/task/6807/fdinfo/5': No such file or directory
+du: cannot access '/proc/6807/task/6807/fdinfo/8': No such file or directory
+du: cannot access '/proc/6807/fdinfo/5': No such file or directory
+^C
+root@MayankGarg4343:/# find / -type f -exec du -sh {} \; sort -rh | head -5
+find: paths must precede expression: `sort'
+root@MayankGarg4343:/# find / -type f -exec du -sh {} \; 2>/dev/null sort -rh | head -5
+root@MayankGarg4343:/# find / -type f -exec du -h {} \; 2>/dev/null sort -rh | head -5
+root@MayankGarg4343:/# find . -type f -exec du -h {} \; 2>/dev/null sort -rh | head -5
+root@MayankGarg4343:/# exit
+exit
+mayank@MayankGarg4343:/$ find . -typr f -exec du -h {} \; 2>/dev/null | sort -rh | head -5
+mayank@MayankGarg4343:/$ find . -type f -exec du -h {} \; 2>/dev/null | sort -rh | head -5
+^C
+mayank@MayankGarg4343:/$ find /var/log -type f -exec du -h {} \; 2>/dev/null | sort -rh | head -5
+8.1M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system@00065767ed3b2241-f286fc5b76e9f5c1.journal~
+8.0M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/user-1000.journal
+8.0M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system@0006574967a7f481-4eb9f6ecfd21ddb7.journal~
+8.0M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system.journal
+4.6M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system@4e5c0ab29d6a4027ba3b5d157cfe5ce3-0000000000028e76-00065767ed5e100c.journal
+mayank@MayankGarg4343:/$ find /var/log -type f -exec du -sh {} \; 2>/dev/null | sort -rh | head -5
+8.1M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system@00065767ed3b2241-f286fc5b76e9f5c1.journal~
+8.0M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/user-1000.journal
+8.0M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system@0006574967a7f481-4eb9f6ecfd21ddb7.journal~
+8.0M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system.journal
+4.6M    /var/log/journal/fc5adf2b8e1a4a88b98ea54bdf74e8c2/system@4e5c0ab29d6a4027ba3b5d157cfe5ce3-0000000000028e76-00065767ed5e100c.journal
+mayank@MayankGarg4343:/$ groups
+mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker
+mayank@MayankGarg4343:/$ sudo newgrp developers
+root@MayankGarg4343:/# groups
+developers root
+root@MayankGarg4343:/# newgrp -
+Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 5.15.167.4-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Mon Jul 27 09:44:28 IST 2026
+
+  System load:  0.0                 Processes:             43
+  Usage of /:   0.2% of 1006.85GB   Users logged in:       1
+  Memory usage: 9%                  IPv4 address for eth0: 172.17.105.109
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+This message is shown once a day. To disable it please create the
+/root/.hushlogin file.
+root@MayankGarg4343:~# exit
+logout
+root@MayankGarg4343:/# exit
+exit
+mayank@MayankGarg4343:/$ su -
+Password:
+su: Authentication failure
+mayank@MayankGarg4343:/$ umask
+0022
+mayank@MayankGarg4343:/$ uptime
+ 10:08:58 up 21:37,  1 user,  load average: 0.00, 0.00, 0.00
+mayank@MayankGarg4343:/$ sudo su
+[sudo] password for mayank:
+Sorry, try again.
+[sudo] password for mayank:
+root@MayankGarg4343:/# groups
+root
+root@MayankGarg4343:/# exit
+exit
+mayank@MayankGarg4343:/$ groups
+mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker
+mayank@MayankGarg4343:/$ sudo su
+root@MayankGarg4343:/# newgrp developers
+root@MayankGarg4343:/# groups
+developers root
+root@MayankGarg4343:/# groupmod -n developers backend
+groupmod: group 'backend' does not exist
+root@MayankGarg4343:/# groupmod -n backend developers
+root@MayankGarg4343:/# groups
+backend root
+root@MayankGarg4343:/# exit
+exit
+root@MayankGarg4343:/# ls -l
+total 2292
+-rw-r--r--   1 root root       0 Jul 22 09:32 Backup
+drwxr-xr-x   5 root root    4096 Jul 22 09:30 Devops-Lab
+drwxr-xr-x   3 root root    4096 Aug 29  2025 Docker
+lrwxrwxrwx   1 root root       7 Apr 22  2024 bin -> usr/bin
+drwxr-xr-x   2 root root    4096 Feb 26  2024 bin.usr-is-merged
+drwxr-xr-x   2 root root    4096 Apr 22  2024 boot
+drwxr-xr-x  16 root root    3560 Jul 25 09:58 dev
+drwxr-xr-x  97 root root    4096 Jul 27 10:15 etc
+drwxr-xr-x   5 root root    4096 Jul 25 14:49 home
+-rw-r--r--   1 root root       0 Jul 22 09:16 httpd.conf
+-rwxrwxrwx   1 root root 2260248 Nov  9  2024 init
+lrwxrwxrwx   1 root root       7 Apr 22  2024 lib -> usr/lib
+drwxr-xr-x   2 root root    4096 Apr  8  2024 lib.usr-is-merged
+lrwxrwxrwx   1 root root       9 Apr 22  2024 lib64 -> usr/lib64
+drwx------   2 root root   16384 May 16  2025 lost+found
+drwxr-xr-x   2 root root    4096 Jan  7  2025 media
+drwxr-xr-x   6 root root    4096 May 16  2025 mnt
+drwxr-xr-x   2 root root    4096 Jan  7  2025 opt
+dr-xr-xr-x 244 root root       0 Jul 25 09:58 proc
+drwx------   8 root root    4096 Jul 21 10:48 root
+drwxr-xr-x  23 root root     720 Jul 27 09:44 run
+lrwxrwxrwx   1 root root       8 Apr 22  2024 sbin -> usr/sbin
+drwxr-xr-x   2 root root    4096 Mar 31  2024 sbin.usr-is-merged
+drwxr-xr-x   6 root root    4096 May 22  2025 snap
+drwxr-xr-x   2 root root    4096 Jan  7  2025 srv
+dr-xr-xr-x  11 root root       0 Jul 25 09:58 sys
+drwxrwxrwt  12 root root    4096 Jul 27 09:32 tmp
+drwxr-xr-x  12 root root    4096 Jan  7  2025 usr
+drwxr-xr-x  13 root root    4096 May 16  2025 var
+root@MayankGarg4343:/# cd /home
+root@MayankGarg4343:/home# cd mayank/
+root@MayankGarg4343:/home/mayank# ls -l
+total 24
+drwxr-xr-x 2 rahul  user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 rahul  mayank     0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank mayank  4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank mayank  4096 Jul 25 12:01 demo
+d--x------ 2 mayank mayank  4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank mayank  4096 Jul 25 10:51 testfind
+root@MayankGarg4343:/home/mayank# groupadd developer
+root@MayankGarg4343:/home/mayank# exit
+exit
+mayank@MayankGarg4343:/$ cd /home/mayank
+mayank@MayankGarg4343:~$ ls
+Day7Lab  LogsLab  a.txt  cd-practice  demo  project  testfind
+mayank@MayankGarg4343:~$ ls -l
+total 24
+drwxr-xr-x 2 rahul  user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 rahul  mayank     0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank mayank  4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank mayank  4096 Jul 25 12:01 demo
+d--x------ 2 mayank mayank  4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank mayank  4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ sudo groupadd developer
+[sudo] password for mayank:
+groupadd: group 'developer' already exists
+mayank@MayankGarg4343:~$ sudo chown mayank:developer a.txt
+mayank@MayankGarg4343:~$ ls -l
+total 24
+drwxr-xr-x 2 rahul  user200   4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank mayank    4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 mayank developer    0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank mayank    4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank mayank    4096 Jul 25 12:01 demo
+d--x------ 2 mayank mayank    4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank mayank    4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ sudo groupdel developer
+mayank@MayankGarg4343:~$ ls -l
+total 24
+drwxr-xr-x 2 rahul  user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 mayank    1007    0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank mayank  4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank mayank  4096 Jul 25 12:01 demo
+d--x------ 2 mayank mayank  4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank mayank  4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ cd /home
+mayank@MayankGarg4343:/home$ ls
+a.sh  mayank  user100  user200
+mayank@MayankGarg4343:/home$ sudo useradd -m john
+mayank@MayankGarg4343:/home$ ls
+a.sh  john  mayank  user100  user200
+mayank@MayankGarg4343:/home$ sudo useradd -m -s /bin/bash john
+useradd: user 'john' already exists
+mayank@MayankGarg4343:/home$ useradd -D
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/sh
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+LOG_INIT=yes
+mayank@MayankGarg4343:/home$ cd mayank/
+mayank@MayankGarg4343:~$ useradd -D
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/sh
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=no
+LOG_INIT=yes
+mayank@MayankGarg4343:~$ ps
+    PID TTY          TIME CMD
+   6271 pts/0    00:00:00 bash
+  36735 pts/0    00:00:00 ps
+mayank@MayankGarg4343:~$ awk '{sum+=$2}END{print sum}'
+^C
+mayank@MayankGarg4343:~$ touch marks.txt
+mayank@MayankGarg4343:~$ vim marks.txt
+mayank@MayankGarg4343:~$ awk '{sum+=$2}END{print sum}' marks.txt
+240
+mayank@MayankGarg4343:~$ awk '{sum+=$2}END{print sum/NR}' marks.txt
+80
+mayank@MayankGarg4343:~$ awk '{sum+=$2}END{print sum/NF}' marks.txt
+120
+mayank@MayankGarg4343:~$ cd /home
+mayank@MayankGarg4343:/home$ du -sh
+du: cannot read directory './user100': Permission denied
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+du: cannot read directory './user200': Permission denied
+du: cannot read directory './john': Permission denied
+124K    .
+mayank@MayankGarg4343:/home$ du -sh 2>/dev/null
+124K    .
+mayank@MayankGarg4343:/home$ du -h --max-depth-1
+du: unrecognized option '--max-depth-1'
+Try 'du --help' for more information.
+mayank@MayankGarg4343:/home$ du -h --max-depth=1
+du: cannot read directory './user100': Permission denied
+4.0K    ./user100
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+108K    ./mayank
+du: cannot read directory './user200': Permission denied
+4.0K    ./user200
+du: cannot read directory './john': Permission denied
+4.0K    ./john
+124K    .
+mayank@MayankGarg4343:/home$ du -h --max-depth=1 2>/dev/null
+4.0K    ./user100
+108K    ./mayank
+4.0K    ./user200
+4.0K    ./john
+124K    .
+mayank@MayankGarg4343:/home$ du
+du: cannot read directory './user100': Permission denied
+4       ./user100
+4       ./mayank/LogsLab
+4       ./mayank/.cache
+4       ./mayank/Day7Lab
+du: cannot read directory './mayank/project': Permission denied
+4       ./mayank/project
+du: cannot read directory './mayank/demo': Permission denied
+4       ./mayank/demo
+4       ./mayank/cd-practice/project/logs
+4       ./mayank/cd-practice/project/src
+12      ./mayank/cd-practice/project
+16      ./mayank/cd-practice
+4       ./mayank/.landscape
+4       ./mayank/testfind/g.txt
+8       ./mayank/testfind
+4       ./mayank/.config/procps
+4       ./mayank/.config/htop
+12      ./mayank/.config
+4       ./mayank/.docker/desktop/log/host
+8       ./mayank/.docker/desktop/log
+12      ./mayank/.docker/desktop
+4       ./mayank/.docker/cli-plugins
+4       ./mayank/.docker/run
+24      ./mayank/.docker
+108     ./mayank
+du: cannot read directory './user200': Permission denied
+4       ./user200
+du: cannot read directory './john': Permission denied
+4       ./john
+124     .
+mayank@MayankGarg4343:/home$ df
+Filesystem      1K-blocks      Used Available Use% Mounted on
+none              3983960         0   3983960   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none              3983960         4   3983956   1% /mnt/wsl
+drivers         293310460 278804464  14505996  96% /usr/lib/wsl/drivers
+/dev/sdc       1055762868   2478384 999581012   1% /
+none              3983960       168   3983792   1% /mnt/wslg
+none              3983960         0   3983960   0% /usr/lib/wsl/lib
+rootfs            3980548      2208   3978340   1% /init
+none              3983960       892   3983068   1% /run
+none              3983960         0   3983960   0% /run/lock
+none              3983960         0   3983960   0% /run/shm
+tmpfs                4096         0      4096   0% /sys/fs/cgroup
+none              3983960        76   3983884   1% /mnt/wslg/versions.txt
+none              3983960        76   3983884   1% /mnt/wslg/doc
+C:\             293310460 278804464  14505996  96% /mnt/c
+D:\             204798972  24465036 180333936  12% /mnt/d
+snapfuse             4736      4736         0 100% /snap/network-manager/1020
+snapfuse            75776     75776         0 100% /snap/core22/2411
+snapfuse            75776     75776         0 100% /snap/core22/2216
+snapfuse             4736      4736         0 100% /snap/network-manager/981
+snapfuse            50560     50560         0 100% /snap/snapd/26865
+snapfuse            51328     51328         0 100% /snap/snapd/27591
+tmpfs              796792        16    796776   1% /run/user/1000
+mayank@MayankGarg4343:/home$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+none            3.8G     0  3.8G   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none            3.8G  4.0K  3.8G   1% /mnt/wsl
+drivers         280G  266G   14G  96% /usr/lib/wsl/drivers
+/dev/sdc       1007G  2.4G  954G   1% /
+none            3.8G  168K  3.8G   1% /mnt/wslg
+none            3.8G     0  3.8G   0% /usr/lib/wsl/lib
+rootfs          3.8G  2.2M  3.8G   1% /init
+none            3.8G  892K  3.8G   1% /run
+none            3.8G     0  3.8G   0% /run/lock
+none            3.8G     0  3.8G   0% /run/shm
+tmpfs           4.0M     0  4.0M   0% /sys/fs/cgroup
+none            3.8G   76K  3.8G   1% /mnt/wslg/versions.txt
+none            3.8G   76K  3.8G   1% /mnt/wslg/doc
+C:\             280G  266G   14G  96% /mnt/c
+D:\             196G   24G  172G  12% /mnt/d
+snapfuse        4.7M  4.7M     0 100% /snap/network-manager/1020
+snapfuse         74M   74M     0 100% /snap/core22/2411
+snapfuse         74M   74M     0 100% /snap/core22/2216
+snapfuse        4.7M  4.7M     0 100% /snap/network-manager/981
+snapfuse         50M   50M     0 100% /snap/snapd/26865
+snapfuse         51M   51M     0 100% /snap/snapd/27591
+tmpfs           779M   16K  779M   1% /run/user/1000
+mayank@MayankGarg4343:/home$ df -H
+Filesystem      Size  Used Avail Use% Mounted on
+none            4.1G     0  4.1G   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none            4.1G  4.1k  4.1G   1% /mnt/wsl
+drivers         301G  286G   15G  96% /usr/lib/wsl/drivers
+/dev/sdc        1.1T  2.6G  1.1T   1% /
+none            4.1G  173k  4.1G   1% /mnt/wslg
+none            4.1G     0  4.1G   0% /usr/lib/wsl/lib
+rootfs          4.1G  2.3M  4.1G   1% /init
+none            4.1G  914k  4.1G   1% /run
+none            4.1G     0  4.1G   0% /run/lock
+none            4.1G     0  4.1G   0% /run/shm
+tmpfs           4.2M     0  4.2M   0% /sys/fs/cgroup
+none            4.1G   78k  4.1G   1% /mnt/wslg/versions.txt
+none            4.1G   78k  4.1G   1% /mnt/wslg/doc
+C:\             301G  286G   15G  96% /mnt/c
+D:\             210G   26G  185G  12% /mnt/d
+snapfuse        4.9M  4.9M     0 100% /snap/network-manager/1020
+snapfuse         78M   78M     0 100% /snap/core22/2411
+snapfuse         78M   78M     0 100% /snap/core22/2216
+snapfuse        4.9M  4.9M     0 100% /snap/network-manager/981
+snapfuse         52M   52M     0 100% /snap/snapd/26865
+snapfuse         53M   53M     0 100% /snap/snapd/27591
+tmpfs           816M   17k  816M   1% /run/user/1000
+mayank@MayankGarg4343:/home$ df -T
+Filesystem     Type           1K-blocks      Used Available Use% Mounted on
+none           overlay          3983960         0   3983960   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none           tmpfs            3983960         4   3983956   1% /mnt/wsl
+drivers        9p             293310460 278835392  14475068  96% /usr/lib/wsl/drivers
+/dev/sdc       ext4          1055762868   2478392 999581004   1% /
+none           tmpfs            3983960       168   3983792   1% /mnt/wslg
+none           overlay          3983960         0   3983960   0% /usr/lib/wsl/lib
+rootfs         rootfs           3980548      2208   3978340   1% /init
+none           tmpfs            3983960       892   3983068   1% /run
+none           tmpfs            3983960         0   3983960   0% /run/lock
+none           tmpfs            3983960         0   3983960   0% /run/shm
+tmpfs          tmpfs               4096         0      4096   0% /sys/fs/cgroup
+none           overlay          3983960        76   3983884   1% /mnt/wslg/versions.txt
+none           overlay          3983960        76   3983884   1% /mnt/wslg/doc
+C:\            9p             293310460 278835392  14475068  96% /mnt/c
+D:\            9p             204798972  24466504 180332468  12% /mnt/d
+snapfuse       fuse.snapfuse       4736      4736         0 100% /snap/network-manager/1020
+snapfuse       fuse.snapfuse      75776     75776         0 100% /snap/core22/2411
+snapfuse       fuse.snapfuse      75776     75776         0 100% /snap/core22/2216
+snapfuse       fuse.snapfuse       4736      4736         0 100% /snap/network-manager/981
+snapfuse       fuse.snapfuse      50560     50560         0 100% /snap/snapd/26865
+snapfuse       fuse.snapfuse      51328     51328         0 100% /snap/snapd/27591
+tmpfs          tmpfs             796792        16    796776   1% /run/user/1000
+mayank@MayankGarg4343:/home$ df -i
+Filesystem       Inodes   IUsed    IFree IUse% Mounted on
+none             995990       4   995986    1% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none             995990       2   995988    1% /mnt/wsl
+drivers             999 -999001  1000000     - /usr/lib/wsl/drivers
+/dev/sdc       67108864   51441 67057423    1% /
+none             995990      40   995950    1% /mnt/wslg
+none             995990       4   995986    1% /usr/lib/wsl/lib
+rootfs           995137      12   995125    1% /init
+none             995990     579   995411    1% /run
+none             995990       2   995988    1% /run/lock
+none             995990       1   995989    1% /run/shm
+tmpfs              1024      19     1005    2% /sys/fs/cgroup
+none             995990      51   995939    1% /mnt/wslg/versions.txt
+none             995990      51   995939    1% /mnt/wslg/doc
+C:\                 999 -999001  1000000     - /mnt/c
+D:\                 999 -999001  1000000     - /mnt/d
+snapfuse            177     177        0  100% /snap/network-manager/1020
+snapfuse          14270   14270        0  100% /snap/core22/2411
+snapfuse          14268   14268        0  100% /snap/core22/2216
+snapfuse            177     177        0  100% /snap/network-manager/981
+snapfuse            610     610        0  100% /snap/snapd/26865
+snapfuse            610     610        0  100% /snap/snapd/27591
+tmpfs            199198      34   199164    1% /run/user/1000
+mayank@MayankGarg4343:/home$ df -x fuse.snapfuse
+Filesystem      1K-blocks      Used Available Use% Mounted on
+none              3983960         0   3983960   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none              3983960         4   3983956   1% /mnt/wsl
+drivers         293310460 278835392  14475068  96% /usr/lib/wsl/drivers
+/dev/sdc       1055762868   2478396 999581000   1% /
+none              3983960       168   3983792   1% /mnt/wslg
+none              3983960         0   3983960   0% /usr/lib/wsl/lib
+rootfs            3980548      2208   3978340   1% /init
+none              3983960       892   3983068   1% /run
+none              3983960         0   3983960   0% /run/lock
+none              3983960         0   3983960   0% /run/shm
+tmpfs                4096         0      4096   0% /sys/fs/cgroup
+none              3983960        76   3983884   1% /mnt/wslg/versions.txt
+none              3983960        76   3983884   1% /mnt/wslg/doc
+C:\             293310460 278835392  14475068  96% /mnt/c
+D:\             204798972  24468840 180330132  12% /mnt/d
+tmpfs              796792        16    796776   1% /run/user/1000
+mayank@MayankGarg4343:/home$ df -a
+Filesystem      1K-blocks      Used Available Use% Mounted on
+none              3983960         0   3983960   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none              3983960         4   3983956   1% /mnt/wsl
+drivers         293310460 278835456  14475004  96% /usr/lib/wsl/drivers
+/dev/sdc       1055762868   2478396 999581000   1% /
+none              3983960       168   3983792   1% /mnt/wslg
+/dev/sdc       1055762868   2478396 999581000   1% /mnt/wslg/distro
+none              3983960         0   3983960   0% /usr/lib/wsl/lib
+rootfs            3980548      2208   3978340   1% /init
+none              3980548         0   3980548   0% /dev
+sysfs                   0         0         0    - /sys
+proc                    0         0         0    - /proc
+devpts                  0         0         0    - /dev/pts
+none              3983960       892   3983068   1% /run
+none              3983960         0   3983960   0% /run/lock
+none              3983960         0   3983960   0% /run/shm
+none              3983960         0   3983960   0% /dev/shm
+none              3983960       168   3983792   1% /run/user
+binfmt_misc             0         0         0    - /proc/sys/fs/binfmt_misc
+tmpfs                4096         0      4096   0% /sys/fs/cgroup
+cgroup2                 0         0         0    - /sys/fs/cgroup/unified
+cgroup                  0         0         0    - /sys/fs/cgroup/cpuset
+cgroup                  0         0         0    - /sys/fs/cgroup/cpu
+cgroup                  0         0         0    - /sys/fs/cgroup/cpuacct
+cgroup                  0         0         0    - /sys/fs/cgroup/blkio
+cgroup                  0         0         0    - /sys/fs/cgroup/memory
+cgroup                  0         0         0    - /sys/fs/cgroup/devices
+cgroup                  0         0         0    - /sys/fs/cgroup/freezer
+cgroup                  0         0         0    - /sys/fs/cgroup/net_cls
+cgroup                  0         0         0    - /sys/fs/cgroup/perf_event
+cgroup                  0         0         0    - /sys/fs/cgroup/net_prio
+cgroup                  0         0         0    - /sys/fs/cgroup/hugetlb
+cgroup                  0         0         0    - /sys/fs/cgroup/pids
+cgroup                  0         0         0    - /sys/fs/cgroup/rdma
+cgroup                  0         0         0    - /sys/fs/cgroup/misc
+none              3983960        76   3983884   1% /mnt/wslg/versions.txt
+none              3983960        76   3983884   1% /mnt/wslg/doc
+none              3983960       168   3983792   1% /tmp/.X11-unix
+C:\             293310460 278835456  14475004  96% /mnt/c
+D:\             204798972  24468840 180330132  12% /mnt/d
+none              3983960       168   3983792   1% /run/user
+cgroup                  0         0         0    - /sys/fs/cgroup/systemd
+hugetlbfs               0         0         0    - /dev/hugepages
+mqueue                  0         0         0    - /dev/mqueue
+debugfs                 0         0         0    - /sys/kernel/debug
+tracefs                 0         0         0    - /sys/kernel/tracing
+fusectl                 0         0         0    - /sys/fs/fuse/connections
+/dev/sdc       1055762868   2478396 999581000   1% /snap
+snapfuse             4736      4736         0 100% /snap/network-manager/1020
+snapfuse            75776     75776         0 100% /snap/core22/2411
+snapfuse            75776     75776         0 100% /snap/core22/2216
+snapfuse             4736      4736         0 100% /snap/network-manager/981
+snapfuse            50560     50560         0 100% /snap/snapd/26865
+snapfuse            51328     51328         0 100% /snap/snapd/27591
+none              3983960       892   3983068   1% /run/snapd/ns
+nsfs                    0         0         0    - /run/snapd/ns/network-manager.mnt
+tmpfs              796792        16    796776   1% /run/user/1000
+tmpfs              796792        16    796776   1% /mnt/wslg/run/user/1000
+tracefs                 -         -         -    - /sys/kernel/debug/tracing
+mayank@MayankGarg4343:/home$ df -t fuse.snapfuse
+Filesystem     1K-blocks  Used Available Use% Mounted on
+snapfuse            4736  4736         0 100% /snap/network-manager/1020
+snapfuse           75776 75776         0 100% /snap/core22/2411
+snapfuse           75776 75776         0 100% /snap/core22/2216
+snapfuse            4736  4736         0 100% /snap/network-manager/981
+snapfuse           50560 50560         0 100% /snap/snapd/26865
+snapfuse           51328 51328         0 100% /snap/snapd/27591
+mayank@MayankGarg4343:/home$ df -total
+df: no file systems processed
+mayank@MayankGarg4343:/home$ df -total fuse.snapfuse
+df: fuse.snapfuse: No such file or directory
+mayank@MayankGarg4343:/home$ df --total
+Filesystem      1K-blocks      Used  Available Use% Mounted on
+none              3983960         0    3983960   0% /usr/lib/modules/5.15.167.4-microsoft-standard-WSL2
+none              3983960         4    3983956   1% /mnt/wsl
+drivers         293310460 278835900   14474560  96% /usr/lib/wsl/drivers
+/dev/sdc       1055762868   2478396  999581000   1% /
+none              3983960       168    3983792   1% /mnt/wslg
+none              3983960         0    3983960   0% /usr/lib/wsl/lib
+rootfs            3980548      2208    3978340   1% /init
+none              3983960       892    3983068   1% /run
+none              3983960         0    3983960   0% /run/lock
+none              3983960         0    3983960   0% /run/shm
+tmpfs                4096         0       4096   0% /sys/fs/cgroup
+none              3983960        76    3983884   1% /mnt/wslg/versions.txt
+none              3983960        76    3983884   1% /mnt/wslg/doc
+C:\             293310460 278835900   14474560  96% /mnt/c
+D:\             204798972  24469792  180329180  12% /mnt/d
+snapfuse             4736      4736          0 100% /snap/network-manager/1020
+snapfuse            75776     75776          0 100% /snap/core22/2411
+snapfuse            75776     75776          0 100% /snap/core22/2216
+snapfuse             4736      4736          0 100% /snap/network-manager/981
+snapfuse            50560     50560          0 100% /snap/snapd/26865
+snapfuse            51328     51328          0 100% /snap/snapd/27591
+tmpfs              796792        16     796776   1% /run/user/1000
+total          1888082748 584886340 1249492936  32% -
+mayank@MayankGarg4343:/home$ du -s
+du: cannot read directory './user100': Permission denied
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+du: cannot read directory './user200': Permission denied
+du: cannot read directory './john': Permission denied
+124     .
+mayank@MayankGarg4343:/home$ du -sk
+du: cannot read directory './user100': Permission denied
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+du: cannot read directory './user200': Permission denied
+du: cannot read directory './john': Permission denied
+124     .
+mayank@MayankGarg4343:/home$ du -sb
+du: cannot read directory './user100': Permission denied
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+du: cannot read directory './user200': Permission denied
+du: cannot read directory './john': Permission denied
+7575    .
+mayank@MayankGarg4343:/home$ du -sm
+du: cannot read directory './user100': Permission denied
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+du: cannot read directory './user200': Permission denied
+du: cannot read directory './john': Permission denied
+1       .
+mayank@MayankGarg4343:/home$ du -x
+du: cannot read directory './user100': Permission denied
+4       ./user100
+4       ./mayank/LogsLab
+4       ./mayank/.cache
+4       ./mayank/Day7Lab
+du: cannot read directory './mayank/project': Permission denied
+4       ./mayank/project
+du: cannot read directory './mayank/demo': Permission denied
+4       ./mayank/demo
+4       ./mayank/cd-practice/project/logs
+4       ./mayank/cd-practice/project/src
+12      ./mayank/cd-practice/project
+16      ./mayank/cd-practice
+4       ./mayank/.landscape
+4       ./mayank/testfind/g.txt
+8       ./mayank/testfind
+4       ./mayank/.config/procps
+4       ./mayank/.config/htop
+12      ./mayank/.config
+4       ./mayank/.docker/desktop/log/host
+8       ./mayank/.docker/desktop/log
+12      ./mayank/.docker/desktop
+4       ./mayank/.docker/cli-plugins
+4       ./mayank/.docker/run
+24      ./mayank/.docker
+108     ./mayank
+du: cannot read directory './user200': Permission denied
+4       ./user200
+du: cannot read directory './john': Permission denied
+4       ./john
+124     .
+mayank@MayankGarg4343:/home$ du -d 3
+du: cannot read directory './user100': Permission denied
+4       ./user100
+4       ./mayank/LogsLab
+4       ./mayank/.cache
+4       ./mayank/Day7Lab
+du: cannot read directory './mayank/project': Permission denied
+4       ./mayank/project
+du: cannot read directory './mayank/demo': Permission denied
+4       ./mayank/demo
+12      ./mayank/cd-practice/project
+16      ./mayank/cd-practice
+4       ./mayank/.landscape
+4       ./mayank/testfind/g.txt
+8       ./mayank/testfind
+4       ./mayank/.config/procps
+4       ./mayank/.config/htop
+12      ./mayank/.config
+12      ./mayank/.docker/desktop
+4       ./mayank/.docker/cli-plugins
+4       ./mayank/.docker/run
+24      ./mayank/.docker
+108     ./mayank
+du: cannot read directory './user200': Permission denied
+4       ./user200
+du: cannot read directory './john': Permission denied
+4       ./john
+124     .
+mayank@MayankGarg4343:/home$ du -d 1
+du: cannot read directory './user100': Permission denied
+4       ./user100
+du: cannot read directory './mayank/project': Permission denied
+du: cannot read directory './mayank/demo': Permission denied
+108     ./mayank
+du: cannot read directory './user200': Permission denied
+4       ./user200
+du: cannot read directory './john': Permission denied
+4       ./john
+124     .
+mayank@MayankGarg4343:/home$ du -c
+du: cannot read directory './user100': Permission denied
+4       ./user100
+4       ./mayank/LogsLab
+4       ./mayank/.cache
+4       ./mayank/Day7Lab
+du: cannot read directory './mayank/project': Permission denied
+4       ./mayank/project
+du: cannot read directory './mayank/demo': Permission denied
+4       ./mayank/demo
+4       ./mayank/cd-practice/project/logs
+4       ./mayank/cd-practice/project/src
+12      ./mayank/cd-practice/project
+16      ./mayank/cd-practice
+4       ./mayank/.landscape
+4       ./mayank/testfind/g.txt
+8       ./mayank/testfind
+4       ./mayank/.config/procps
+4       ./mayank/.config/htop
+12      ./mayank/.config
+4       ./mayank/.docker/desktop/log/host
+8       ./mayank/.docker/desktop/log
+12      ./mayank/.docker/desktop
+4       ./mayank/.docker/cli-plugins
+4       ./mayank/.docker/run
+24      ./mayank/.docker
+108     ./mayank
+du: cannot read directory './user200': Permission denied
+4       ./user200
+du: cannot read directory './john': Permission denied
+4       ./john
+124     .
+124     total
+mayank@MayankGarg4343:/home$ lsblk
+NAME
+    MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
+sda   8:0    0 388.4M  1 disk
+sdb   8:16   0     2G  0 disk [SWAP]
+sdc   8:32   0     1T  0 disk /snap
+                              /mnt/wslg/distro
+                              /
+mayank@MayankGarg4343:/home$ lsof -u mayank
+lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
+      Output information may be incomplete.
+COMMAND    PID   USER   FD      TYPE DEVICE SIZE/OFF   NODE NAME
+systemd    615 mayank  cwd   unknown                        /proc/615/cwd (readlink: Permission denied)
+systemd    615 mayank  rtd   unknown                        /proc/615/root (readlink: Permission denied)
+systemd    615 mayank  txt   unknown                        /proc/615/exe (readlink: Permission denied)
+systemd    615 mayank    0   unknown                        /proc/615/fd/0 (readlink: Permission denied)
+systemd    615 mayank    1   unknown                        /proc/615/fd/1 (readlink: Permission denied)
+systemd    615 mayank    2   unknown                        /proc/615/fd/2 (readlink: Permission denied)
+systemd    615 mayank    3   unknown                        /proc/615/fd/3 (readlink: Permission denied)
+systemd    615 mayank    4   unknown                        /proc/615/fd/4 (readlink: Permission denied)
+systemd    615 mayank    5   unknown                        /proc/615/fd/5 (readlink: Permission denied)
+systemd    615 mayank    6   unknown                        /proc/615/fd/6 (readlink: Permission denied)
+systemd    615 mayank    7   unknown                        /proc/615/fd/7 (readlink: Permission denied)
+systemd    615 mayank    8   unknown                        /proc/615/fd/8 (readlink: Permission denied)
+systemd    615 mayank    9   unknown                        /proc/615/fd/9 (readlink: Permission denied)
+systemd    615 mayank   10   unknown                        /proc/615/fd/10 (readlink: Permission denied)
+systemd    615 mayank   11   unknown                        /proc/615/fd/11 (readlink: Permission denied)
+systemd    615 mayank   12   unknown                        /proc/615/fd/12 (readlink: Permission denied)
+systemd    615 mayank   13   unknown                        /proc/615/fd/13 (readlink: Permission denied)
+systemd    615 mayank   14   unknown                        /proc/615/fd/14 (readlink: Permission denied)
+systemd    615 mayank   15   unknown                        /proc/615/fd/15 (readlink: Permission denied)
+systemd    615 mayank   16   unknown                        /proc/615/fd/16 (readlink: Permission denied)
+systemd    615 mayank   17   unknown                        /proc/615/fd/17 (readlink: Permission denied)
+systemd    615 mayank   18   unknown                        /proc/615/fd/18 (readlink: Permission denied)
+systemd    615 mayank   19   unknown                        /proc/615/fd/19 (readlink: Permission denied)
+systemd    615 mayank   20   unknown                        /proc/615/fd/20 (readlink: Permission denied)
+systemd    615 mayank   21   unknown                        /proc/615/fd/21 (readlink: Permission denied)
+systemd    615 mayank   26   unknown                        /proc/615/fd/26 (readlink: Permission denied)
+systemd    615 mayank   28   unknown                        /proc/615/fd/28 (readlink: Permission denied)
+systemd    615 mayank   29   unknown                        /proc/615/fd/29 (readlink: Permission denied)
+systemd    615 mayank   30   unknown                        /proc/615/fd/30 (readlink: Permission denied)
+systemd    615 mayank   33   unknown                        /proc/615/fd/33 (readlink: Permission denied)
+systemd    615 mayank   34   unknown                        /proc/615/fd/34 (readlink: Permission denied)
+systemd    615 mayank   35   unknown                        /proc/615/fd/35 (readlink: Permission denied)
+systemd    615 mayank   36   unknown                        /proc/615/fd/36 (readlink: Permission denied)
+(sd-pam)   616 mayank  cwd   unknown                        /proc/616/cwd (readlink: Permission denied)
+(sd-pam)   616 mayank  rtd   unknown                        /proc/616/root (readlink: Permission denied)
+(sd-pam)   616 mayank  txt   unknown                        /proc/616/exe (readlink: Permission denied)
+(sd-pam)   616 mayank NOFD                                  /proc/616/fd (opendir: Permission denied)
+bash       682 mayank  cwd       DIR   8,32     4096    688 /home/mayank
+bash       682 mayank  rtd       DIR   8,32     4096      2 /
+bash       682 mayank  txt       REG   8,32  1446024   1464 /usr/bin/bash
+bash       682 mayank  mem       REG   8,32   360460  13639 /usr/lib/locale/C.utf8/LC_CTYPE
+bash       682 mayank  mem       REG   8,32       50  13648 /usr/lib/locale/C.utf8/LC_NUMERIC
+bash       682 mayank  mem       REG   8,32     3360  13652 /usr/lib/locale/C.utf8/LC_TIME
+bash       682 mayank  mem       REG   8,32     1406  13638 /usr/lib/locale/C.utf8/LC_COLLATE
+bash       682 mayank  mem       REG   8,32      270  13644 /usr/lib/locale/C.utf8/LC_MONETARY
+bash       682 mayank  mem       REG   8,32       48  13643 /usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+bash       682 mayank  mem       REG   8,32       34  13650 /usr/lib/locale/C.utf8/LC_PAPER
+bash       682 mayank  mem       REG   8,32    27028  37524 /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+bash       682 mayank  mem       REG   8,32  2125328  37535 /usr/lib/x86_64-linux-gnu/libc.so.6
+bash       682 mayank  mem       REG   8,32   208328  12780 /usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+bash       682 mayank  mem       REG   8,32       62  13646 /usr/lib/locale/C.utf8/LC_NAME
+bash       682 mayank  mem       REG   8,32      127  13637 /usr/lib/locale/C.utf8/LC_ADDRESS
+bash       682 mayank  mem       REG   8,32       47  13651 /usr/lib/locale/C.utf8/LC_TELEPHONE
+bash       682 mayank  mem       REG   8,32       23  13642 /usr/lib/locale/C.utf8/LC_MEASUREMENT
+bash       682 mayank  mem       REG   8,32      258  13641 /usr/lib/locale/C.utf8/LC_IDENTIFICATION
+bash       682 mayank  mem       REG   8,32   236616  37532 /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+bash       682 mayank    0u      CHR  136,1      0t0      4 /dev/pts/1
+bash       682 mayank    1u      CHR  136,1      0t0      4 /dev/pts/1
+bash       682 mayank    2u      CHR  136,1      0t0      4 /dev/pts/1
+bash       682 mayank  255u      CHR  136,1      0t0      4 /dev/pts/1
+bash      6271 mayank  cwd       DIR   8,32     4096  24577 /home
+bash      6271 mayank  rtd       DIR   8,32     4096      2 /
+bash      6271 mayank  txt       REG   8,32  1446024   1464 /usr/bin/bash
+bash      6271 mayank  mem       REG   8,32   360460  13639 /usr/lib/locale/C.utf8/LC_CTYPE
+bash      6271 mayank  mem       REG   8,32       50  13648 /usr/lib/locale/C.utf8/LC_NUMERIC
+bash      6271 mayank  mem       REG   8,32     3360  13652 /usr/lib/locale/C.utf8/LC_TIME
+bash      6271 mayank  mem       REG   8,32     1406  13638 /usr/lib/locale/C.utf8/LC_COLLATE
+bash      6271 mayank  mem       REG   8,32      270  13644 /usr/lib/locale/C.utf8/LC_MONETARY
+bash      6271 mayank  mem       REG   8,32       48  13643 /usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+bash      6271 mayank  mem       REG   8,32       34  13650 /usr/lib/locale/C.utf8/LC_PAPER
+bash      6271 mayank  mem       REG   8,32    27028  37524 /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+bash      6271 mayank  mem       REG   8,32  2125328  37535 /usr/lib/x86_64-linux-gnu/libc.so.6
+bash      6271 mayank  mem       REG   8,32   208328  12780 /usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+bash      6271 mayank  mem       REG   8,32       62  13646 /usr/lib/locale/C.utf8/LC_NAME
+bash      6271 mayank  mem       REG   8,32      127  13637 /usr/lib/locale/C.utf8/LC_ADDRESS
+bash      6271 mayank  mem       REG   8,32       47  13651 /usr/lib/locale/C.utf8/LC_TELEPHONE
+bash      6271 mayank  mem       REG   8,32       23  13642 /usr/lib/locale/C.utf8/LC_MEASUREMENT
+bash      6271 mayank  mem       REG   8,32      258  13641 /usr/lib/locale/C.utf8/LC_IDENTIFICATION
+bash      6271 mayank  mem       REG   8,32   236616  37532 /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+bash      6271 mayank    0u      CHR  136,0      0t0      3 /dev/pts/0
+bash      6271 mayank    1u      CHR  136,0      0t0      3 /dev/pts/0
+bash      6271 mayank    2u      CHR  136,0      0t0      3 /dev/pts/0
+bash      6271 mayank    6u      CHR    5,2      0t0     85 /dev/ptmx
+bash      6271 mayank  255u      CHR  136,0      0t0      3 /dev/pts/0
+lsof     36829 mayank  cwd       DIR   8,32     4096  24577 /home
+lsof     36829 mayank  rtd       DIR   8,32     4096      2 /
+lsof     36829 mayank  txt       REG   8,32   175784   1802 /usr/bin/lsof
+lsof     36829 mayank  mem       REG   8,32    27028  37524 /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+lsof     36829 mayank  mem       REG   8,32   360460  13639 /usr/lib/locale/C.utf8/LC_CTYPE
+lsof     36829 mayank  mem       REG   8,32    68104  37548 /usr/lib/x86_64-linux-gnu/libresolv.so.2
+lsof     36829 mayank  mem       REG   8,32    22600  12872 /usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10
+lsof     36829 mayank  mem       REG   8,32    47904  11563 /usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1
+lsof     36829 mayank  mem       REG   8,32    18504  12705 /usr/lib/x86_64-linux-gnu/libcom_err.so.2.1
+lsof     36829 mayank  mem       REG   8,32   178648    805 /usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1
+lsof     36829 mayank  mem       REG   8,32   823488  11572 /usr/lib/x86_64-linux-gnu/libkrb5.so.3.3
+lsof     36829 mayank  mem       REG   8,32   625344  12948 /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.11.2
+lsof     36829 mayank  mem       REG   8,32   338696  11556 /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2
+lsof     36829 mayank  mem       REG   8,32  2125328  37535 /usr/lib/x86_64-linux-gnu/libc.so.6
+lsof     36829 mayank  mem       REG   8,32   174472  12983 /usr/lib/x86_64-linux-gnu/libselinux.so.1
+lsof     36829 mayank  mem       REG   8,32   178816  13025 /usr/lib/x86_64-linux-gnu/libtirpc.so.3.0.0
+lsof     36829 mayank  mem       REG   8,32   236616  37532 /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+lsof     36829 mayank    0u      CHR  136,0      0t0      3 /dev/pts/0
+lsof     36829 mayank    1u      CHR  136,0      0t0      3 /dev/pts/0
+lsof     36829 mayank    2u      CHR  136,0      0t0      3 /dev/pts/0
+lsof     36829 mayank    3r      DIR   0,62        0      1 /proc
+lsof     36829 mayank    4r      DIR   0,62        0 144887 /proc/36829/fd
+lsof     36829 mayank    5w     FIFO   0,12      0t0 144892 pipe
+lsof     36829 mayank    6r     FIFO   0,12      0t0 144893 pipe
+lsof     36830 mayank  cwd       DIR   8,32     4096  24577 /home
+lsof     36830 mayank  rtd       DIR   8,32     4096      2 /
+lsof     36830 mayank  txt       REG   8,32   175784   1802 /usr/bin/lsof
+lsof     36830 mayank  mem       REG   8,32    27028  37524 /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+lsof     36830 mayank  mem       REG   8,32   360460  13639 /usr/lib/locale/C.utf8/LC_CTYPE
+lsof     36830 mayank  mem       REG   8,32    68104  37548 /usr/lib/x86_64-linux-gnu/libresolv.so.2
+lsof     36830 mayank  mem       REG   8,32    22600  12872 /usr/lib/x86_64-linux-gnu/libkeyutils.so.1.10
+lsof     36830 mayank  mem       REG   8,32    47904  11563 /usr/lib/x86_64-linux-gnu/libkrb5support.so.0.1
+lsof     36830 mayank  mem       REG   8,32    18504  12705 /usr/lib/x86_64-linux-gnu/libcom_err.so.2.1
+lsof     36830 mayank  mem       REG   8,32   178648    805 /usr/lib/x86_64-linux-gnu/libk5crypto.so.3.1
+lsof     36830 mayank  mem       REG   8,32   823488  11572 /usr/lib/x86_64-linux-gnu/libkrb5.so.3.3
+lsof     36830 mayank  mem       REG   8,32   625344  12948 /usr/lib/x86_64-linux-gnu/libpcre2-8.so.0.11.2
+lsof     36830 mayank  mem       REG   8,32   338696  11556 /usr/lib/x86_64-linux-gnu/libgssapi_krb5.so.2.2
+lsof     36830 mayank  mem       REG   8,32  2125328  37535 /usr/lib/x86_64-linux-gnu/libc.so.6
+lsof     36830 mayank  mem       REG   8,32   174472  12983 /usr/lib/x86_64-linux-gnu/libselinux.so.1
+lsof     36830 mayank  mem       REG   8,32   178816  13025 /usr/lib/x86_64-linux-gnu/libtirpc.so.3.0.0
+lsof     36830 mayank  mem       REG   8,32   236616  37532 /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+lsof     36830 mayank    4r     FIFO   0,12      0t0 144892 pipe
+lsof     36830 mayank    7w     FIFO   0,12      0t0 144893 pipe
+mayank@MayankGarg4343:/home$ lsof -p 616
+lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
+      Output information may be incomplete.
+COMMAND  PID   USER   FD      TYPE DEVICE SIZE/OFF NODE NAME
+(sd-pam) 616 mayank  cwd   unknown                      /proc/616/cwd (readlink: Permission denied)
+(sd-pam) 616 mayank  rtd   unknown                      /proc/616/root (readlink: Permission denied)
+(sd-pam) 616 mayank  txt   unknown                      /proc/616/exe (readlink: Permission denied)
+(sd-pam) 616 mayank NOFD                                /proc/616/fd (opendir: Permission denied)
+mayank@MayankGarg4343:/home$ lsof -c ssh
+lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
+      Output information may be incomplete.
+mayank@MayankGarg4343:/home$ lsof -C ssh
+lsof: illegal option character: C
+lsof 4.95.0
+ latest revision: https://github.com/lsof-org/lsof
+ latest FAQ: https://github.com/lsof-org/lsof/blob/master/00FAQ
+ latest (non-formatted) man page: https://github.com/lsof-org/lsof/blob/master/Lsof.8
+ usage: [-?abhKlnNoOPRtUvVX] [+|-c c] [+|-d s] [+D D] [+|-E] [+|-e s] [+|-f[gG]]
+ [-F [f]] [-g [s]] [-i [i]] [+|-L [l]] [+m [m]] [+|-M] [-o [o]] [-p s]
+ [+|-r [t]] [-s [p:s]] [-S [t]] [-T [t]] [-u s] [+|-w] [-x [fl]] [--] [names]
+Use the ``-h'' option to get more help information.
+mayank@MayankGarg4343:/home$ lsof -p 616
+lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
+      Output information may be incomplete.
+COMMAND  PID   USER   FD      TYPE DEVICE SIZE/OFF NODE NAME
+(sd-pam) 616 mayank  cwd   unknown                      /proc/616/cwd (readlink: Permission denied)
+(sd-pam) 616 mayank  rtd   unknown                      /proc/616/root (readlink: Permission denied)
+(sd-pam) 616 mayank  txt   unknown                      /proc/616/exe (readlink: Permission denied)
+(sd-pam) 616 mayank NOFD                                /proc/616/fd (opendir: Permission denied)
+mayank@MayankGarg4343:/home$ lsof -i
+mayank@MayankGarg4343:/home$ lsof -D /var/log
+lsof: unsupported option: -D
+lsof 4.95.0
+ latest revision: https://github.com/lsof-org/lsof
+ latest FAQ: https://github.com/lsof-org/lsof/blob/master/00FAQ
+ latest (non-formatted) man page: https://github.com/lsof-org/lsof/blob/master/Lsof.8
+ usage: [-?abhKlnNoOPRtUvVX] [+|-c c] [+|-d s] [+D D] [+|-E] [+|-e s] [+|-f[gG]]
+ [-F [f]] [-g [s]] [-i [i]] [+|-L [l]] [+m [m]] [+|-M] [-o [o]] [-p s]
+ [+|-r [t]] [-s [p:s]] [-S [t]] [-T [t]] [-u s] [+|-w] [-x [fl]] [--] [names]
+Use the ``-h'' option to get more help information.
+mayank@MayankGarg4343:/home$ lsof +D /var/log
+lsof: WARNING: can't stat() tracefs file system /sys/kernel/debug/tracing
+      Output information may be incomplete.
+lsof: WARNING: can't opendir(/var/log/private): Permission denied
+mayank@MayankGarg4343:/home$ cd mayank/
+mayank@MayankGarg4343:~$ ls -l
+total 28
+drwxr-xr-x 2 rahul  user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 mayank john       0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank mayank  4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank mayank  4096 Jul 25 12:01 demo
+-rw-r--r-- 1 mayank mayank    27 Jul 27 12:51 marks.txt
+d--x------ 2 mayank mayank  4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank mayank  4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ chown user200 a.txt
+chown: changing ownership of 'a.txt': Operation not permitted
+mayank@MayankGarg4343:~$ sudo chown user200 a.txt
+[sudo] password for mayank:
+mayank@MayankGarg4343:~$ ls -l
+total 28
+drwxr-xr-x 2 rahul   user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank  mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 user200 john       0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank  mayank  4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank  mayank  4096 Jul 25 12:01 demo
+-rw-r--r-- 1 mayank  mayank    27 Jul 27 12:51 marks.txt
+d--x------ 2 mayank  mayank  4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank  mayank  4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ sudo chown mayank a.txt
+mayank@MayankGarg4343:~$ ls -l
+total 28
+drwxr-xr-x 2 rahul  user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x 2 mayank mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x 1 mayank john       0 Jul 26 10:45 a.txt
+drwxr-xr-x 3 mayank mayank  4096 Jul 23 11:03 cd-practice
+d-wx------ 2 mayank mayank  4096 Jul 25 12:01 demo
+-rw-r--r-- 1 mayank mayank    27 Jul 27 12:51 marks.txt
+d--x------ 2 mayank mayank  4096 Jul 25 11:52 project
+drwxr-xr-x 3 mayank mayank  4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ sudo usermod -l user2 user200
+mayank@MayankGarg4343:~$ ls
+Day7Lab  LogsLab  a.txt  cd-practice  demo  marks.txt  project  testfind
+mayank@MayankGarg4343:~$ cd ..
+mayank@MayankGarg4343:/home$ ls
+a.sh  john  mayank  user100  user200
+mayank@MayankGarg4343:/home$ users
+mayank
+mayank@MayankGarg4343:/home$ id user2
+uid=1002(user2) gid=1002(user200) groups=1002(user200),100(users)
+mayank@MayankGarg4343:/home$ id user200
+id: ‘user200’: no such user
+mayank@MayankGarg4343:/home$ sudo usermod -d /home/user2 -m user2
+mayank@MayankGarg4343:/home$ ls
+a.sh  john  mayank  user100  user2
+mayank@MayankGarg4343:/home$ group user2
+Command 'group' not found, did you mean:
+  command 'grop' from deb grop (2:0.10-1.2)
+  command 'groups' from deb coreutils (9.4-3ubuntu6.2)
+Try: sudo apt install <deb name>
+mayank@MayankGarg4343:/home$ groups user2
+user2 : user200 users
+mayank@MayankGarg4343:/home$ groups mayank
+mayank : mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker backend
+mayank@MayankGarg4343:/home$ passwd -S
+mayank P 2026-07-26 0 99999 7 -1
+mayank@MayankGarg4343:/home$ passwd -S user2
+passwd: You may not view or modify password information for user2.
+mayank@MayankGarg4343:/home$ passwd user2
+passwd: You may not view or modify password information for user2.
+mayank@MayankGarg4343:/home$ sudo passwd -S user2
+user2 P 2025-05-21 0 99999 7 -1
+mayank@MayankGarg4343:/home$ sudo -l
+Matching Defaults entries for mayank on MayankGarg4343:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User mayank may run the following commands on MayankGarg4343:
+    (ALL : ALL) ALL
+mayank@MayankGarg4343:/home$ sudo -l user2
+sudo: user2: command not found
+mayank@MayankGarg4343:/home$ sudo -l -U user2
+User user2 is not allowed to run sudo on MayankGarg4343.
+mayank@MayankGarg4343:/home$ sudo adduser user2 sudo
+info: Adding user `user2' to group `sudo' ...
+mayank@MayankGarg4343:/home$ groups user2
+user2 : user200 sudo users
+mayank@MayankGarg4343:/home$ sudo -l -U user2
+Matching Defaults entries for user2 on MayankGarg4343:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User user2 may run the following commands on MayankGarg4343:
+    (ALL : ALL) ALL
+mayank@MayankGarg4343:/home$ sudo deluser user2 sudo
+info: Removing user `user2' from group `sudo' ...
+mayank@MayankGarg4343:/home$ whoami
+mayank
+mayank@MayankGarg4343:/home$ sudo -l
+[sudo] password for mayank:
+Matching Defaults entries for mayank on MayankGarg4343:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User mayank may run the following commands on MayankGarg4343:
+    (ALL : ALL) ALL
+mayank@MayankGarg4343:/home$ groups
+mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker
+mayank@MayankGarg4343:/home$ sudo adduser -m deveopslab
+Unknown option: m
+adduser [--uid id] [--firstuid id] [--lastuid id]
+        [--gid id] [--firstgid id] [--lastgid id] [--ingroup group]
+        [--add-extra-groups] [--encrypt-home] [--shell shell]
+        [--comment comment] [--home dir] [--no-create-home]
+        [--allow-all-names] [--allow-bad-names]
+        [--disabled-password] [--disabled-login]
+        [--conf file] [--extrausers] [--quiet] [--verbose] [--debug]
+        user
+    Add a normal user
+
+adduser --system
+        [--uid id] [--group] [--ingroup group] [--gid id]
+        [--shell shell] [--comment comment] [--home dir] [--no-create-home]
+        [--conf file] [--extrausers] [--quiet] [--verbose] [--debug]
+        user
+   Add a system user
+
+adduser --group
+        [--gid ID] [--firstgid id] [--lastgid id]
+        [--conf file] [--extrausers] [--quiet] [--verbose] [--debug]
+        group
+addgroup
+        [--gid ID] [--firstgid id] [--lastgid id]
+        [--conf file] [--extrausers] [--quiet] [--verbose] [--debug]
+        group
+   Add a user group
+
+addgroup --system
+        [--gid id]
+        [--conf file] [--extrausers] [--quiet] [--verbose] [--debug]
+        group
+   Add a system group
+
+adduser [--extrausers] USER GROUP
+   Add an existing user to an existing group
+mayank@MayankGarg4343:/home$ sudo adduser deveopslab
+info: Adding user `deveopslab' ...
+info: Selecting UID/GID from range 1000 to 59999 ...
+info: Adding new group `deveopslab' (1008) ...
+info: Adding new user `deveopslab' (1008) with group `deveopslab (1008)' ...
+info: Creating home directory `/home/deveopslab' ...
+info: Copying files from `/etc/skel' ...
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for deveopslab
+Enter the new value, or press ENTER for the default
+        Full Name []: deveopslab
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n] Y
+info: Adding new user `deveopslab' to supplemental / extra groups `users' ...
+info: Adding user `deveopslab' to group `users' ...
+mayank@MayankGarg4343:/home$ id devopslab
+id: ‘devopslab’: no such user
+mayank@MayankGarg4343:/home$ id deveopslab
+uid=1008(deveopslab) gid=1008(deveopslab) groups=1008(deveopslab),100(users)
+mayank@MayankGarg4343:/home$ su - deveopslab
+Password:
+Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 5.15.167.4-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Jul 28 09:33:19 IST 2026
+
+  System load:  0.0                 Processes:             41
+  Usage of /:   0.2% of 1006.85GB   Users logged in:       1
+  Memory usage: 9%                  IPv4 address for eth0: 172.17.105.109
+  Swap usage:   0%
+
+
+This message is shown once a day. To disable it please create the
+/home/deveopslab/.hushlogin file.
+deveopslab@MayankGarg4343:~$ whoami
+deveopslab
+deveopslab@MayankGarg4343:~$ ls
+deveopslab@MayankGarg4343:~$ sudo ls
+[sudo] password for deveopslab:
+deveopslab is not in the sudoers file.
+deveopslab@MayankGarg4343:~$ su -
+Password:
+su: Authentication failure
+deveopslab@MayankGarg4343:~$ sudo su
+[sudo] password for deveopslab:
+Sorry, try again.
+[sudo] password for deveopslab:
+deveopslab is not in the sudoers file.
+deveopslab@MayankGarg4343:~$ exit
+logout
+mayank@MayankGarg4343:/home$ sudo su
+root@MayankGarg4343:/home# cd /
+root@MayankGarg4343:/# sudo visudo
+root@MayankGarg4343:/# su - deveopslab
+deveopslab@MayankGarg4343:~$ sudo whoami
+[sudo] password for deveopslab:
+root
+deveopslab@MayankGarg4343:~$ sudo -l
+Matching Defaults entries for deveopslab on MayankGarg4343:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User deveopslab may run the following commands on MayankGarg4343:
+    (ALL : ALL) ALL
+deveopslab@MayankGarg4343:~$ exit
+logout
+root@MayankGarg4343:/# sudo visudo -f /etc/sudoers.d/devopslab
+root@MayankGarg4343:/# sudo visudo -c
+/etc/sudoers: parsed OK
+/etc/sudoers.d/README: parsed OK
+/etc/sudoers.d/devopslab: bad permissions, should be mode 0440
+root@MayankGarg4343:/# sudo systemctl status
+● MayankGarg4343
+    State: degraded
+    Units: 361 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Sat 2026-07-25 09:58:53 IST; 2 days ago
+  systemd: 255.4-1ubuntu8.16
+  Tainted: cgroupsv1
+   CGroup: /
+           ├─init.scope
+           │ ├─    1 /sbin/init
+           │ ├─    2 /init
+           │ ├─    7 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --log-truncate
+           │ ├─ 6263 /init
+           │ ├─ 6264 /init
+           │ ├─ 6271 -bash
+           │ ├─37872 sudo su
+           │ └─37873 sudo su
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─240 /usr/sbin/NetworkManager --no-daemon
+           │ ├─console-getty.service
+           │ │ └─380 /sbin/agetty -o "-p -- \\u" --noclear --keep-baud - 115200,38400,9600 vt220
+           │ ├─cron.service
+           │ │ └─217 /usr/sbin/cron -f -P
+           │ ├─dbus.service
+           │ │ └─218 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+           │ ├─polkit.service
+           │ │ └─225 /usr/lib/polkit-1/polkitd --no-debug
+ ESCOC
+
+
+
+
+
+
+
+
+
+
+
+
+--server-fd 7 --pipe-fd 9 --log-truncate
+
+
+
+
+
+
+
+
+
+-keep-baud - 115200,38400,9600 vt220
+
+
+
+: --nofork --nopidfile --systemd-activation --syslog-only
+
+
+ ESCOC
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ ESCOD
+
+
+
+
+
+
+
+
+
+
+
+
+--server-fd 7 --pipe-fd 9 --log-truncate
+
+
+
+
+
+
+
+
+
+-keep-baud - 115200,38400,9600 vt220
+
+
+
+: --nofork --nopidfile --systemd-activation --syslog-only
+
+
+ ESCOD
+● MayankGarg4343
+    State: degraded
+    Units: 361 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Sat 2026-07-25 09:58:53 IST; 2 days ago
+  systemd: 255.4-1ubuntu8.16
+  Tainted: cgroupsv1
+   CGroup: /
+           ├─init.scope
+           │ ├─    1 /sbin/init
+           │ ├─    2 /init
+           │ ├─    7 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --log-truncate
+           │ ├─ 6263 /init
+           │ ├─ 6264 /init
+           │ ├─ 6271 -bash
+           │ ├─37872 sudo su
+           │ └─37873 sudo su
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─240 /usr/sbin/NetworkManager --no-daemon
+           │ ├─console-getty.service
+           │ │ └─380 /sbin/agetty -o "-p -- \\u" --noclear --keep-baud - 115200,38400,9600 vt220
+           │ ├─cron.service
+           │ │ └─217 /usr/sbin/cron -f -P
+           │ ├─dbus.service
+           │ │ └─218 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+           │ ├─polkit.service
+           │ │ └─225 /usr/lib/polkit-1/polkitd --no-debug
+           │ ├─rsyslog.service
+           │ │ └─2342 /usr/sbin/rsyslogd -n -iNONE
+           │ ├─snap-core22-2216.mount
+           │ │ └─109 snapfuse /var/lib/snapd/snaps/core22_2216.snap /snap/core22/2216 -o ro,nodev,allow_other,suid
+           │ ├─snap-core22-2411.mount
+           │ │ └─107 snapfuse /var/lib/snapd/snaps/core22_2411.snap /snap/core22/2411 -o ro,nodev,allow_other,suid
+           │ ├─snap-network\x2dmanager-1020.mount
+           │ │ └─106 snapfuse /var/lib/snapd/snaps/network-manager_1020.snap /snap/network-manager/1020 -o ro,nodev,all>
+           │ ├─snap-network\x2dmanager-981.mount
+           │ │ └─118 snapfuse /var/lib/snapd/snaps/network-manager_981.snap /snap/network-manager/981 -o ro,nodev,allow>
+           │ ├─snap-snapd-26865.mount
+           │ │ └─125 snapfuse /var/lib/snapd/snaps/snapd_26865.snap /snap/snapd/26865 -o ro,nodev,allow_other,suid
+           │ ├─snap-snapd-27591.mount
+           │ │ └─130 snapfuse /var/lib/snapd/snaps/snapd_27591.snap /snap/snapd/27591 -o ro,nodev,allow_other,suid
+           │ ├─snapd.service
+           │ │ └─2731 /snap/snapd/current/usr/lib/snapd/snapd
+           │ ├─system-getty.slice
+           │ │ └─getty@tty1.service
+           │ │   └─383 /sbin/agetty -o "-p -- \\u" --noclear - linux
+           │ ├─systemd-journald.service
+           │ │ └─52 /usr/lib/systemd/systemd-journald
+           │ ├─systemd-logind.service
+           │ │ └─232 /usr/lib/systemd/systemd-logind
+           │ ├─systemd-resolved.service
+           │ │ └─165 /usr/lib/systemd/systemd-resolved
+           │ ├─systemd-timesyncd.service
+           │ │ └─167 /usr/lib/systemd/systemd-timesyncd
+           │ ├─systemd-udevd.service
+           │ │ └─udev
+           │ │   └─93 /usr/lib/systemd/systemd-udevd
+           │ ├─unattended-upgrades.service
+           │ │ └─373 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+           │ ├─wpa_supplicant.service
+           │ │ └─241 /usr/sbin/wpa_supplicant -u -s -O "DIR=/run/wpa_supplicant GROUP=netdev"
+           │ └─wsl-pro.service
+           │   └─234 /usr/libexec/wsl-pro-service -vv
+           └─user.slice
+             ├─user-0.slice
+             │ ├─session-c6.scope
+             │ │ ├─37874 su
+             │ │ ├─37889 bash
+             │ │ ├─37947 sudo systemctl status
+             │ │ ├─37948 sudo systemctl status
+             │ │ ├─37949 systemctl status
+             │ │ └─37950 pager
+             │ └─user@0.service
+             │   └─init.scope
+             │     ├─37877 /usr/lib/systemd/systemd --user
+             │     └─37878 "(sd-pam)"
+             └─user-1000.slice
+               ├─session-1.scope
+               │ ├─501 /bin/login -f
+               │ └─682 -bash
+               └─user@1000.service
+                 └─init.scope
+                   ├─615 /usr/lib/systemd/systemd --user
+                   └─616 "(sd-pam)"
+root@MayankGarg4343:/# su - deveopslab
+deveopslab@MayankGarg4343:~$ sudo systemctl status
+● MayankGarg4343
+    State: degraded
+    Units: 361 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Sat 2026-07-25 09:58:53 IST; 2 days ago
+  systemd: 255.4-1ubuntu8.16
+  Tainted: cgroupsv1
+   CGroup: /
+           ├─init.scope
+           │ ├─    1 /sbin/init
+           │ ├─    2 /init
+           │ ├─    7 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --log-truncate
+           │ ├─ 6263 /init
+           │ ├─ 6264 /init
+           │ ├─ 6271 -bash
+           │ ├─37872 sudo su
+           │ └─37873 sudo su
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─240 /usr/sbin/NetworkManager --no-daemon
+           │ ├─console-getty.service
+           │ │ └─380 /sbin/agetty -o "-p -- \\u" --noclear --keep-baud - 115200,38400,9600 vt220
+           │ ├─cron.service
+           │ │ └─217 /usr/sbin/cron -f -P
+           │ ├─dbus.service
+           │ │ └─218 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+           │ ├─polkit.service
+           │ │ └─225 /usr/lib/polkit-1/polkitd --no-debug
+           │ ├─rsyslog.service
+           │ │ └─2342 /usr/sbin/rsyslogd -n -iNONE
+           │ ├─snap-core22-2216.mount
+           │ │ └─109 snapfuse /var/lib/snapd/snaps/core22_2216.snap /snap/core22/2216 -o ro,nodev,allow_other,suid
+           │ ├─snap-core22-2411.mount
+           │ │ └─107 snapfuse /var/lib/snapd/snaps/core22_2411.snap /snap/core22/2411 -o ro,nodev,allow_other,suid
+           │ ├─snap-network\x2dmanager-1020.mount
+           │ │ └─106 snapfuse /var/lib/snapd/snaps/network-manager_1020.snap /snap/network-manager/1020 -o ro,nodev,all>
+           │ ├─snap-network\x2dmanager-981.mount
+           │ │ └─118 snapfuse /var/lib/snapd/snaps/network-manager_981.snap /snap/network-manager/981 -o ro,nodev,allow>
+           │ ├─snap-snapd-26865.mount
+           │ │ └─125 snapfuse /var/lib/snapd/snaps/snapd_26865.snap /snap/snapd/26865 -o ro,nodev,allow_other,suid
+           │ ├─snap-snapd-27591.mount
+           │ │ └─130 snapfuse /var/lib/snapd/snaps/snapd_27591.snap /snap/snapd/27591 -o ro,nodev,allow_other,suid
+           │ ├─snapd.service
+           │ │ └─2731 /snap/snapd/current/usr/lib/snapd/snapd
+           │ ├─system-getty.slice
+           │ │ └─getty@tty1.service
+           │ │   └─383 /sbin/agetty -o "-p -- \\u" --noclear - linux
+           │ ├─systemd-journald.service
+           │ │ └─52 /usr/lib/systemd/systemd-journald
+           │ ├─systemd-logind.service
+           │ │ └─232 /usr/lib/systemd/systemd-logind
+           │ ├─systemd-resolved.service
+           │ │ └─165 /usr/lib/systemd/systemd-resolved
+           │ ├─systemd-timesyncd.service
+           │ │ └─167 /usr/lib/systemd/systemd-timesyncd
+           │ ├─systemd-udevd.service
+           │ │ └─udev
+           │ │   └─93 /usr/lib/systemd/systemd-udevd
+           │ ├─unattended-upgrades.service
+           │ │ └─373 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+           │ ├─wpa_supplicant.service
+           │ │ └─241 /usr/sbin/wpa_supplicant -u -s -O "DIR=/run/wpa_supplicant GROUP=netdev"
+           │ └─wsl-pro.service
+           │   └─234 /usr/libexec/wsl-pro-service -vv
+           └─user.slice
+             ├─user-0.slice
+             │ ├─session-c6.scope
+             │ │ ├─37874 su
+             │ │ ├─37889 bash
+             │ │ ├─37953 su - deveopslab
+             │ │ ├─37954 -bash
+             │ │ ├─37968 sudo systemctl status
+             │ │ ├─37969 sudo systemctl status
+             │ │ ├─37970 systemctl status
+             │ │ └─37971 pager
+             │ └─user@0.service
+             │   └─init.scope
+             │     ├─37877 /usr/lib/systemd/systemd --user
+             │     └─37878 "(sd-pam)"
+             └─user-1000.slice
+               ├─session-1.scope
+               │ ├─501 /bin/login -f
+               │ └─682 -bash
+               └─user@1000.service
+                 └─init.scope
+                   ├─615 /usr/lib/systemd/systemd --user
+                   └─616 "(sd-pam)"
+deveopslab@MayankGarg4343:~$ sudo apt update
+Hit:1 http://archive.ubuntu.com/ubuntu noble InRelease
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:4 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:5 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [898 kB]
+26% [Waiting for headers] [Waiting for headers]                                                      17.3 kB/s 8min 42s^C
+deveopslab@MayankGarg4343:~$ sudo -l
+Matching Defaults entries for deveopslab on MayankGarg4343:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User deveopslab may run the following commands on MayankGarg4343:
+    (ALL) /usr/bin/systemctl
+    (ALL : ALL) ALL
+deveopslab@MayankGarg4343:~$ sudo grep -R "deveopslab" /etc/sudoers /etc/sudoers.d
+/etc/sudoers:deveopslab ALL=(ALL:ALL) ALL
+/etc/sudoers.d/devopslab:deveopslab ALL=(ALL) /usr/bin/systemctl
+deveopslab@MayankGarg4343:~$ exit
+logout
+root@MayankGarg4343:/# sudo visudo
+root@MayankGarg4343:/# su - deveopslab
+deveopslab@MayankGarg4343:~$ sudo apt update
+Sorry, user deveopslab is not allowed to execute '/usr/bin/apt update' as root on MayankGarg4343..
+deveopslab@MayankGarg4343:~$ sudo systemctl status
+● MayankGarg4343
+    State: degraded
+    Units: 361 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Sat 2026-07-25 09:58:53 IST; 2 days ago
+  systemd: 255.4-1ubuntu8.16
+  Tainted: cgroupsv1
+   CGroup: /
+           ├─init.scope
+           │ ├─    1 /sbin/init
+           │ ├─    2 /init
+           │ ├─    7 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --log-truncate
+           │ ├─ 6263 /init
+           │ ├─ 6264 /init
+           │ ├─ 6271 -bash
+           │ ├─37872 sudo su
+           │ └─37873 sudo su
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─240 /usr/sbin/NetworkManager --no-daemon
+           │ ├─console-getty.service
+           │ │ └─380 /sbin/agetty -o "-p -- \\u" --noclear --keep-baud - 115200,38400,9600 vt220
+           │ ├─cron.service
+           │ │ └─217 /usr/sbin/cron -f -P
+           │ ├─dbus.service
+           │ │ └─218 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+           │ ├─polkit.service
+           │ │ └─225 /usr/lib/polkit-1/polkitd --no-debug
+           │ ├─rsyslog.service
+           │ │ └─2342 /usr/sbin/rsyslogd -n -iNONE
+           │ ├─snap-core22-2216.mount
+           │ │ └─109 snapfuse /var/lib/snapd/snaps/core22_2216.snap /snap/core22/2216 -o ro,nodev,allow_other,suid
+           │ ├─snap-core22-2411.mount
+           │ │ └─107 snapfuse /var/lib/snapd/snaps/core22_2411.snap /snap/core22/2411 -o ro,nodev,allow_other,suid
+           │ ├─snap-network\x2dmanager-1020.mount
+           │ │ └─106 snapfuse /var/lib/snapd/snaps/network-manager_1020.snap /snap/network-manager/1020 -o ro,nodev,all>
+           │ ├─snap-network\x2dmanager-981.mount
+           │ │ └─118 snapfuse /var/lib/snapd/snaps/network-manager_981.snap /snap/network-manager/981 -o ro,nodev,allow>
+           │ ├─snap-snapd-26865.mount
+           │ │ └─125 snapfuse /var/lib/snapd/snaps/snapd_26865.snap /snap/snapd/26865 -o ro,nodev,allow_other,suid
+           │ ├─snap-snapd-27591.mount
+           │ │ └─130 snapfuse /var/lib/snapd/snaps/snapd_27591.snap /snap/snapd/27591 -o ro,nodev,allow_other,suid
+           │ ├─snapd.service
+           │ │ └─2731 /snap/snapd/current/usr/lib/snapd/snapd
+           │ ├─system-getty.slice
+           │ │ └─getty@tty1.service
+           │ │   └─383 /sbin/agetty -o "-p -- \\u" --noclear - linux
+           │ ├─systemd-journald.service
+           │ │ └─52 /usr/lib/systemd/systemd-journald
+           │ ├─systemd-logind.service
+           │ │ └─232 /usr/lib/systemd/systemd-logind
+           │ ├─systemd-resolved.service
+           │ │ └─165 /usr/lib/systemd/systemd-resolved
+           │ ├─systemd-timesyncd.service
+           │ │ └─167 /usr/lib/systemd/systemd-timesyncd
+           │ ├─systemd-udevd.service
+           │ │ └─udev
+           │ │   └─93 /usr/lib/systemd/systemd-udevd
+           │ ├─unattended-upgrades.service
+           │ │ └─373 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+           │ ├─wpa_supplicant.service
+           │ │ └─241 /usr/sbin/wpa_supplicant -u -s -O "DIR=/run/wpa_supplicant GROUP=netdev"
+           │ └─wsl-pro.service
+           │   └─234 /usr/libexec/wsl-pro-service -vv
+           └─user.slice
+             ├─user-0.slice
+             │ ├─session-c6.scope
+             │ │ ├─37874 su
+             │ │ ├─37889 bash
+             │ │ ├─38226 su - deveopslab
+             │ │ ├─38227 -bash
+             │ │ ├─38244 sudo systemctl status
+             │ │ ├─38245 sudo systemctl status
+             │ │ ├─38246 systemctl status
+             │ │ └─38247 pager
+             │ └─user@0.service
+             │   └─init.scope
+             │     ├─37877 /usr/lib/systemd/systemd --user
+             │     └─37878 "(sd-pam)"
+             └─user-1000.slice
+               ├─session-1.scope
+               │ ├─501 /bin/login -f
+               │ └─682 -bash
+               └─user@1000.service
+                 └─init.scope
+                   ├─615 /usr/lib/systemd/systemd --user
+                   └─616 "(sd-pam)"
+deveopslab@MayankGarg4343:~$ sudo visudo /etc/sudoers.d/deveopslab
+Sorry, user deveopslab is not allowed to execute '/usr/sbin/visudo /etc/sudoers.d/deveopslab' as root on MayankGarg4343..
+deveopslab@MayankGarg4343:~$ exit
+logout
+root@MayankGarg4343:/# visudo /etc/sudoers.d/deveopslab
+root@MayankGarg4343:/# su - deveopslab
+deveopslab@MayankGarg4343:~$ sudo systemctl status
+● MayankGarg4343
+    State: degraded
+    Units: 361 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Sat 2026-07-25 09:58:53 IST; 2 days ago
+  systemd: 255.4-1ubuntu8.16
+  Tainted: cgroupsv1
+   CGroup: /
+           ├─init.scope
+           │ ├─    1 /sbin/init
+           │ ├─    2 /init
+           │ ├─    7 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --log-truncate
+           │ ├─ 6263 /init
+           │ ├─ 6264 /init
+           │ ├─ 6271 -bash
+           │ ├─37872 sudo su
+           │ └─37873 sudo su
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─240 /usr/sbin/NetworkManager --no-daemon
+           │ ├─console-getty.service
+           │ │ └─380 /sbin/agetty -o "-p -- \\u" --noclear --keep-baud - 115200,38400,9600 vt220
+           │ ├─cron.service
+           │ │ └─217 /usr/sbin/cron -f -P
+           │ ├─dbus.service
+           │ │ └─218 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+           │ ├─polkit.service
+           │ │ └─225 /usr/lib/polkit-1/polkitd --no-debug
+deveopslab@MayankGarg4343:~$ sudo journalctl
+Sorry, user deveopslab is not allowed to execute '/usr/bin/journalctl' as root on MayankGarg4343..
+deveopslab@MayankGarg4343:~$ sudo -l
+Matching Defaults entries for deveopslab on MayankGarg4343:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin,
+    use_pty
+
+User deveopslab may run the following commands on MayankGarg4343:
+    (ALL) /usr/bin/systemctl
+deveopslab@MayankGarg4343:~$ sudo visudo -f /etc/sudoers.d/devopslab
+Sorry, user deveopslab is not allowed to execute '/usr/sbin/visudo -f /etc/sudoers.d/devopslab' as root on MayankGarg4343..
+deveopslab@MayankGarg4343:~$ exit
+logout
+root@MayankGarg4343:/# sudo visudo -f /etc/sudoers.d/deveopslab
+visudo: /etc/sudoers.d/deveopslab.tmp unchanged
+root@MayankGarg4343:/# visudo -f /etc/sudoers.d/deveopslab
+root@MayankGarg4343:/# visudo -c
+/etc/sudoers: parsed OK
+/etc/sudoers.d/README: parsed OK
+/etc/sudoers.d/deveopslab: bad permissions, should be mode 0440
+/etc/sudoers.d/devopslab: bad permissions, should be mode 0440
+root@MayankGarg4343:/# su - deveopslab
+deveopslab@MayankGarg4343:~$ sudo systemctl status
+● MayankGarg4343
+    State: degraded
+    Units: 361 loaded (incl. loaded aliases)
+     Jobs: 0 queued
+   Failed: 1 units
+    Since: Sat 2026-07-25 09:58:53 IST; 2 days ago
+  systemd: 255.4-1ubuntu8.16
+  Tainted: cgroupsv1
+   CGroup: /
+           ├─init.scope
+           │ ├─    1 /sbin/init
+           │ ├─    2 /init
+           │ ├─    7 plan9 --control-socket 6 --log-level 4 --server-fd 7 --pipe-fd 9 --log-truncate
+           │ ├─ 6263 /init
+           │ ├─ 6264 /init
+           │ ├─ 6271 -bash
+           │ ├─37872 sudo su
+           │ └─37873 sudo su
+           ├─system.slice
+           │ ├─NetworkManager.service
+           │ │ └─240 /usr/sbin/NetworkManager --no-daemon
+           │ ├─console-getty.service
+           │ │ └─380 /sbin/agetty -o "-p -- \\u" --noclear --keep-baud - 115200,38400,9600 vt220
+           │ ├─cron.service
+           │ │ └─217 /usr/sbin/cron -f -P
+           │ ├─dbus.service
+           │ │ └─218 @dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+           │ ├─polkit.service
+           │ │ └─225 /usr/lib/polkit-1/polkitd --no-debug
+           │ ├─rsyslog.service
+           │ │ └─2342 /usr/sbin/rsyslogd -n -iNONE
+           │ ├─snap-core22-2216.mount
+           │ │ └─109 snapfuse /var/lib/snapd/snaps/core22_2216.snap /snap/core22/2216 -o ro,nodev,allow_other,suid
+           │ ├─snap-core22-2411.mount
+           │ │ └─107 snapfuse /var/lib/snapd/snaps/core22_2411.snap /snap/core22/2411 -o ro,nodev,allow_other,suid
+           │ ├─snap-network\x2dmanager-1020.mount
+           │ │ └─106 snapfuse /var/lib/snapd/snaps/network-manager_1020.snap /snap/network-manager/1020 -o ro,nodev,all>
+           │ ├─snap-network\x2dmanager-981.mount
+           │ │ └─118 snapfuse /var/lib/snapd/snaps/network-manager_981.snap /snap/network-manager/981 -o ro,nodev,allow>
+           │ ├─snap-snapd-26865.mount
+           │ │ └─125 snapfuse /var/lib/snapd/snaps/snapd_26865.snap /snap/snapd/26865 -o ro,nodev,allow_other,suid
+           │ ├─snap-snapd-27591.mount
+           │ │ └─130 snapfuse /var/lib/snapd/snaps/snapd_27591.snap /snap/snapd/27591 -o ro,nodev,allow_other,suid
+           │ ├─snapd.service
+           │ │ └─2731 /snap/snapd/current/usr/lib/snapd/snapd
+           │ ├─system-getty.slice
+           │ │ └─getty@tty1.service
+           │ │   └─383 /sbin/agetty -o "-p -- \\u" --noclear - linux
+           │ ├─systemd-journald.service
+           │ │ └─52 /usr/lib/systemd/systemd-journald
+           │ ├─systemd-logind.service
+           │ │ └─232 /usr/lib/systemd/systemd-logind
+           │ ├─systemd-resolved.service
+           │ │ └─165 /usr/lib/systemd/systemd-resolved
+           │ ├─systemd-timesyncd.service
+           │ │ └─167 /usr/lib/systemd/systemd-timesyncd
+           │ ├─systemd-udevd.service
+           │ │ └─udev
+           │ │   └─93 /usr/lib/systemd/systemd-udevd
+           │ ├─unattended-upgrades.service
+           │ │ └─373 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+           │ ├─wpa_supplicant.service
+           │ │ └─241 /usr/sbin/wpa_supplicant -u -s -O "DIR=/run/wpa_supplicant GROUP=netdev"
+           │ └─wsl-pro.service
+           │   └─234 /usr/libexec/wsl-pro-service -vv
+           └─user.slice
+             ├─user-0.slice
+             │ ├─session-c6.scope
+             │ │ ├─37874 su
+             │ │ ├─37889 bash
+             │ │ ├─38302 su - deveopslab
+             │ │ ├─38303 -bash
+             │ │ ├─38317 sudo systemctl status
+             │ │ ├─38318 sudo systemctl status
+             │ │ ├─38319 systemctl status
+             │ │ └─38320 pager
+             │ └─user@0.service
+             │   └─init.scope
+             │     ├─37877 /usr/lib/systemd/systemd --user
+             │     └─37878 "(sd-pam)"
+             └─user-1000.slice
+               ├─session-1.scope
+               │ ├─501 /bin/login -f
+               │ └─682 -bash
+               └─user@1000.service
+                 └─init.scope
+                   ├─615 /usr/lib/systemd/systemd --user
+                   └─616 "(sd-pam)"
+deveopslab@MayankGarg4343:~$ sudo journalctl
+Jul 22 11:28:32 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:28:32 MayankGarg4343 systemd-journald[3811]: Time jumped backwards, rotating.
+Jul 22 11:29:03 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:29:30 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:29:30 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:29:30 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:29:30 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:29:30 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:29:34 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:30:05 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:30:28 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:30:28 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:30:28 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:30:28 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:30:28 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:30:37 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:31:08 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:31:26 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:31:26 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:31:26 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:31:26 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:31:26 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:31:39 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:32:10 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:32:24 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:32:24 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:32:24 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:32:24 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:32:24 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:32:42 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:33:13 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:33:22 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:33:22 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:33:22 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:33:22 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:33:22 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:33:44 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:34:16 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:34:19 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:34:19 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:34:19 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:34:19 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:34:19 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:34:47 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:35:18 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:35:18 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:35:18 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:35:18 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:35:18 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:35:18 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:35:18 MayankGarg4343 systemd-journald[3811]: Time jumped backwards, rotating.
+Jul 22 11:35:49 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:36:16 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:36:16 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:36:16 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:36:16 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:36:16 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:36:20 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:36:52 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:37:14 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:37:14 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:37:14 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:37:14 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:37:14 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:37:23 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:37:54 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:38:12 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:38:12 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:38:12 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:38:12 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:38:12 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:38:25 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:38:57 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:39:10 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:39:10 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:39:10 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:39:10 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:39:10 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:39:28 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:40:00 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:40:08 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:40:08 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:40:08 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:40:08 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:40:08 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:40:31 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:41:02 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:41:06 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:41:06 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:41:06 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:41:06 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:41:06 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:41:33 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:42:05 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:42:05 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:42:05 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:42:05 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:42:05 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:42:05 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:42:05 MayankGarg4343 systemd-journald[3811]: Time jumped backwards, rotating.
+Jul 22 11:42:36 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:43:03 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:43:03 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:43:03 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:43:03 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:43:03 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:43:07 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:43:39 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:44:01 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:44:01 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:44:01 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:44:01 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:44:01 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:44:10 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:44:41 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:44:59 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:44:59 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:44:59 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:44:59 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:44:59 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:45:12 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:45:16 MayankGarg4343 snapd[239]: storehelpers.go:914: cannot refresh: snap has no updates available: "core22">
+Jul 22 11:45:44 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:45:57 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:45:57 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:45:57 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:45:57 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:45:57 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:46:15 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:46:46 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:46:55 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:46:55 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:46:55 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:46:55 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:46:55 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:47:17 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:47:48 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:47:53 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:47:53 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:47:53 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:47:53 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:47:53 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:48:20 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:48:51 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:48:51 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:48:51 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:48:51 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:48:51 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:48:51 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:49:22 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:49:50 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:49:50 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:49:50 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:49:50 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:49:50 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:49:53 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:50:24 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:50:48 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:50:48 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:50:48 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:50:48 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:50:48 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:50:56 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:51:27 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:51:46 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:51:46 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:51:46 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:51:46 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:51:46 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:51:59 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:52:30 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:52:44 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:52:44 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:52:44 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:52:44 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:52:44 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:53:01 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:53:33 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:53:42 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:53:42 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:53:42 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:53:42 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:53:42 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:54:04 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:54:35 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:54:40 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:54:40 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:54:40 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:54:40 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:54:40 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:55:07 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:55:39 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:55:39 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:55:39 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:55:39 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:55:39 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:55:38 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:55:38 MayankGarg4343 systemd-journald[3811]: Time jumped backwards, rotating.
+Jul 22 11:56:10 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:56:37 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:56:37 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:56:37 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:56:37 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:56:37 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:56:41 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:57:13 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:57:35 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:57:35 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:57:35 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:57:35 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:57:35 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:57:44 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:57:57 MayankGarg4343 su[13664]: pam_unix(su:auth): authentication failure; logname= uid=1000 euid=0 tty=/dev/>
+Jul 22 11:57:58 MayankGarg4343 su[13664]: FAILED SU (to root) mayank on pts/0
+Jul 22 11:58:05 MayankGarg4343 su[13667]: (to root) mayank on pts/0
+Jul 22 11:58:05 MayankGarg4343 su[13667]: pam_unix(su:session): session opened for user root(uid=0) by (uid=1000)
+Jul 22 11:58:05 MayankGarg4343 systemd[1]: Created slice user-0.slice - User Slice of UID 0.
+Jul 22 11:58:05 MayankGarg4343 systemd[1]: Starting user-runtime-dir@0.service - User Runtime Directory /run/user/0...
+Jul 22 11:58:05 MayankGarg4343 systemd-logind[241]: New session c2 of user root.
+Jul 22 11:58:05 MayankGarg4343 systemd[1]: Finished user-runtime-dir@0.service - User Runtime Directory /run/user/0.
+Jul 22 11:58:05 MayankGarg4343 systemd[1]: Starting user@0.service - User Manager for UID 0...
+Jul 22 11:58:05 MayankGarg4343 (systemd)[13670]: pam_unix(systemd-user:session): session opened for user root(uid=0) by>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Queued start job for default target default.target.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: init.scope: Failed to delete controller cgroups /user.slice/user-0.slice>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: cgroup compatibility translation between legacy and unified hierarchy se>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Created slice app.slice - User Application Slice.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Started launchpadlib-cache-clean.timer - Clean up old files in the Launc>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Reached target paths.target - Paths.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Reached target timers.target - Timers.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Starting dbus.socket - D-Bus User Message Bus Socket...
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on dirmngr.socket - GnuPG network certificate management daemo>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on gpg-agent-browser.socket - GnuPG cryptographic agent and pa>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on gpg-agent-extra.socket - GnuPG cryptographic agent and pass>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Starting gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent emu>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on gpg-agent.socket - GnuPG cryptographic agent and passphrase>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on keyboxd.socket - GnuPG public key management service.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on pk-debconf-helper.socket - debconf communication socket.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on snapd.session-agent.socket - REST API socket for snapd user>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on dbus.socket - D-Bus User Message Bus Socket.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Listening on gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent>
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Reached target sockets.target - Sockets.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Reached target basic.target - Basic System.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Reached target default.target - Main User Target.
+Jul 22 11:58:05 MayankGarg4343 systemd[1]: Started user@0.service - User Manager for UID 0.
+Jul 22 11:58:05 MayankGarg4343 systemd[13670]: Startup finished in 127ms.
+Jul 22 11:58:05 MayankGarg4343 systemd[1]: Started session-c2.scope - Session c2 of User root.
+Jul 22 11:58:11 MayankGarg4343 su[13667]: pam_unix(su:session): session closed for user root
+Jul 22 11:58:11 MayankGarg4343 systemd[1]: session-c2.scope: Deactivated successfully.
+Jul 22 11:58:11 MayankGarg4343 systemd-logind[241]: Session c2 logged out. Waiting for processes to exit.
+Jul 22 11:58:11 MayankGarg4343 systemd-logind[241]: Removed session c2.
+Jul 22 11:58:16 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:58:20 MayankGarg4343 systemd[1]: Stopping user@0.service - User Manager for UID 0...
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Activating special unit exit.target...
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Stopped target default.target - Main User Target.
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Stopped target basic.target - Basic System.
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Stopped target paths.target - Paths.
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Stopped target sockets.target - Sockets.
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Stopped target timers.target - Timers.
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Stopped launchpadlib-cache-clean.timer - Clean up old files in the Launc>
+Jul 22 11:58:20 MayankGarg4343 systemd[13670]: Closed dbus.socket - D-Bus User Message Bus Socket.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed dirmngr.socket - GnuPG network certificate management daemon.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed gpg-agent-browser.socket - GnuPG cryptographic agent and passphra>
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed gpg-agent-extra.socket - GnuPG cryptographic agent and passphrase>
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Stopping gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent emu>
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed gpg-agent.socket - GnuPG cryptographic agent and passphrase cache.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed keyboxd.socket - GnuPG public key management service.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed pk-debconf-helper.socket - debconf communication socket.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed snapd.session-agent.socket - REST API socket for snapd user sessi>
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Closed gpg-agent-ssh.socket - GnuPG cryptographic agent (ssh-agent emula>
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Removed slice app.slice - User Application Slice.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Reached target shutdown.target - Shutdown.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Finished systemd-exit.service - Exit the Session.
+Jul 22 11:58:21 MayankGarg4343 systemd[13670]: Reached target exit.target - Exit the Session.
+Jul 22 11:58:21 MayankGarg4343 (sd-pam)[13671]: pam_unix(systemd-user:session): session closed for user root
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: user@0.service: Deactivated successfully.
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: Stopped user@0.service - User Manager for UID 0.
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: Stopping user-runtime-dir@0.service - User Runtime Directory /run/user/0...
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: mnt-wslg-run-user-0.mount: Deactivated successfully.
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: run-user-0.mount: Deactivated successfully.
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: user-runtime-dir@0.service: Deactivated successfully.
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: Stopped user-runtime-dir@0.service - User Runtime Directory /run/user/0.
+Jul 22 11:58:21 MayankGarg4343 systemd[1]: Removed slice user-0.slice - User Slice of UID 0.
+Jul 22 11:58:32 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:58:32 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:58:32 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:58:32 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:58:32 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:58:48 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:59:19 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 11:59:30 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 11:59:30 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 11:59:30 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 11:59:30 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 11:59:30 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 11:59:51 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:00:22 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:00:28 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:00:28 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:00:28 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:00:28 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:00:28 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:00:54 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:01:26 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:01:26 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:01:26 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:01:26 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:01:26 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:01:26 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:01:58 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:02:25 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:02:25 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:02:25 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:02:25 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:02:25 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:02:29 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:03:01 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:03:23 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:03:23 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:03:23 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:03:23 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:03:23 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:03:32 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:04:04 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:04:21 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:04:21 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:04:21 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:04:21 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:04:21 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:04:35 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:05:06 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:05:19 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:05:19 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:05:19 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:05:19 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:05:19 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:05:52 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:06:17 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:06:17 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:06:17 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:06:17 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:06:17 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:06:23 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:06:55 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:07:16 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:07:16 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:07:16 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:07:16 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:07:16 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:07:26 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:07:57 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:08:14 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:08:14 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:08:14 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:08:14 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:08:14 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:08:29 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:09:00 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:09:12 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:09:12 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:09:12 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:09:12 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:09:12 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:09:32 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:10:03 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:10:10 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:10:10 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:10:10 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:10:10 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:10:10 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:10:34 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:11:05 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:11:08 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:11:08 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:11:08 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:11:08 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:11:08 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:11:36 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:12:07 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:12:07 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:12:07 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:12:07 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:12:07 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:12:08 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:12:39 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:12:39 MayankGarg4343 systemd[1]: Starting motd-news.service - Message of the Day...
+Jul 22 12:12:42 MayankGarg4343 50-motd-news[13754]:  * Strictly confined Kubernetes makes edge and IoT secure. Learn ho>
+Jul 22 12:12:42 MayankGarg4343 50-motd-news[13754]:    just raised the bar for easy, resilient and secure K8s cluster d>
+Jul 22 12:12:42 MayankGarg4343 50-motd-news[13754]:    https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+Jul 22 12:12:42 MayankGarg4343 systemd[1]: motd-news.service: Deactivated successfully.
+Jul 22 12:12:42 MayankGarg4343 systemd[1]: Finished motd-news.service - Message of the Day.
+Jul 22 12:13:05 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:13:05 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:13:05 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:13:05 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:13:05 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:13:10 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:13:42 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:14:03 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:14:03 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:14:03 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:14:03 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:14:03 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:14:13 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:14:44 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:15:01 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:15:01 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:15:01 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:15:01 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:15:01 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:15:16 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:15:47 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:15:59 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:15:59 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:15:59 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:15:59 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:15:59 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:16:18 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:16:50 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:16:57 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:16:57 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:16:57 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:16:57 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:16:57 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:17:01 MayankGarg4343 CRON[13772]: pam_unix(cron:session): session opened for user root(uid=0) by root(uid=0)
+Jul 22 12:17:01 MayankGarg4343 CRON[13773]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)
+Jul 22 12:17:01 MayankGarg4343 CRON[13772]: pam_unix(cron:session): session closed for user root
+Jul 22 12:17:21 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:17:52 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+Jul 22 12:17:55 MayankGarg4343 wsl-pro-service[243]: INFO Daemon: connecting to Windows Agent
+Jul 22 12:17:55 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Connecting"
+Jul 22 12:17:55 MayankGarg4343 wsl-pro-service[243]: WARNING Daemon: could not connect to Windows Agent: could not get >
+Jul 22 12:17:55 MayankGarg4343 wsl-pro-service[243]: INFO Reconnecting to Windows host in 60 seconds
+Jul 22 12:17:55 MayankGarg4343 wsl-pro-service[243]: DEBUG Updated systemd status to "Not connected: waiting to retry"
+Jul 22 12:18:23 MayankGarg4343 systemd-resolved[3983]: Clock change detected. Flushing caches.
+
+deveopslab@MayankGarg4343:~$ sudo apt update
+Sorry, user deveopslab is not allowed to execute '/usr/bin/apt update' as root on MayankGarg4343..
+deveopslab@MayankGarg4343:~$ exit
+logout
+root@MayankGarg4343:/# exit
+exit
+mayank@MayankGarg4343:/home$ ls
+a.sh  deveopslab  john  mayank  user100  user2
+mayank@MayankGarg4343:/home$ cd mayank/
+mayank@MayankGarg4343:~$ ls
+Day7Lab  LogsLab  a.txt  cd-practice  demo  marks.txt  project  testfind
+mayank@MayankGarg4343:~$ getfacl marks.txt
+Command 'getfacl' not found, but can be installed with:
+sudo apt install acl
+mayank@MayankGarg4343:~$ sudo apt install apt
+[sudo] password for mayank:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  apt-utils libapt-pkg6.0t64
+Suggested packages:
+  apt-doc aptitude | synaptic | wajig dpkg-dev powermgmt-base
+The following packages will be upgraded:
+  apt apt-utils libapt-pkg6.0t64
+3 upgraded, 0 newly installed, 0 to remove and 77 not upgraded.
+Need to get 2576 kB of archives.
+After this operation, 10.2 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libapt-pkg6.0t64 amd64 2.8.3 [985 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 apt amd64 2.8.3 [1376 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 apt-utils amd64 2.8.3 [216 kB]
+Fetched 2576 kB in 48s (53.3 kB/s)
+(Reading database ... 41889 files and directories currently installed.)
+Preparing to unpack .../libapt-pkg6.0t64_2.8.3_amd64.deb ...
+Unpacking libapt-pkg6.0t64:amd64 (2.8.3) over (2.7.14build2) ...
+Setting up libapt-pkg6.0t64:amd64 (2.8.3) ...
+(Reading database ... 41889 files and directories currently installed.)
+Preparing to unpack .../archives/apt_2.8.3_amd64.deb ...
+Unpacking apt (2.8.3) over (2.7.14build2) ...
+Setting up apt (2.8.3) ...
+(Reading database ... 41889 files and directories currently installed.)
+Preparing to unpack .../apt-utils_2.8.3_amd64.deb ...
+Unpacking apt-utils (2.8.3) over (2.7.14build2) ...
+Setting up apt-utils (2.8.3) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.7) ...
+mayank@MayankGarg4343:~$ getfacl marks.txt
+Command 'getfacl' not found, but can be installed with:
+sudo apt install acl
+mayank@MayankGarg4343:~$ sudo apt install acl
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  acl
+0 upgraded, 1 newly installed, 0 to remove and 77 not upgraded.
+Need to get 39.4 kB of archives.
+After this operation, 197 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 acl amd64 2.3.2-1build1.1 [39.4 kB]
+Fetched 39.4 kB in 59s (663 B/s)
+Selecting previously unselected package acl.
+(Reading database ... 41889 files and directories currently installed.)
+Preparing to unpack .../acl_2.3.2-1build1.1_amd64.deb ...
+Unpacking acl (2.3.2-1build1.1) ...
+Setting up acl (2.3.2-1build1.1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+group::r--
+other::r--
+
+mayank@MayankGarg4343:~$ setfacl -m u:rahul:rwx report.txt
+setfacl: report.txt: No such file or directory
+mayank@MayankGarg4343:~$ setfacl -m u:rahul:rwx marks.txt
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:rahul:rwx
+group::r--
+mask::rwx
+other::r--
+
+mayank@MayankGarg4343:~$ getfacl -a marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:rahul:rwx
+group::r--
+mask::rwx
+other::r--
+
+mayank@MayankGarg4343:~$ getfacl -c marks.txt
+user::rw-
+user:rahul:rwx
+group::r--
+mask::rwx
+other::r--
+
+mayank@MayankGarg4343:~$ getfacl -e marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:rahul:rwx                  #effective:rwx
+group::r--                      #effective:r--
+mask::rwx
+other::r--
+
+mayank@MayankGarg4343:~$ getfacl -s marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:rahul:rwx
+group::r--
+mask::rwx
+other::r--
+
+mayank@MayankGarg4343:~$ setfacl -m u:rahul:rwx, u:user2:rw- marks.txt
+setfacl: u:user2:rw-: No such file or directory
+mayank@MayankGarg4343:~$ setfacl -m u:rahul:rwx,u:user2:rw- marks.txt
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:user2:rw-
+user:rahul:rwx
+group::r--
+mask::rwx
+other::r--
+
+mayank@MayankGarg4343:~$ setfacl -m o::rwmarks.txt
+setfacl: Option -m: Invalid argument near character 6
+mayank@MayankGarg4343:~$ setfacl -m o::rw marks.txt
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:user2:rw-
+user:rahul:rwx
+group::r--
+mask::rwx
+other::rw-
+
+mayank@MayankGarg4343:~$ setfacl -m m::rw marks.txt
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:user2:rw-
+user:rahul:rwx                  #effective:rw-
+group::r--
+mask::rw-
+other::rw-
+
+mayank@MayankGarg4343:~$ setfacl -x u:rahul,u:user2 marks.txt
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+group::r--
+mask::r--
+other::rw-
+
+mayank@MayankGarg4343:~$ setfacl -b marks.txt
+mayank@MayankGarg4343:~$ getfacl marks.txt
+# file: marks.txt
+# owner: mayank
+# group: mayank
+user::rw-
+group::r--
+other::rw-
+
+mayank@MayankGarg4343:~$ getfacl -c marks.txt
+user::rw-
+group::r--
+other::rw-
+
+mayank@MayankGarg4343:~$ mkdir aclfolder
+mayank@MayankGarg4343:~$ setfacl -m -d u:user2:rwx aclfolder
+setfacl: Option -m: Invalid argument near character 1
+mayank@MayankGarg4343:~$ setfacl -d -m u:user2:rwx aclfolder
+mayank@MayankGarg4343:~$ getfacl aclfolder
+# file: aclfolder
+# owner: mayank
+# group: mayank
+user::rwx
+group::r-x
+other::r-x
+default:user::rwx
+default:user:user2:rwx
+default:group::r-x
+default:mask::rwx
+default:other::r-x
+
+mayank@MayankGarg4343:~$ touch /aclfolder/f1.txt
+touch: cannot touch '/aclfolder/f1.txt': No such file or directory
+mayank@MayankGarg4343:~$ ls
+Day7Lab  LogsLab  a.txt  aclfolder  cd-practice  demo  marks.txt  project  testfind
+mayank@MayankGarg4343:~$ sudo touch /aclfolder/f1.txt
+[sudo] password for mayank:
+touch: cannot touch '/aclfolder/f1.txt': No such file or directory
+mayank@MayankGarg4343:~$ ls -l
+total 32
+drwxr-xr-x  2 rahul  user200 4096 Jul 26 17:16 Day7Lab
+drwxr-xr-x  2 mayank mayank  4096 Jul 25 10:51 LogsLab
+-rwx-wxr-x  1 mayank john       0 Jul 26 10:45 a.txt
+drwxr-xr-x+ 2 mayank mayank  4096 Jul 28 10:24 aclfolder
+drwxr-xr-x  3 mayank mayank  4096 Jul 23 11:03 cd-practice
+d-wx------  2 mayank mayank  4096 Jul 25 12:01 demo
+-rw-r--rw-  1 mayank mayank    27 Jul 27 12:51 marks.txt
+d--x------  2 mayank mayank  4096 Jul 25 11:52 project
+drwxr-xr-x  3 mayank mayank  4096 Jul 25 10:51 testfind
+mayank@MayankGarg4343:~$ ls -ld
+drwxr-x--- 13 mayank mayank 4096 Jul 28 10:24 .
+mayank@MayankGarg4343:~$ ls -ld /aclfolder
+ls: cannot access '/aclfolder': No such file or directory
+mayank@MayankGarg4343:~$ touch /home/mayank/aclfolder/f1.txt
+mayank@MayankGarg4343:~$ getfacl /home/mayank/aclfolder/f1.txt
+getfacl: Removing leading '/' from absolute path names
+# file: home/mayank/aclfolder/f1.txt
+# owner: mayank
+# group: mayank
+user::rw-
+user:user2:rwx                  #effective:rw-
+group::r-x                      #effective:r--
+mask::rw-
+other::r--
+
+mayank@MayankGarg4343:~$ lsattr f1.txt
+lsattr: No such file or directory while trying to stat f1.txt
+mayank@MayankGarg4343:~$ ls
+Day7Lab  LogsLab  a.txt  aclfolder  cd-practice  demo  marks.txt  project  testfind
+mayank@MayankGarg4343:~$ lsattr a.txt
+--------------e------- a.txt
+mayank@MayankGarg4343:~$ sudo chattr +i a.txt
+[sudo] password for mayank:
+mayank@MayankGarg4343:~$ lsattr a.txt
+----i---------e------- a.txt
+mayank@MayankGarg4343:~$ rm a.txt
+rm: cannot remove 'a.txt': Operation not permitted
+mayank@MayankGarg4343:~$ ls
+Day7Lab  LogsLab  a.txt  aclfolder  cd-practice  demo  marks.txt  project  testfind
+mayank@MayankGarg4343:~$ cat a.txt
+mayank@MayankGarg4343:~$ vim a.txt
+mayank@MayankGarg4343:~$ sudo chattr -i a.txt
+mayank@MayankGarg4343:~$ vim a.txt
+mayank@MayankGarg4343:~$ history
+    5  find /var/log -type f -a -name "*.log"
+    6  find /var/log -type f -name "*.log"
+    7  find /var/log -type f -name "*.log" -size +10M
+    8  sudo find /var/log -type f -name "*.log" -size +1M
+    9  sudo find /var/log -type f -name "*.log" -size +1
+   10  sudo find /var/log -type f -name "*.log" -size +1K
+   11  sudo find /var/log -type f -name "*.log" -size +1k
+   12  sudo find /var/log -type f -name "*.log" -o -name "*.sh"
+   13  mkdir testfind
+   14  cd testfind/
+   15  touch a.log b.log c.sh d.sh e.txt f.txt
+   16  find /home/mayank/testfind -type f -name "*.log" -o -name "*.txt"
+   17  find /home/mayank/testfind \(-name "*.log" -o -name "*.txt"\) -type f
+   18  find /home/mayank/testfind \(-name "*.log" -o -name "*.txt" \) -type f
+   19  mkdir g.txt
+   20  find /home/mayank/testfind -type f -name "*.log" -o -name "*.txt"
+   21  find /home/mayank/testfind -type f -name "*.log" -o -name "*.txt" | ls -l
+   22  find /home/mayank/testfind -type f -name "*.log" -o -name "*.txt" | ls
+   23  find /home/mayank/testfind -type f -name "*.log" -o -name "*.txt"
+   24  find /home/mayank/testfind -type f -name "*.log" -name "*.txt"
+   25  find /home/mayank/testfind -type f -name "*.log" -a -name "*.txt"
+   26  find /home/mayank/testfind \(-name "*.log" -o -name "*.txt" \) -type f
+   27  find /home/mayank/testfind \( -name "*.log" -o -name "*.txt" \) -type f
+   28  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \)
+   29  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size +1k
+   30  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) | ls -s
+   31  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size +0k
+   32  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size +4k
+   33  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size 4k
+   34  find /home/mayank/testfind -type d \( -name "*.log" -o -name "*.txt" \) -size +4k
+   35  find /home/mayank/testfind -type d \( -name "*.log" -o -name "*.txt" \) -size 4k
+   36  find /home/mayank/testfind -type d \( -name "*.log" -o -name "*.txt" \) -size +3k
+   37  find /home/mayank/testfind -type d \( -name "*.log" -o -name "*.txt" \) -size 0k
+   38  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size 0k
+   39  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size -0k
+   40  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size -5k
+   41  find /home/mayank/testfind -ls
+   42  find /home/mayank/testfind -type f \( -name "*.log" -o -name "*.txt" \) -size +1k
+   43  find /home -user mayank
+   44  find /home/mayank -group mayank
+   45  find /home -group user100
+   46  find /home -uid 1000
+   47  find /home -gid 1000
+   48  cd /
+   49  cd ~
+   50  ls
+   51  ls -;
+   52  ls -l
+   53  find . -perm 111
+   54  find ~ -perm 111
+   55  find ~ -perm 001
+   56  find ~ -perm 755
+   57  find . -maxdepth 1
+   58  tree .
+   59  find . -maxdepth 2
+   60  find . -mindepth 1
+   61  find . -mindepth 2
+   62  find . -mindepth 1
+   63  stat file1.txt
+   64  tree . -l
+   65  tree . -L 2
+   66  tree . -L 1
+   67  find . -links +0
+   68  find . -links +1
+   69  find . -links +2
+   70  find . -links +3
+   71  find . -links +4
+   72  find . -links +5
+   73  tree .
+   74  find . -samefile file1.txt
+   75  find . -samefile file2.txt
+   76  find . -samefile hfile3.txt
+   77  find . -samefile hfile2.txt
+   78  find . -print0 | xargs -0 rm
+   79  find . -ls
+   80  find . -l
+   81  find . -xdev
+   82  ls
+   83  tree Day5Lab/
+   84  ls Day5Lab/
+   85  rmdir Day5Lab/
+   86  ls
+   87  tree Day6Lab/
+   88  tree Day7Lab/
+   89  tree cd-practice/
+   90  rmdir cd-practice/
+   91  touch Day6Lab/hi.txt
+   92  tree Day6Lab/
+   93  rmdir -r Day6Lab/
+   94  rm -r Day6Lab/
+   95  ls
+   96  mkdir project
+   97  ls -l
+   98  chmod 100 project
+   99  ls -l
+  100  cd project/
+  101  touch secret.txt
+  102  cat secret.txt
+  103  cat > secret.txt << EOF
+  104  hi
+  105  EOF
+  106  ls p
+  107  cd ..
+  108  ls project/
+  109  mkdir demo
+  110  touch demo/file.txt
+  111  echo "Hello" > demo/file.txt
+  112  chmod 111 demo
+  113  ls -ld demo
+  114  ls demo
+  115  cat demo/file.txt
+  116  ls
+  117  chmod 300 demo
+  118  ls -ld demo
+  119  cd demo
+  120  touch new.txt
+  121  rm new.txt
+  122  ls
+  123  echo "hello" > new.txt
+  124  cat new.txt
+  125  ls -l /etc/passwd
+  126  ls -l /usr/bin/passwd
+  127  sudo passwd
+  128  passwd
+  129  ls -ld tmp
+  130  ls -ld /tmp
+  131  cd /
+  132  tree -d /
+  133  cd /home
+  134  tree -d .
+  135  tree -a
+  136  tree -f
+  137  tree -h
+  138  tree -P ".txt"
+  139  tree -P "*.txt"
+  140  tree -l "*.txt"
+  141  less file.log
+  142  cat /var/log
+  143  ls /var/log
+  144  less /var/log/auth.log
+  145  touch practise.sh
+  146  sudo touch a.sh
+  147  vim a.sh
+  148  ls
+  149  touch a.txt
+  150  cd mayank/
+  151  ls
+  152  touch a.txt
+  153  ls -l a.txt
+  154  chmod g=w a.txt
+  155  ls -l a.txt
+  156  chmod +x a.txt
+  157  ls -l a.txt
+  158  ls
+  159  ls -l a.txt
+  160  chown rahul:rahul a.txt
+  161  ls -u
+  162  sudo chown rahul:rahul a.txt
+  163  cd ..
+  164  ls
+  165  sudo chown rahul:rahucd -l a.txt
+  166  cd mayank/
+  167  ls -l a.txt
+  168  sudo chown user100:user100 -l a.txt
+  169  sudo chown user100:user100 a.txt
+  170  ls -l a.txt
+  171  ls -i
+  172  ls -li a.txt
+  173  sudo chown mayank:mayank a.txt
+  174  ls -li a.txt
+  175  chown user100:user100 a.txt
+  176  ls
+  177  cd ..
+  178  ls
+  179  useradd rahul
+  180  sudo useradd rahul
+  181  ls
+  182  cd mayank/
+  183  ls-l
+  184  ls -l
+  185  cat /etc/passwd | cut -d: -f1
+  186  sudo chown rahul a.txt
+  187  ls -l a.txt
+  188  sudo chown rahul:user200 a.txt
+  189  ls -l a.txt
+  190  sudo chown :mayank a.txt
+  191  ls -l a.txt
+  192  ls -ld Day7Lab/
+  193  sudo chown -R rahul:user200 Day7Lab
+  194  ls -ld Day7Lab/
+  195  cd Day7Lab/
+  196  ls
+  197  touch a.txt
+  198  sudo touch a.txt
+  199  ls -l
+  200  sudo chown -R rahul:user200 Day7Lab
+  201  cd ..
+  202  sudo chown -R rahul:user200 Day7Lab
+  203  ls -ld Day7Lab/
+  204  cd Day7Lab/
+  205  ls -l
+  206  sudo chown -v rahul:user200 Day7Lab
+  207  cd ..
+  208  sudo chown -v rahul:user200 Day7Lab
+  209  cd /
+  210  du
+  211  du -h
+  212  du -H
+  213  du -T
+  214  du -t
+  215  df -h
+  216  df -H
+  217  df -T
+  218  df -i
+  219  df -a
+  220  df -x overlay
+  221  df -xT overlay
+  222  df -x overlay
+  223  df -total
+  224  df --total
+  225  du -s
+  226  du -a
+  227  du -c
+  228  du -c /home
+  229  du -ch /home
+  230  du -d 5
+  231  du -d 1
+  232  du -x
+  233  cd /home
+  234  du -x
+  235  du -xhc
+  236  du -s
+  237  cd mayank
+  238  cd ..
+  239  cd mayank/
+  240  ls
+  241  du -s project/
+  242  du -sh ~
+  243  ls /dev
+  244  lsblk
+  245  tree lsblk
+  246  lsblk
+  247  lsof
+  248  lsof +D /var/log
+  249  sudo lsof +D /var/log
+  250  lsof -i
+  251  lsof -i ssh
+  252  lsof -i :80
+  253  lsof -n
+  254  lsof -P
+  255  ps
+  256  du -c
+  257  du -c /
+  258  grep "^rahul:" /etc/passwd
+  259  grep "ERROR" /var/log/auth.log
+  260  cat /var/log/auth.log
+  261  grep "uid" /var/log/auth.log
+  262  grep "^rahul:" /etc/passwd
+  263  grep "^rahul" /etc/passwd
+  264  grep "^rahul" /etc/passwd | head -5
+  265  grep "uid" /var/log/auth.log | head -5
+  266  grep "^uid" /var/log/auth.log | head -5
+  267  grep "uid" /var/log/auth.log | head -5
+  268  sudo groupadd linuxteam
+  269  getent group linuxteam
+  270  Module 2 — Group Management
+  271  Start with groups because permissions depend on them.
+  272  Commands
+  273  groupadd
+  274  groupdel
+  275  groupmod
+  276  gpasswd
+  277  newgrp
+  278  Concepts:
+  279  Create groups
+  280  Delete groups
+  281  Rename groups
+  282  Change GID
+  283  Add/remove users
+  284  Group passwords (historical feature, rarely used today)
+  285  Module 3 — User Creation
+  286  Commands:
+  287  useradd
+  288  adduser (Debian/Ubuntu helper)
+  289  userdel
+  290  usermod
+  291  Concepts:
+  292  Create user
+  293  Home directory creation
+  294  Default shell
+  295  Default files (/etc/skel)
+  296  Expiration dates
+  297  UID assignment
+  298  Primary group
+  299  Secondary groups
+  300  Module 4 — Password Management
+  301  Commands:
+  302  passwd
+  303  chage
+  304  chpasswd
+  305  Concepts:
+  306  Password hashing
+  307  /etc/shadow
+  308  Password aging
+  309  Expiration
+  310  Locking accounts
+  311  Unlocking accounts
+  312  Module 5 — Switching Users
+  313  Commands:
+  314  su
+  315  cd ..
+  316  cd ..
+  317  cd ..
+  318  ubuntu
+  319  su root
+  320  clear
+  321  getent group linuxteam
+  322  grep "^linuxteam:" /etc/group
+  323  sudo grep "^linuxteam:" /etc/gshadow
+  324  getent group developer
+  325  getent group linuxgroup
+  326  getent group linuxteam
+  327  sudo groupadd developers
+  328  sudo gpasswd -a mayank developers
+  329  sudo gpasswd -a rahul developers
+  330  sudo gpasswd -d rahul developers
+  331  sudo gpasswd -M mayank,user100 developers
+  332  sudo groupadd developers
+  333  sudo groupadd -f developers
+  334  cat /home
+  335  cd /home
+  336  ls
+  337  groups
+  338  cd /
+  339  groups
+  340  sudo gpasswd developers
+  341  newgrp develop
+  342  sudo newgrp develop
+  343  sudo newgrp developers
+  344  find . -typr f -exec du -h {} \; 2>/dev/null | sort -rh | head -5
+  345  find . -type f -exec du -h {} \; 2>/dev/null | sort -rh | head -5
+  346  find /var/log -type f -exec du -h {} \; 2>/dev/null | sort -rh | head -5
+  347  find /var/log -type f -exec du -sh {} \; 2>/dev/null | sort -rh | head -5
+  348  groups
+  349  sudo newgrp developers
+  350  su -
+  351  umask
+  352  uptime
+  353  sudo su
+  354  groups
+  355  sudo su
+  356  cd /home/mayank
+  357  ls
+  358  ls -l
+  359  sudo groupadd developer
+  360  sudo chown mayank:developer a.txt
+  361  ls -l
+  362  sudo groupdel developer
+  363  ls -l
+  364  cd /home
+  365  ls
+  366  sudo useradd -m john
+  367  ls
+  368  sudo useradd -m -s /bin/bash john
+  369  useradd -D
+  370  cd mayank/
+  371  useradd -D
+  372  ps
+  373  awk '{sum+=$2}END{print sum}'
+  374  touch marks.txt
+  375  vim marks.txt
+  376  awk '{sum+=$2}END{print sum}' marks.txt
+  377  awk '{sum+=$2}END{print sum/NR}' marks.txt
+  378  awk '{sum+=$2}END{print sum/NF}' marks.txt
+  379  cd /home
+  380  du -sh
+  381  du -sh 2>/dev/null
+  382  du -h --max-depth-1
+  383  du -h --max-depth=1
+  384  du -h --max-depth=1 2>/dev/null
+  385  du
+  386  df
+  387  df -h
+  388  df -H
+  389  df -T
+  390  df -i
+  391  df -x fuse.snapfuse
+  392  df -a
+  393  df -t fuse.snapfuse
+  394  df -total
+  395  df -total fuse.snapfuse
+  396  df --total
+  397  du -s
+  398  du -sk
+  399  du -sb
+  400  du -sm
+  401  du -x
+  402  du -d 3
+  403  du -d 1
+  404  du -c
+  405  lsblk
+  406  lsof -u mayank
+  407  lsof -p 616
+  408  lsof -c ssh
+  409  lsof -C ssh
+  410  lsof -p 616
+  411  lsof -i
+  412  lsof -D /var/log
+  413  lsof +D /var/log
+  414  cd mayank/
+  415  ls -l
+  416  chown user200 a.txt
+  417  sudo chown user200 a.txt
+  418  ls -l
+  419  sudo chown mayank a.txt
+  420  ls -l
+  421  sudo usermod -l user2 user200
+  422  ls
+  423  cd ..
+  424  ls
+  425  users
+  426  id user2
+  427  id user200
+  428  sudo usermod -d /home/user2 -m user2
+  429  ls
+  430  group user2
+  431  groups user2
+  432  groups mayank
+  433  passwd -S
+  434  passwd -S user2
+  435  passwd user2
+  436  sudo passwd -S user2
+  437  sudo -l
+  438  sudo -l user2
+  439  sudo -l -U user2
+  440  sudo adduser user2 sudo
+  441  groups user2
+  442  sudo -l -U user2
+  443  sudo deluser user2 sudo
+  444  whoami
+  445  sudo -l
+  446  groups
+  447  sudo adduser -m deveopslab
+  448  sudo adduser deveopslab
+  449  id devopslab
+  450  id deveopslab
+  451  su - deveopslab
+  452  sudo su
+  453  ls
+  454  cd mayank/
+  455  ls
+  456  getfacl marks.txt
+  457  sudo apt install apt
+  458  getfacl marks.txt
+  459  sudo apt install acl
+  460  getfacl marks.txt
+  461  setfacl -m u:rahul:rwx report.txt
+  462  setfacl -m u:rahul:rwx marks.txt
+  463  getfacl marks.txt
+  464  getfacl -a marks.txt
+  465  getfacl -c marks.txt
+  466  getfacl -e marks.txt
+  467  getfacl -s marks.txt
+  468  setfacl -m u:rahul:rwx, u:user2:rw- marks.txt
+  469  setfacl -m u:rahul:rwx,u:user2:rw- marks.txt
+  470  getfacl marks.txt
+  471  setfacl -m o::rwmarks.txt
+  472  setfacl -m o::rw marks.txt
+  473  getfacl marks.txt
+  474  setfacl -m m::rw marks.txt
+  475  getfacl marks.txt
+  476  setfacl -x u:rahul,u:user2 marks.txt
+  477  getfacl marks.txt
+  478  setfacl -b marks.txt
+  479  getfacl marks.txt
+  480  getfacl -c marks.txt
+  481  mkdir aclfolder
+  482  setfacl -m -d u:user2:rwx aclfolder
+  483  setfacl -d -m u:user2:rwx aclfolder
+  484  getfacl aclfolder
+  485  touch /aclfolder/f1.txt
+  486  ls
+  487  sudo touch /aclfolder/f1.txt
+  488  ls -l
+  489  ls -ld
+  490  ls -ld /aclfolder
+  491  touch /home/mayank/aclfolder/f1.txt
+  492  getfacl /home/mayank/aclfolder/f1.txt
+  493  lsattr f1.txt
+  494  ls
+  495  lsattr a.txt
+  496  sudo chattr +i a.txt
+  497  lsattr a.txt
+  498  rm a.txt
+  499  ls
+  500  cat a.txt
+  501  vim a.txt
+  502  sudo chattr -i a.txt
+  503  vim a.txt
+  504  history
+mayank@MayankGarg4343:~$

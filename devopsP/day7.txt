@@ -1,0 +1,73 @@
+mayank@MayankGarg4343:~/Day7Lab$ touch demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ touch script.sh
+mayank@MayankGarg4343:~/Day7Lab$ ls -l
+total 0
+-rw-r--r-- 1 mayank mayank 0 Jul 22 17:51 demo.txt
+-rw-r--r-- 1 mayank mayank 0 Jul 22 17:51 script.sh
+mayank@MayankGarg4343:~/Day7Lab$ chmod 700 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ ls -l demo.txt
+-rwx------ 1 mayank mayank 0 Jul 22 17:51 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ chmod 644 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ ls -l demo.txt
+-rw-r--r-- 1 mayank mayank 0 Jul 22 17:51 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ chmod +x script.sh
+mayank@MayankGarg4343:~/Day7Lab$ ls -l script.sh
+-rwxr-xr-x 1 mayank mayank 0 Jul 22 17:51 script.sh
+mayank@MayankGarg4343:~/Day7Lab$ chmod g+w script.sh
+mayank@MayankGarg4343:~/Day7Lab$ ls -l script.sh
+-rwxrwxr-x 1 mayank mayank 0 Jul 22 17:51 script.sh
+mayank@MayankGarg4343:~/Day7Lab$ chmod o-r script.sh
+mayank@MayankGarg4343:~/Day7Lab$ ls -l script.sh
+-rwxrwx--x 1 mayank mayank 0 Jul 22 17:51 script.sh
+mayank@MayankGarg4343:~/Day7Lab$ whoami
+mayank
+mayank@MayankGarg4343:~/Day7Lab$ id
+uid=1000(mayank) gid=1000(mayank) groups=1000(mayank),4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),100(users),107(netdev),1003(docker)
+mayank@MayankGarg4343:~/Day7Lab$ groups
+mayank adm dialout cdrom floppy sudo audio dip video plugdev users netdev docker
+mayank@MayankGarg4343:~/Day7Lab$ ls -l demo.txt
+-rw-r--r-- 1 mayank mayank 0 Jul 22 17:51 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ sudo chown root demo.txt
+[sudo] password for mayank:
+mayank@MayankGarg4343:~/Day7Lab$ ls -l demo.txt
+-rw-r--r-- 1 root mayank 0 Jul 22 17:51 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ sudo chgrp sudo demo.txt
+mayank@MayankGarg4343:~/Day7Lab$ ls -l demo.txt
+-rw-r--r-- 1 root sudo 0 Jul 22 17:51 demo.txt
+mayank@MayankGarg4343:~/Day7Lab$
+
+
+What is the difference between a user and a group?
+answer - a group is a container which used to contains the users and the users are those which uses the linux as a machine.
+
+What does chmod do?
+answer - this command is used to set the permissions for the file.
+
+What is the difference between chmod 755 and chmod 644?
+answer - there is the difference of the permissions in 755 users are given all permissions and groups and other are given the read and execute permission
+        in 644 the users are given the read and write permission and the group and other are given the read permission only.
+
+Why is 777 considered dangerous?
+answer - because every one can make the changes to the file and execute it.
+
+What is the difference between chown and chgrp?
+answer - chown means changing the ownership like who is the owner of this file and chgrp means change group which tell to which group this file belongs to.
+
+Why do we use sudo instead of logging in as root?
+answer - because it is safer and does not harm the security priviledges.
+
+Explain Linux file permissions.
+answer - it contains various permissins like the read , write and execute and they also have number like the 4,2,1. 
+
+What do the numbers 755 and 644 mean?
+answer - there is the difference of the permissions in 755 users are given all permissions and groups and other are given the read and execute permission
+        in 644 the users are given the read and write permission and the group and other are given the read permission only.
+
+How do you make a shell script executable?
+answer - by giving the +x permission to the scripting file.
+
+What is the difference between chmod and chown?
+answer - chown means changing the ownership like who is the owner of this file and chmod means giving the file the permissions.
+
+Why do services like Nginx or MySQL run under separate users instead of root?
+answer - because they have their own users and they must need to have the permissions for their users instead of root.
