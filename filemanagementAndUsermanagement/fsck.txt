@@ -1,0 +1,124 @@
+LINUX COMMAND NOTES – fsck (Filesystem Check)
+
+1. OVERVIEW
+
+Command: fsck
+
+Purpose: fsck (File System Consistency Check) checks and repairs Linux
+filesystems.
+
+Why it is used: - Detect filesystem corruption. - Repair metadata
+inconsistencies. - Recover after improper shutdowns or power failures. -
+Ensure filesystem integrity before mounting.
+
+Problem it solves: Filesystem corruption can prevent booting, mounting,
+or accessing data. fsck repairs many logical filesystem errors.
+
+WARNING: Never run fsck on a mounted read-write filesystem unless the
+filesystem documentation explicitly allows it.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  fsck [options] device fsck -t ext4 /dev/sdb1
+
+  --------------------------------------------------
+
+3. HOW IT WORKS
+
+1.  Detects filesystem type.
+2.  Invokes the correct checker (e.g., fsck.ext4).
+3.  Scans metadata, inodes, directories, and allocation maps.
+4.  Reports errors.
+5.  Repairs them automatically or after confirmation.
+
+  --------------------------------------------------
+  4. COMMON OPTIONS
+  --------------------------------------------------
+  -A Check filesystems listed in /etc/fstab.
+
+  -C Show progress.
+
+  -f Force checking even if filesystem appears
+  clean.
+
+  -M Skip mounted filesystems.
+
+  -N Show what would be done without executing.
+
+  -R Skip root filesystem when using -A.
+
+  -r Interactive statistics (legacy).
+
+  -t TYPE Specify filesystem type.
+
+  -T Do not display title.
+
+  -V Verbose mode.
+
+  -y Automatically answer “yes” to all repair
+  prompts.
+
+  -n Automatically answer “no”; perform read-only
+  check.
+  --------------------------------------------------
+
+5. EXAMPLES
+
+Check partition: fsck /dev/sdb1
+
+Force check: fsck -f /dev/sdb1
+
+Automatic repair: fsck -y /dev/sdb1
+
+Read-only check: fsck -n /dev/sdb1
+
+Check all fstab filesystems: fsck -A
+
+  --------------------------------------------------
+  6. BEST PRACTICES
+  --------------------------------------------------
+  - Unmount the filesystem first. - Back up
+  important data. - Use -n first if unsure. - Use -y
+  only when automatic repair is acceptable. - Check
+  SMART health if corruption repeatedly occurs.
+
+  --------------------------------------------------
+
+7. COMMON ERRORS
+
+“The filesystem is mounted.” -> Unmount before checking.
+
+“Bad superblock.” -> Try alternate superblock using filesystem-specific
+checker.
+
+Repeated corruption. -> Suspect failing storage hardware.
+
+  -----------------------------
+  8. SCENARIO-BASED QUESTIONS
+  -----------------------------
+
+1.  A server lost power and ext4 won’t mount. What command helps?
+    Answer: fsck on the unmounted partition.
+
+2.  You only want to inspect errors, not repair them. Answer: fsck -n
+    /dev/sdb1
+
+3.  You want every repair accepted automatically. Answer: fsck -y
+    /dev/sdb1
+
+4.  Why avoid running fsck on mounted filesystems? Answer: It can damage
+    filesystem consistency.
+
+5.  Which option forces a check? Answer: -f
+
+6.  Which option displays progress? Answer: -C
+
+7.  Which option checks filesystems from /etc/fstab? Answer: -A
+
+8.  Which option specifies filesystem type? Answer: -t
+
+9.  What problem does fsck solve? Answer: Logical filesystem corruption.
+
+10. After frequent fsck repairs, what should you investigate? Answer:
+    Disk health, cables, controller, or power issues.

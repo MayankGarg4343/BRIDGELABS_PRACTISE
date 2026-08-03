@@ -1,0 +1,109 @@
+LINUX COMMAND NOTES – getfacl (Get File Access Control Lists)
+
+1. OVERVIEW
+
+Command: getfacl
+
+Purpose: Displays the Access Control Lists (ACLs) of files and
+directories.
+
+Why it is used: - View standard permissions and extended ACL entries. -
+Audit file access. - Troubleshoot permission issues. - Verify changes
+made with setfacl.
+
+Problem it solves: Standard ls -l cannot display detailed ACL entries.
+getfacl shows the complete permission model.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  getfacl [options] FILE…
+
+  --------------------------------------------------
+
+3. HOW IT WORKS
+
+Reads ACL metadata stored with the file and displays: - Owner - Group -
+Standard permissions - Named user entries - Named group entries - ACL
+mask - Other permissions - Default ACLs (for directories)
+
+  --------------------------------------------------
+  4. IMPORTANT OPTIONS
+  --------------------------------------------------
+  -R Display ACLs recursively.
+
+  -a Display file access ACL only.
+
+  -d Display default ACL only.
+
+  -c Omit comment headers.
+
+  -e Display effective permissions for ACL entries.
+
+  -E Omit effective rights comments.
+
+  -s Skip files with only base ACLs.
+
+  -p Keep full path names.
+  --------------------------------------------------
+
+5. SAMPLE OUTPUT
+
+file: project.txt
+
+owner: alice
+
+group: developers
+
+user::rw- user:bob:rwx group::r– mask::rwx other::—
+
+  --------------------------------------------------
+  6. EXAMPLES
+  --------------------------------------------------
+  getfacl file.txt getfacl /etc/passwd getfacl -R
+  /shared getfacl -d shared/ getfacl -e file.txt
+  getfacl -c file.txt
+
+  --------------------------------------------------
+
+7. BEST PRACTICES
+
+-   Verify ACLs after using setfacl.
+-   Check effective permissions when access is denied.
+-   Audit shared directories regularly.
+-   Use recursive output cautiously on large trees.
+
+  --------------------------------------------------
+  8. COMMON USE CASES
+  --------------------------------------------------
+  • Verify user access. • Audit shared folders. •
+  Troubleshoot ACL masks. • Backup ACL information.
+  • Confirm inherited default ACLs.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Which command displays ACLs? Answer: getfacl file
+
+2.  Display ACLs recursively. Answer: getfacl -R directory
+
+3.  Show only default ACLs. Answer: getfacl -d directory
+
+4.  Show effective permissions. Answer: getfacl -e file
+
+5.  Hide comment headers. Answer: getfacl -c file
+
+6.  What does the ACL mask represent? Answer: The maximum effective
+    permissions for named users and groups.
+
+7.  What problem does getfacl solve? Answer: It displays detailed ACL
+    information beyond standard permissions.
+
+8.  Which command is commonly paired with getfacl? Answer: setfacl
+
+9.  Why might a named user have fewer permissions than expected? Answer:
+    The ACL mask limits their effective permissions.
+
+10. When should you use getfacl instead of ls -l? Answer: When you need
+    to inspect extended ACL entries and default ACLs.

@@ -1,0 +1,121 @@
+LINUX COMMAND NOTES – ln (Create Hard & Symbolic Links)
+
+1. OVERVIEW
+
+Command: ln
+
+Purpose: Creates hard links and symbolic (soft) links between files.
+
+Why it is used: - Provide alternate names for files. - Create shortcuts
+to files/directories. - Maintain compatibility with applications
+expecting different paths.
+
+Problem it solves: Avoids duplicating files while allowing access from
+multiple locations.
+
+  --------------------------------------------------
+  2. HARD LINK vs SYMBOLIC LINK
+  --------------------------------------------------
+  Hard Link - Points directly to the file’s inode. -
+  Shares the same inode as the original file. -
+  Cannot span filesystems. - Normally cannot link
+  directories. - Continues to work if the original
+  filename is removed.
+
+  Symbolic Link (Soft Link) - Stores the pathname of
+  another file. - Has its own inode. - Can cross
+  filesystems. - Can link directories. - Breaks if
+  the target is deleted or moved.
+  --------------------------------------------------
+
+3. SYNTAX
+
+ln [options] TARGET LINK_NAME ln -s TARGET LINK_NAME
+
+  --------------------------------------------------
+  4. IMPORTANT OPTIONS
+  --------------------------------------------------
+  -s Create a symbolic link.
+
+  -f Remove existing destination before creating the
+  link.
+
+  -i Prompt before overwriting.
+
+  -v Verbose output.
+
+  -n Treat destination symlink as a normal file.
+
+  -T Treat destination as a normal file instead of a
+  directory.
+
+  -b Create a backup of an overwritten destination.
+
+  -S SUFFIX Specify backup suffix.
+
+  -r Create relative symbolic links.
+  --------------------------------------------------
+
+5. EXAMPLES
+
+Create hard link: ln file1 hardlink1
+
+Create symbolic link: ln -s /opt/app/config.conf config.conf
+
+Verbose: ln -sv /data/file link
+
+Relative symlink: ln -sr source.txt link.txt
+
+Overwrite existing: ln -sf target link
+
+  --------------------------------------------------
+  6. VERIFY LINKS
+  --------------------------------------------------
+  ls -li Show inode numbers.
+
+  ls -l Show symbolic link target.
+  --------------------------------------------------
+
+7. BEST PRACTICES
+
+-   Use symbolic links for directories.
+-   Use hard links for file redundancy on the same filesystem.
+-   Verify broken symlinks after moving files.
+-   Prefer relative symlinks in portable projects.
+
+  --------------------------------------------------
+  8. COMMON USE CASES
+  --------------------------------------------------
+  • Share configuration files. • Application
+  compatibility paths. • Shortcuts to deep directory
+  trees. • Multiple filenames for one file. •
+  Software version switching.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Create a symbolic link to /var/log/app.log. Answer: ln -s
+    /var/log/app.log applog
+
+2.  Create a hard link named backup. Answer: ln original backup
+
+3.  Which link survives deletion of the original filename? Answer: Hard
+    link.
+
+4.  Which link can point to directories? Answer: Symbolic link.
+
+5.  Which option forces overwrite? Answer: -f
+
+6.  Which option creates relative symbolic links? Answer: -r
+
+7.  How do you check inode numbers? Answer: ls -li
+
+8.  Why can’t hard links normally cross filesystems? Answer: Inodes are
+    unique only within a filesystem.
+
+9.  What problem does ln solve? Answer: Provides alternate references to
+    files without copying data.
+
+10. A symlink shows ‘No such file’. Why? Answer: Its target has been
+    moved or deleted, creating a broken symbolic link.

@@ -1,0 +1,96 @@
+LINUX COMMAND NOTES – Sticky Bit
+
+1. OVERVIEW
+
+Sticky Bit is a special permission bit primarily used on directories.
+
+Purpose: - Prevent users from deleting or renaming files they do not own
+in a shared directory.
+
+Why it is used: - Secure shared writable directories. - Prevent
+accidental or malicious deletion of other users’ files.
+
+Problem it solves: Without the Sticky Bit, any user with write
+permission on a shared directory could delete or rename another user’s
+files.
+
+  --------------------------------------------------
+  2. HOW STICKY BIT WORKS
+  --------------------------------------------------
+  When set on a directory: - Users can create files
+  (if directory permissions allow). - Users can
+  delete or rename only: * Their own files * Files
+  owned by root (if they are root) * Files when they
+  own the directory (subject to permissions)
+
+  Common example: /tmp
+  --------------------------------------------------
+
+3. VIEWING STICKY BIT
+
+ls -ld /tmp
+
+Example: drwxrwxrwt
+
+The ‘t’ in the others execute position indicates the Sticky Bit.
+
+  --------------------------------------------------
+  4. SETTING & REMOVING
+  --------------------------------------------------
+  Symbolic: chmod +t shared_dir chmod -t shared_dir
+
+  Numeric: chmod 1777 shared_dir
+
+  Special digits: 4 = SUID 2 = SGID 1 = Sticky Bit
+  --------------------------------------------------
+
+5. EXAMPLES
+
+mkdir /shared chmod 1777 /shared
+
+Check: ls -ld /shared
+
+  --------------------------------------------------
+  6. BEST PRACTICES
+  --------------------------------------------------
+  - Use on world-writable shared directories. - Do
+  not rely on Sticky Bit as a replacement for proper
+  permissions. - Audit shared directories regularly.
+
+  --------------------------------------------------
+
+7. COMMON USE CASES
+
+• /tmp directory • Shared upload directories • Public collaboration
+areas • Multi-user systems
+
+  -----------------------------
+  8. SCENARIO-BASED QUESTIONS
+  -----------------------------
+
+1.  What does the Sticky Bit do? Answer: Prevents users from deleting or
+    renaming files owned by others in a shared directory.
+
+2.  What numeric value represents Sticky Bit? Answer: 1 (e.g., 1777).
+
+3.  Set the Sticky Bit symbolically. Answer: chmod +t directory
+
+4.  Remove the Sticky Bit. Answer: chmod -t directory
+
+5.  How is Sticky Bit displayed? Answer: A ‘t’ appears in the others
+    execute position.
+
+6.  Which Linux directory commonly uses the Sticky Bit? Answer: /tmp
+
+7.  What problem does Sticky Bit solve? Answer: It protects users’ files
+    in shared writable directories.
+
+8.  Does Sticky Bit affect regular file execution? Answer: On modern
+    Linux systems, it is meaningful primarily on directories.
+
+9.  Can a user delete another user’s file in a Sticky Bit directory?
+    Answer: Not unless they own the file, own the directory, or are
+    root.
+
+10. When should you use Sticky Bit? Answer: On shared writable
+    directories used by multiple users.

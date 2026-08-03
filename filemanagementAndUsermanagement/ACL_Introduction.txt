@@ -1,0 +1,111 @@
+LINUX COMMAND NOTES – Access Control Lists (ACL)
+
+1. OVERVIEW
+
+Access Control Lists (ACLs) extend the traditional Linux permission
+model.
+
+Why ACLs are used: - Grant permissions to specific users without
+changing file ownership. - Grant permissions to multiple users or groups
+independently. - Provide finer-grained access than owner/group/others.
+
+Problem solved: Standard permissions allow only one owner and one group.
+ACLs allow additional named users and groups to receive customized
+permissions.
+
+  --------------------------------------------------
+  2. ACL TYPES
+  --------------------------------------------------
+  Access ACL Controls permissions on an existing
+  file/directory.
+
+  Default ACL Applied to newly created
+  files/directories inside a directory.
+  --------------------------------------------------
+
+3. HOW ACLs WORK
+
+ACL entries are stored as filesystem metadata.
+
+Typical entries: user::rw- user:alice:rwx group::r– group:dev:rwx
+mask::rwx other::—
+
+  --------------------------------------------------
+  4. ACL MASK
+  --------------------------------------------------
+  The ACL mask limits the maximum effective
+  permissions for all named users and groups (except
+  the owner).
+
+  --------------------------------------------------
+
+5. VIEW ACLs
+
+getfacl filename
+
+Files with ACLs often show a ‘+’ after permissions: -rw-rw-r–+
+
+  --------------------------------------------------
+  6. SET ACLs
+  --------------------------------------------------
+  setfacl command is used to add, modify, or remove
+  ACLs.
+
+  --------------------------------------------------
+
+7. REQUIREMENTS
+
+-   Filesystem must support ACLs.
+-   ACLs may need to be enabled at mount time on some systems.
+
+  --------------------------------------------------
+  8. ACL vs STANDARD PERMISSIONS
+  --------------------------------------------------
+  chmod: Owner / Group / Others only.
+
+  ACL: Multiple named users and groups with
+  independent permissions.
+  --------------------------------------------------
+
+9. COMMON USE CASES
+
+• Shared project directories. • Grant temporary access to one user. •
+Application-specific permissions. • Department file sharing. • Secure
+collaboration.
+
+  --------------------------------------------------
+  10. BEST PRACTICES
+  --------------------------------------------------
+  - Keep ACLs simple. - Audit ACLs regularly. - Use
+  default ACLs for shared directories. - Document
+  exceptions from normal permissions.
+
+  --------------------------------------------------
+
+11. SCENARIO-BASED QUESTIONS
+
+1.  Why use ACLs? Answer: To provide permissions for multiple specific
+    users/groups beyond standard Linux permissions.
+
+2.  Which command displays ACLs? Answer: getfacl
+
+3.  Which command modifies ACLs? Answer: setfacl
+
+4.  What does ‘+’ in ls -l indicate? Answer: The file has extended ACL
+    entries.
+
+5.  What is a Default ACL? Answer: ACL entries inherited by newly
+    created files/directories.
+
+6.  What does the ACL mask control? Answer: Maximum effective
+    permissions for named users/groups.
+
+7.  What problem do ACLs solve? Answer: Fine-grained access control.
+
+8.  Can ACLs coexist with chmod? Answer: Yes, but chmod can affect ACL
+    masks.
+
+9.  Where are ACLs commonly used? Answer: Shared team directories.
+
+10. When should ACLs be preferred? Answer: When standard
+    owner/group/others permissions are insufficient.

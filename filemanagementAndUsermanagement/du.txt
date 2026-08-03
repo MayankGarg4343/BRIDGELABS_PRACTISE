@@ -1,0 +1,118 @@
+LINUX COMMAND NOTES – du (Disk Usage)
+
+1. OVERVIEW
+
+Command: du
+
+Purpose: Estimates disk space used by files and directories.
+
+Why it is used: - Find which directories consume the most storage. -
+Troubleshoot full disks. - Identify large files/directories before
+cleanup. - Monitor application and user storage usage.
+
+Problem it solves: Unlike df, which reports usage at the filesystem
+level, du identifies where the space is actually being used inside
+directories.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  du [options] [file|directory]
+
+  --------------------------------------------------
+
+3. HOW IT WORKS
+
+du walks through a directory tree recursively, sums the disk blocks used
+by files, and reports the total usage for each directory (or only
+totals, depending on options).
+
+  --------------------------------------------------
+  4. IMPORTANT OPTIONS
+  --------------------------------------------------
+  -h Human-readable sizes (KB, MB, GB, TB).
+
+  -H Follow symbolic links given on the command
+  line.
+
+  -k Display sizes in KB.
+
+  -m Display sizes in MB.
+
+  -s Show only the total (summary) for each
+  argument.
+
+  -c Produce a grand total.
+
+  -a Include individual files in addition to
+  directories.
+
+  -d N Limit recursion depth. Example: du -h -d 1
+  /var
+
+  –max-depth=N Same as -d on GNU systems.
+
+  -x Stay on one filesystem only.
+
+  -L Follow all symbolic links.
+
+  –exclude=PATTERN Exclude matching
+  files/directories.
+  --------------------------------------------------
+
+5. EXAMPLES
+
+du -h du -sh /home du -h -d 1 /var du -ah /tmp du -ch dir1 dir2 du
+–exclude=“*.log” -sh .
+
+  --------------------------------------------------
+  6. COMMON USE CASES
+  --------------------------------------------------
+  • Find the largest directories. • Check a user’s
+  home directory usage. • Verify application log
+  growth. • Measure backup size. • Estimate storage
+  before migration.
+
+  --------------------------------------------------
+
+7. BEST PRACTICES
+
+-   Use du -sh for quick summaries.
+-   Combine with sort -h to find the largest directories.
+-   Compare du with df when disk usage appears inconsistent.
+-   Exclude unnecessary files when analyzing usage.
+
+  --------------------------------------------------
+  8. df vs du
+  --------------------------------------------------
+  df Reports filesystem free/used space.
+
+  du Reports directory/file space usage.
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Which command shows the total size of /home? Answer: du -sh /home
+
+2.  Show directory sizes one level deep. Answer: du -h -d 1
+
+3.  Include individual files in the output. Answer: du -a
+
+4.  Display a grand total for multiple directories. Answer: du -c
+
+5.  Why might df and du show different values? Answer: Deleted-but-open
+    files, reserved blocks, or filesystem metadata.
+
+6.  Which option stays on the current filesystem? Answer: -x
+
+7.  Which option excludes matching files? Answer: –exclude=PATTERN
+
+8.  What problem does du solve? Answer: It identifies which
+    files/directories are consuming disk space.
+
+9.  Which command is best to quickly summarize one directory? Answer: du
+    -sh
+
+10. A server is full and you need to identify the largest folder.
+    Answer: Use du -h -d 1 / (or the relevant parent directory) and
+    inspect the largest entries.

@@ -1,0 +1,115 @@
+LINUX COMMAND NOTES – lsattr (List File Attributes)
+
+1. OVERVIEW
+
+Command: lsattr
+
+Purpose: Displays filesystem attributes of files and directories
+(primarily ext2/ext3/ext4).
+
+Why it is used: - View special filesystem flags. - Troubleshoot why a
+file cannot be modified or deleted. - Verify security-related
+attributes.
+
+Problem it solves: Standard permissions are sometimes not enough.
+Filesystem attributes add an extra layer of protection and behavior that
+ls -l does not show.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  lsattr [options] [file|directory]
+
+  --------------------------------------------------
+
+3. HOW IT WORKS
+
+Reads inode attribute flags from the filesystem and displays them for
+each file.
+
+  --------------------------------------------------
+  4. COMMON ATTRIBUTES
+  --------------------------------------------------
+  i Immutable. File cannot be modified, renamed, or
+  deleted.
+
+  a Append-only. Data can only be appended.
+
+  A Do not update access time.
+
+  d Skip during dump backups.
+
+  e Extent format (commonly present on ext4).
+
+  j Data journaling.
+
+  s Secure deletion (filesystem support dependent).
+
+  u Undelete information (filesystem support
+  dependent).
+  --------------------------------------------------
+
+5. IMPORTANT OPTIONS
+
+-R List attributes recursively.
+
+-a Include hidden files.
+
+-d List directory attributes instead of contents.
+
+-l Display long attribute names (where supported).
+
+-V Show version information.
+
+  --------------------------------------------------
+  6. EXAMPLES
+  --------------------------------------------------
+  lsattr file.txt lsattr /etc/passwd lsattr -R
+  /home/user lsattr -a . lsattr -d /var/log
+
+  --------------------------------------------------
+
+7. BEST PRACTICES
+
+-   Use lsattr when chmod/chown appear correct but operations still
+    fail.
+-   Verify immutable files before troubleshooting permissions.
+-   Pair with chattr to modify attributes.
+
+  --------------------------------------------------
+  8. COMMON USE CASES
+  --------------------------------------------------
+  • Check immutable configuration files. • Verify
+  append-only log files. • Audit filesystem
+  attributes. • Troubleshoot “Operation not
+  permitted” errors.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Which command shows filesystem attributes? Answer: lsattr
+
+2.  View attributes recursively. Answer: lsattr -R
+
+3.  Include hidden files. Answer: lsattr -a
+
+4.  Show only a directory’s attributes. Answer: lsattr -d directory
+
+5.  Which attribute prevents deletion and modification? Answer: i
+    (immutable)
+
+6.  Which attribute allows only appending? Answer: a
+
+7.  A root user cannot delete a file despite 777 permissions. What
+    should you check? Answer: Run lsattr to see if the immutable
+    attribute is set.
+
+8.  What problem does lsattr solve? Answer: It reveals special
+    filesystem attributes not visible with normal permission tools.
+
+9.  Which command changes these attributes? Answer: chattr
+
+10. Why use lsattr with chmod troubleshooting? Answer: Because
+    attributes can override expected behavior even when permissions look
+    correct.

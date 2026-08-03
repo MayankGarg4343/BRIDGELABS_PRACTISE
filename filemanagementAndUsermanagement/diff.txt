@@ -1,0 +1,117 @@
+LINUX COMMAND NOTES – diff (Compare Files)
+
+1. OVERVIEW
+
+Command: diff
+
+Purpose: Compares two files or directories line by line and displays
+differences.
+
+Why it is used: - Compare configuration files. - Review source code
+changes. - Verify backups. - Generate patches.
+
+Problem it solves: Identifies exactly what has changed between two
+versions of a file or directory.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  diff [options] file1 file2 diff [options] dir1
+  dir2
+
+  --------------------------------------------------
+
+3. HOW IT WORKS
+
+Reads both inputs line by line and reports additions, deletions, and
+modifications using standard diff formats.
+
+  --------------------------------------------------
+  4. IMPORTANT OPTIONS
+  --------------------------------------------------
+  -u Unified format (commonly used for patches).
+
+  -c Context format.
+
+  -y Side-by-side comparison.
+
+  -q Report only whether files differ.
+
+  -s Report identical files.
+
+  -r Compare directories recursively.
+
+  -N Treat absent files as empty.
+
+  -i Ignore case differences.
+
+  -w Ignore all whitespace.
+
+  -b Ignore changes in amount of whitespace.
+
+  -B Ignore blank lines.
+
+  -a Treat all files as text.
+
+  –color Highlight differences (GNU diff).
+  --------------------------------------------------
+
+5. EXAMPLES
+
+diff file1.txt file2.txt diff -u old.conf new.conf diff -y file1 file2
+diff -r dir1 dir2 diff -q file1 file2 diff -w file1 file2
+
+  --------------------------------------------------
+  6. COMMON OUTPUT SYMBOLS
+  --------------------------------------------------
+  < Line exists only in first file.
+
+  > Line exists only in second file.
+
+  a Addition.
+
+  d Deletion.
+
+  c Change.
+  --------------------------------------------------
+
+7. COMMON USE CASES
+
+• Compare configuration files. • Check code changes before deployment. •
+Generate patch files. • Compare backup directories. • Validate migration
+results.
+
+  --------------------------------------------------
+  8. BEST PRACTICES
+  --------------------------------------------------
+  - Use -u for readable output. - Use -w when
+  formatting differences are irrelevant. - Use -r
+  for entire directory trees. - Use version control
+  for long-term history.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Compare two files in unified format. Answer: diff -u file1 file2
+
+2.  Compare two directories recursively. Answer: diff -r dir1 dir2
+
+3.  Ignore whitespace differences. Answer: diff -w file1 file2
+
+4.  Display side-by-side comparison. Answer: diff -y file1 file2
+
+5.  Show only whether files differ. Answer: diff -q file1 file2
+
+6.  Ignore case differences. Answer: diff -i file1 file2
+
+7.  Which option reports identical files? Answer: -s
+
+8.  What problem does diff solve? Answer: It identifies line-by-line
+    differences between files or directories.
+
+9.  Why is unified output commonly used? Answer: It is compact and
+    suitable for creating patches and reviewing changes.
+
+10. You need to verify whether two configuration directories are
+    identical. Answer: Run: diff -r /etc/config1 /etc/config2

@@ -1,0 +1,112 @@
+LINUX COMMAND NOTES – setfacl (Set File Access Control Lists)
+
+1. OVERVIEW
+
+Command: setfacl
+
+Purpose: Adds, modifies, removes, and manages Access Control Lists
+(ACLs) on files and directories.
+
+Why it is used: - Grant permissions to specific users or groups. -
+Configure inherited (default) permissions on directories. - Provide
+fine-grained access without changing ownership.
+
+Problem it solves: Traditional Linux permissions allow only one owner
+and one group. setfacl enables multiple users/groups to receive
+different permissions.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  setfacl [options] file… setfacl [options] -m ENTRY
+  file setfacl [options] -x ENTRY file
+
+  ACL Entry Format: u:username:rwx g:groupname:r-x
+  m:rwx o:r–
+  --------------------------------------------------
+
+3. IMPORTANT OPTIONS
+
+-m ENTRY Add or modify ACL entries.
+
+-x ENTRY Remove ACL entries.
+
+-b Remove all extended ACL entries.
+
+-k Remove default ACL.
+
+-d Work with default ACL.
+
+-R Apply recursively.
+
+–restore=FILE Restore ACLs from a backup.
+
+–test Show changes without applying them.
+
+  --------------------------------------------------
+  4. EXAMPLES
+  --------------------------------------------------
+  Grant rwx to user alice: setfacl -m u:alice:rwx
+  file.txt
+
+  Grant read access to group developers: setfacl -m
+  g:developers:r– project.doc
+
+  Set default ACL on directory: setfacl -d -m
+  u:alice:rwx shared/
+
+  Remove ACL for alice: setfacl -x u:alice file.txt
+
+  Remove all extended ACLs: setfacl -b file.txt
+
+  Recursive ACL: setfacl -R -m g:dev:rwx project/
+
+  Restore ACLs: setfacl –restore=acl_backup.txt
+  --------------------------------------------------
+
+5. DEFAULT ACLs
+
+Default ACLs apply only to directories. New files and subdirectories
+inherit these permissions.
+
+  --------------------------------------------------
+  6. BEST PRACTICES
+  --------------------------------------------------
+  - Verify with getfacl after changes. - Use default
+  ACLs for shared directories. - Avoid overly
+  complex ACL structures. - Back up ACLs before
+  major changes.
+
+  --------------------------------------------------
+
+7. COMMON USE CASES
+
+• Shared team folders. • Temporary project access. • Department
+collaboration. • Application data directories. • File server management.
+
+  -----------------------------
+  8. SCENARIO-BASED QUESTIONS
+  -----------------------------
+
+1.  Grant rwx to user alice. Answer: setfacl -m u:alice:rwx file
+
+2.  Remove ACL for user bob. Answer: setfacl -x u:bob file
+
+3.  Remove all extended ACLs. Answer: setfacl -b file
+
+4.  Set a default ACL on a directory. Answer: setfacl -d -m u:alice:rwx
+    dir
+
+5.  Apply ACLs recursively. Answer: setfacl -R -m g:dev:rwx dir
+
+6.  Which command verifies ACLs? Answer: getfacl
+
+7.  What does -k do? Answer: Removes the default ACL.
+
+8.  What problem does setfacl solve? Answer: Provides fine-grained
+    user/group permissions beyond chmod.
+
+9.  Which option restores ACLs from backup? Answer: –restore
+
+10. Why use default ACLs? Answer: To ensure new files inherit the
+    required permissions automatically.

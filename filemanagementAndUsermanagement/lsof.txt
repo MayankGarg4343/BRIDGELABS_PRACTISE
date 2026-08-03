@@ -1,0 +1,138 @@
+LINUX COMMAND NOTES – lsof (List Open Files)
+
+1. OVERVIEW
+
+Command: lsof
+
+Purpose: Lists files currently opened by running processes.
+
+Why it is used: - Find which process is using a file. - Identify
+processes listening on network ports. - Troubleshoot “device or resource
+busy” errors. - Detect deleted files still consuming disk space.
+
+Problem it solves: On Linux, almost everything is treated as a file
+(regular files, sockets, pipes, devices). lsof shows which processes
+have them open.
+
+  ----------------------------------------------------
+  2. SYNTAX
+  ----------------------------------------------------
+  lsof [options] lsof filename lsof /path/to/file
+
+  ----------------------------------------------------
+
+3. HOW IT WORKS
+
+lsof queries the kernel for process file descriptor information and
+displays the process, user, file descriptor, type, device, size, inode,
+and file name.
+
+  ----------------------------------------------------
+  4. IMPORTANT OPTIONS
+  ----------------------------------------------------
+  -a Combine multiple selection conditions with AND.
+
+  -c command Show files opened by processes whose name
+  starts with command.
+
+  -d fd Show specific file descriptors (e.g. cwd, txt,
+  mem, 0,1,2).
+
+  -i Display network files.
+
+  -i :80 Show processes using TCP/UDP port 80.
+
+  -i TCP Show TCP connections.
+
+  -i UDP Show UDP connections.
+
+  -n Don’t resolve hostnames (faster).
+
+  -P Don’t convert port numbers to service names.
+
+  -p PID Show files opened by a specific process.
+
+  -u USER Show files opened by a user.
+
+  +t Show file access times (where supported).
+
+  -r N Repeat output every N seconds.
+
+  -F Machine-readable output.
+
+  -t Display only process IDs.
+  ----------------------------------------------------
+
+5. EXAMPLES
+
+Show everything: lsof
+
+Check file usage: lsof /var/log/messages
+
+Which process uses port 22? lsof -i :22
+
+Show nginx files: lsof -c nginx
+
+Show PID 1234: lsof -p 1234
+
+Current user’s files: lsof -u alice
+
+Network only: lsof -i
+
+Fast network listing: lsof -i -n -P
+
+Only process IDs: lsof -t /tmp/test.txt
+
+  ----------------------------------------------------
+  6. COMMON COLUMNS
+  ----------------------------------------------------
+  COMMAND : Process name PID : Process ID USER : Owner
+  FD : File descriptor TYPE : File type DEVICE :
+  Device ID SIZE/OFF: Size or offset NODE : Inode NAME
+  : File/path/socket
+
+  ----------------------------------------------------
+
+7. BEST PRACTICES
+
+-   Use -n -P for faster output.
+-   Combine with kill carefully.
+-   Use before unmounting busy filesystems.
+-   Check deleted open files if disk usage seems incorrect.
+
+  ----------------------------------------------------
+  8. REAL-WORLD SCENARIOS
+  ----------------------------------------------------
+  • “Device is busy” during umount -> use lsof on
+  mount point. • Port 8080 already in use -> lsof -i
+  :8080 • Log file deleted but disk still full ->
+  identify process with deleted file. • Find which
+  application locked a file.
+
+  ----------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Port 3306 is already in use. Which command? Answer: lsof -i :3306
+
+2.  Which process is locking /data/file.txt? Answer: lsof /data/file.txt
+
+3.  Show only PIDs using a file. Answer: lsof -t filename
+
+4.  Show files opened by user bob. Answer: lsof -u bob
+
+5.  Display only TCP connections. Answer: lsof -i TCP
+
+6.  Why use -n -P? Answer: Faster output by avoiding DNS and
+    service-name lookups.
+
+7.  Which option filters by PID? Answer: -p
+
+8.  Which option filters by process name? Answer: -c
+
+9.  What problem does lsof solve? Answer: Identifies processes using
+    files, sockets, devices, or ports.
+
+10. A filesystem won’t unmount because it’s busy. What do you do?
+    Answer: Run lsof on the mount point to identify and stop the
+    processes using it.

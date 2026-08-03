@@ -1,0 +1,118 @@
+LINUX COMMAND NOTES – find (Search Files)
+
+1. OVERVIEW
+
+Command: find
+
+Purpose: Search for files and directories based on many criteria.
+
+Why it is used: - Locate files by name, type, owner, permissions, size,
+or time. - Automate cleanup tasks. - Execute commands on matching files.
+
+Problem it solves: Allows precise file discovery and management across
+large directory trees.
+
+2. SYNTAX
+
+find [expression]
+
+Example: find /home -name “*.txt”
+
+3. IMPORTANT OPTIONS / EXPRESSIONS
+
+-name PATTERN Match file name (case-sensitive).
+
+-iname PATTERN Case-insensitive name match.
+
+-type f Regular files.
+
+-type d Directories.
+
+-type l Symbolic links.
+
+-size +100M Larger than 100 MB. -size -10k Smaller than 10 KB.
+
+-user USER Owned by USER.
+
+-group GROUP Owned by GROUP.
+
+-perm MODE Match permissions exactly. -perm -MODE Has at least these
+permission bits. -perm /MODE Has any of these permission bits.
+
+-mtime N Modified N*24 hours ago. -mtime -7 Modified within last 7 days.
+-mtime +30 Older than 30 days.
+
+-atime N Last access time.
+
+-ctime N Metadata change time.
+
+-empty Empty files/directories.
+
+-maxdepth N Limit search depth.
+
+-mindepth N Skip upper levels.
+
+-print Print matches (default).
+
+-delete Delete matched files.
+
+-exec CMD {} ; Execute command for each match.
+
+-exec CMD {} + Execute command with multiple matches.
+
+-ok CMD {} ; Ask before executing.
+
+-not or ! Negate expression.
+
+-o OR operator.
+
+-a AND operator (default).
+
+-follow Follow symbolic links.
+
+-L Follow symlinks from command line.
+
+4. EXAMPLES
+
+find / -name passwd find . -iname “.jpg” find /var -type f find /home
+-size +1G find /tmp -empty find /var/log -mtime +30 find . -user alice
+find . -perm 644 find . -exec ls -l {} ; find . -name ”.log” -delete
+
+5. BEST PRACTICES
+
+-   Test with -print before using -delete.
+-   Limit search path to improve speed.
+-   Use -maxdepth to reduce traversal.
+-   Quote wildcard patterns.
+
+6. REAL-WORLD USE CASES
+
+• Delete logs older than 30 days. • Find world-writable files. • Locate
+SUID files. • Search files owned by a deleted user. • Find large files
+consuming disk space.
+
+7. SCENARIO-BASED QUESTIONS
+
+1.  Find all PDF files under /home. Answer: find /home -name “*.pdf”
+
+2.  Find directories only. Answer: find . -type d
+
+3.  Delete files older than 60 days. Answer: find . -type f -mtime +60
+    -delete
+
+4.  Find files larger than 500 MB. Answer: find / -type f -size +500M
+
+5.  Find empty directories. Answer: find . -type d -empty
+
+6.  Run chmod 644 on all .txt files. Answer: find . -name “*.txt” -exec
+    chmod 644 {} ;
+
+7.  Find files owned by root. Answer: find / -user root
+
+8.  Which option performs case-insensitive name search? Answer: -iname
+
+9.  What problem does find solve? Answer: Efficiently locates files
+    using complex search conditions.
+
+10. Why test with -print before -delete? Answer: To verify matches and
+    avoid accidental deletion.

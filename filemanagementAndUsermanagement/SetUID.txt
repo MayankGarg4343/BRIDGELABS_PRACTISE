@@ -1,0 +1,101 @@
+LINUX COMMAND NOTES – SetUID (SUID)
+
+1. OVERVIEW
+
+SetUID (Set User ID) is a special permission bit that allows an
+executable to run with the effective permissions of the file owner
+instead of the user who launched it.
+
+Why it is used: - Allow normal users to perform specific privileged
+operations. - Grant temporary controlled access to system resources.
+
+Problem it solves: Some programs require root privileges for only a
+small task. SUID lets users run those programs without giving them full
+root access.
+
+  --------------------------------------------------
+  2. HOW SUID WORKS
+  --------------------------------------------------
+  When an executable has the SUID bit set: 1. User
+  executes the file. 2. The process runs with the
+  file owner’s effective UID. 3. After the program
+  exits, privileges end.
+
+  Typical owner: root
+  --------------------------------------------------
+
+3. VIEWING SUID
+
+ls -l /usr/bin/passwd
+
+Example: -rwsr-xr-x
+
+The ‘s’ in the owner’s execute position indicates SUID.
+
+  --------------------------------------------------
+  4. SETTING & REMOVING SUID
+  --------------------------------------------------
+  Symbolic: chmod u+s file chmod u-s file
+
+  Numeric: chmod 4755 file chmod 0755 file
+
+  Leading digit: 4 = SUID 2 = SGID 1 = Sticky Bit
+  --------------------------------------------------
+
+5. COMMON EXAMPLE
+
+passwd
+
+Normal users can change their password because passwd needs temporary
+write access to protected system authentication files.
+
+  --------------------------------------------------
+  6. FIND SUID FILES
+  --------------------------------------------------
+  find / -perm -4000 -type f 2>/dev/null
+
+  --------------------------------------------------
+
+7. SECURITY RISKS
+
+-   Vulnerable SUID programs can lead to privilege escalation.
+-   Avoid setting SUID on scripts.
+-   Regularly audit SUID binaries.
+-   Remove unnecessary SUID permissions.
+
+  --------------------------------------------------
+  8. BEST PRACTICES
+  --------------------------------------------------
+  - Use only on trusted executables. - Keep software
+  updated. - Limit the number of SUID binaries. -
+  Audit with find regularly.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  What does SUID do? Answer: Runs an executable with the file owner’s
+    effective permissions.
+
+2.  What numeric value represents SUID? Answer: 4 (e.g., 4755).
+
+3.  Set SUID using symbolic mode. Answer: chmod u+s file
+
+4.  Remove SUID. Answer: chmod u-s file
+
+5.  Which command finds SUID files? Answer: find / -perm -4000 -type f
+
+6.  Which standard Linux command commonly uses SUID? Answer: passwd
+
+7.  Why is SUID useful? Answer: It grants temporary elevated privileges
+    for specific tasks.
+
+8.  Why is SUID considered a security risk? Answer: A vulnerable SUID
+    binary can be exploited for privilege escalation.
+
+9.  How is SUID displayed in ls -l? Answer: An ‘s’ replaces the owner’s
+    execute bit.
+
+10. What problem does SUID solve? Answer: It allows controlled
+    privileged operations without giving users permanent administrative
+    access.

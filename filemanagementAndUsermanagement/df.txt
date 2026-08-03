@@ -1,0 +1,117 @@
+LINUX COMMAND NOTES – df (Disk Free)
+
+1. OVERVIEW
+
+Command: df
+
+Purpose: Displays filesystem disk space usage.
+
+Why it is used: - Monitor free and used storage. - Verify mounted
+filesystems. - Detect partitions running out of space. - Capacity
+planning.
+
+Problem it solves: Helps administrators quickly determine where disk
+space is being consumed at the filesystem level.
+
+  --------------------------------------------------
+  2. SYNTAX
+  --------------------------------------------------
+  df [options] df [file_or_directory]
+
+  --------------------------------------------------
+
+3. HOW IT WORKS
+
+Reads filesystem metadata from the kernel and reports: - Total space -
+Used space - Available space - Usage percentage - Mount point
+
+  --------------------------------------------------
+  4. IMPORTANT OPTIONS
+  --------------------------------------------------
+  -h Human-readable units (KB, MB, GB, TB).
+
+  -H Human-readable using powers of 1000.
+
+  -k Show sizes in KB.
+
+  -m Show sizes in MB.
+
+  -B SIZE Display in specified block size. Example:
+  df -B1
+
+  -T Show filesystem type.
+
+  -i Show inode usage.
+
+  -a Include pseudo, duplicate and inaccessible
+  filesystems.
+
+  -l Show only local filesystems.
+
+  -x TYPE Exclude filesystem type. Example: df -x
+  tmpfs
+
+  -t TYPE Show only specified filesystem type.
+  Example: df -t ext4
+
+  –total Display grand total.
+
+  -P POSIX output format.
+  --------------------------------------------------
+
+5. EXAMPLES
+
+df df -h df -T df -i df -h / df -h /home df -x tmpfs df -t ext4 df
+–total
+
+  --------------------------------------------------
+  6. OUTPUT COLUMNS
+  --------------------------------------------------
+  Filesystem : Device/filesystem Size : Total
+  capacity Used : Space consumed Avail : Free space
+  Use% : Utilization percentage Mounted on : Mount
+  point
+
+  --------------------------------------------------
+
+7. COMMON USE CASES
+
+• Check root filesystem before upgrades. • Verify storage after
+extending a partition. • Monitor disk utilization. • Detect inode
+exhaustion. • Confirm mounted storage.
+
+  --------------------------------------------------
+  8. BEST PRACTICES
+  --------------------------------------------------
+  - Use df -h for readability. - Check df -i if free
+  space exists but files can’t be created. - Combine
+  with du to locate directories consuming space. -
+  Monitor filesystems nearing 80–90% usage.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Which command shows readable disk usage? Answer: df -h
+
+2.  Which option displays filesystem type? Answer: -T
+
+3.  Which option reports inode usage? Answer: -i
+
+4.  Show only ext4 filesystems. Answer: df -t ext4
+
+5.  Exclude tmpfs from output. Answer: df -x tmpfs
+
+6.  Why would df show free space but users cannot create files? Answer:
+    Inodes may be exhausted; check df -i.
+
+7.  Which command checks only the root filesystem? Answer: df -h /
+
+8.  What problem does df solve? Answer: It reports filesystem capacity
+    and free space.
+
+9.  When should you use du instead of df? Answer: To identify which
+    directories/files consume space.
+
+10. A server is 95% full. Which command do you run first? Answer: df -h
+    to identify the affected filesystem.

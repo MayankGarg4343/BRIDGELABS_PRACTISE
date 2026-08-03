@@ -1,0 +1,90 @@
+LINUX COMMAND NOTES – mkfs (Create a Filesystem)
+
+1. OVERVIEW
+
+Command: mkfs
+
+Purpose: mkfs (Make Filesystem) creates a new filesystem on a storage
+device or partition such as /dev/sdb1. It prepares the storage so an
+operating system can store files.
+
+Problem it solves: - A new disk cannot store files until a filesystem
+exists. - A corrupted or repurposed partition often needs a new
+filesystem. - Allows choosing the most suitable filesystem (ext4, xfs,
+vfat, etc.).
+
+WARNING: Creating a filesystem destroys existing data on the target
+partition.
+
+  -----------------------------------------------------
+  2. SYNTAX
+  -----------------------------------------------------
+  mkfs [options] device mkfs -t filesystem_type device
+
+  -----------------------------------------------------
+
+3. HOW IT WORKS
+
+1.  Writes filesystem metadata.
+2.  Creates superblock and filesystem structures.
+3.  Initializes inode/data structures.
+4.  Makes the partition mountable.
+
+  -----------------------------------------------------
+  4. COMMON OPTIONS
+  -----------------------------------------------------
+  -t TYPE Specify filesystem type. Example: mkfs -t
+  ext4 /dev/sdb1
+
+  -V Verbose output.
+
+  -h Help.
+
+  Most advanced options are filesystem-specific and are
+  passed through mkfs..
+
+  Examples: mkfs.ext4 -L DATA /dev/sdb1 mkfs.xfs -f
+  /dev/sdb1 mkfs.vfat -F 32 /dev/sdb1
+  -----------------------------------------------------
+
+5. COMMON USE CASES
+
+• Prepare a new SSD • Reformat a USB drive • Create Linux data partition
+• Initialize cloud block storage • Lab environments
+
+  -----------------------------------------------------
+  6. BEST PRACTICES
+  -----------------------------------------------------
+  - Verify device with lsblk before running. - Unmount
+  partition first. - Backup important data. - Prefer
+  UUID mounting in /etc/fstab.
+
+  -----------------------------------------------------
+
+7. SCENARIO-BASED QUESTIONS
+
+1.  A new disk appears in lsblk but cannot be mounted. Answer: Create a
+    filesystem using mkfs.
+
+2.  You need an ext4 filesystem on /dev/sdb1. Answer: mkfs -t ext4
+    /dev/sdb1
+
+3.  Why does mkfs erase data? Answer: It rewrites filesystem metadata
+    and structures.
+
+4.  Which command creates an XFS filesystem? Answer: mkfs.xfs /dev/sdb1
+
+5.  When should you never run mkfs? Answer: On a partition containing
+    required data.
+
+6.  Why check lsblk first? Answer: To avoid formatting the wrong disk.
+
+7.  Why choose ext4? Answer: General-purpose Linux filesystem.
+
+8.  Why use filesystem labels? Answer: Easier identification during
+    mounting.
+
+9.  What is created first? Answer: Filesystem metadata and superblock.
+
+10. What problem does mkfs solve? Answer: It converts raw storage into a
+    usable filesystem.

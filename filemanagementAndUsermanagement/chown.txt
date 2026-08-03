@@ -1,0 +1,114 @@
+LINUX COMMAND NOTES – chown (Change File Owner)
+
+1. OVERVIEW
+
+Command: chown
+
+Purpose: Changes the ownership of files and directories.
+
+Why it is used: - Transfer ownership to another user. - Assign files to
+the correct group. - Fix permission issues after copying/restoring
+files. - Prepare application data directories.
+
+Problem it solves: Ensures the correct user and/or group owns files so
+applications and users can access them appropriately.
+
+  --------------------------------------------------
+  2. OWNERSHIP BASICS
+  --------------------------------------------------
+  Each file has: - User (Owner) - Group (Owning
+  group)
+
+  View ownership: ls -l
+
+  Syntax in output: -rw-r–r– 1 alice developers …
+  --------------------------------------------------
+
+3. SYNTAX
+
+chown [options] OWNER[:GROUP] FILE
+
+Examples: chown alice file.txt chown alice:developers project.txt chown
+:developers report.txt
+
+  --------------------------------------------------
+  4. IMPORTANT OPTIONS
+  --------------------------------------------------
+  -R Change ownership recursively.
+
+  -v Verbose output.
+
+  -c Report only changed files.
+
+  -f Suppress most error messages.
+
+  –reference=FILE Copy owner and group from another
+  file.
+
+  -h Affect symbolic link itself (where supported),
+  not its target.
+  --------------------------------------------------
+
+5. EXAMPLES
+
+Change owner: chown alice notes.txt
+
+Change owner and group: chown alice:developers app.conf
+
+Change only group: chown :developers file.txt
+
+Recursive ownership: chown -R www-data:www-data /var/www/html
+
+Copy ownership: chown –reference=file1 file2
+
+  --------------------------------------------------
+  6. chown vs chmod
+  --------------------------------------------------
+  chown Changes owner/group.
+
+  chmod Changes permissions.
+  --------------------------------------------------
+
+7. BEST PRACTICES
+
+-   Verify ownership with ls -l.
+-   Use -R carefully.
+-   Assign least-privilege ownership.
+-   Avoid unnecessary root ownership.
+
+  --------------------------------------------------
+  8. COMMON USE CASES
+  --------------------------------------------------
+  • Fix web server permissions. • Correct ownership
+  after extracting backups. • Transfer project files
+  to another user. • Assign shared group ownership.
+  • Prepare application directories.
+
+  --------------------------------------------------
+
+9. SCENARIO-BASED QUESTIONS
+
+1.  Change owner to alice. Answer: chown alice file.txt
+
+2.  Change owner and group. Answer: chown alice:developers file.txt
+
+3.  Change only the group. Answer: chown :developers file.txt
+
+4.  Apply ownership recursively. Answer: chown -R alice:developers
+    project/
+
+5.  Copy ownership from another file. Answer: chown –reference=source
+    target
+
+6.  Which command displays file ownership? Answer: ls -l
+
+7.  What problem does chown solve? Answer: It assigns the correct
+    owner/group to files and directories.
+
+8.  Which option shows changes made? Answer: -v or -c
+
+9.  After restoring a website, Apache cannot read files. Why? Answer:
+    Ownership is incorrect; assign the web server user/group.
+
+10. What is the difference between chmod and chown? Answer: chmod
+    changes permissions; chown changes ownership.

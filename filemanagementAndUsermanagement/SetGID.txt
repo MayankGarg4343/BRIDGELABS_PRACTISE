@@ -1,0 +1,101 @@
+LINUX COMMAND NOTES – SetGID (SGID)
+
+1. OVERVIEW
+
+SetGID (Set Group ID) is a special permission bit.
+
+On executables: - The program runs with the effective group ID of the
+file’s group.
+
+On directories: - New files and subdirectories inherit the directory’s
+group instead of the creator’s primary group.
+
+Why it is used: - Enable controlled group access. - Simplify
+collaboration in shared directories.
+
+Problem it solves: Keeps group ownership consistent and allows programs
+to temporarily use a specific group when required.
+
+  --------------------------------------------------
+  2. HOW SGID WORKS
+  --------------------------------------------------
+  Files: - Process gets the file’s group privileges
+  while running.
+
+  Directories: - Newly created files inherit the
+  parent directory’s group.
+  --------------------------------------------------
+
+3. VIEWING SGID
+
+ls -l
+
+Example: -rwxr-sr-x drwxrwsr-x
+
+The ‘s’ in the group execute position indicates SGID.
+
+  --------------------------------------------------
+  4. SETTING & REMOVING SGID
+  --------------------------------------------------
+  Symbolic: chmod g+s file_or_directory chmod g-s
+  file_or_directory
+
+  Numeric: chmod 2755 file chmod 2775 shared_dir
+
+  Leading special digits: 4 = SUID 2 = SGID 1 =
+  Sticky Bit
+  --------------------------------------------------
+
+5. EXAMPLES
+
+Create shared directory: mkdir /shared chown root:developers /shared
+chmod 2775 /shared
+
+Find SGID files: find / -perm -2000 -type f 2>/dev/null
+
+Find SGID directories: find / -perm -2000 -type d 2>/dev/null
+
+  --------------------------------------------------
+  6. BEST PRACTICES
+  --------------------------------------------------
+  - Use SGID on shared project directories. - Audit
+  SGID executables regularly. - Grant write access
+  only to trusted groups. - Combine with ACLs for
+  finer control.
+
+  --------------------------------------------------
+
+7. COMMON USE CASES
+
+• Team collaboration folders. • Shared development environments. •
+Department file shares. • Programs requiring temporary group privileges.
+
+  -----------------------------
+  8. SCENARIO-BASED QUESTIONS
+  -----------------------------
+
+1.  What does SGID do on a directory? Answer: New files inherit the
+    directory’s group.
+
+2.  What numeric value represents SGID? Answer: 2 (e.g., 2755 or 2775).
+
+3.  Set SGID symbolically. Answer: chmod g+s directory
+
+4.  Remove SGID. Answer: chmod g-s directory
+
+5.  Which command finds SGID files? Answer: find / -perm -2000 -type f
+
+6.  How is SGID shown in ls -l? Answer: An ‘s’ appears in the group’s
+    execute position.
+
+7.  Why use SGID on a shared folder? Answer: To keep all new files in
+    the same group automatically.
+
+8.  What problem does SGID solve? Answer: Consistent group ownership and
+    controlled group privilege usage.
+
+9.  Can SGID be used on executables? Answer: Yes, they run with the
+    file’s effective group ID.
+
+10. When is SGID preferred? Answer: When multiple users collaborate on
+    the same directory and need shared group ownership.
