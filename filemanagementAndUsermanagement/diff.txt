@@ -77,9 +77,11 @@ diff -r dir1 dir2 diff -q file1 file2 diff -w file1 file2
 
 7. COMMON USE CASES
 
-• Compare configuration files. • Check code changes before deployment. •
-Generate patch files. • Compare backup directories. • Validate migration
-results.
+• Compare configuration files. 
+• Check code changes before deployment. 
+• Generate patch files. 
+• Compare backup directories. 
+• Validate migration results.
 
   --------------------------------------------------
   8. BEST PRACTICES
