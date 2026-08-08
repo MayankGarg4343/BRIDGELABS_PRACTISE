@@ -1,0 +1,1161 @@
+============================================================ DATA
+TRANSMISSION MODES - DETAILED NOTES
+============================================================
+
+Topic: Simplex, Half Duplex, Full Duplex
+
+Purpose: These notes explain not only the definitions of transmission
+modes, but also how communication works internally at the physical/NIC
+level and how the concepts relate to Ethernet and DevOps
+troubleshooting.
+
+============================================================ 1. WHAT IS
+A TRANSMISSION MODE?
+============================================================
+
+A transmission mode defines the direction and timing in which data can
+flow between two communicating devices.
+
+The three common transmission modes are:
+
+1.  Simplex
+2.  Half Duplex
+3.  Full Duplex
+
+Core difference:
+
+Simplex: One-way communication.
+
+Half Duplex: Two-way communication, but only one direction at a time.
+
+Full Duplex: Two-way communication, with both directions operating
+simultaneously.
+
+============================================================ 2. SIMPLEX
+============================================================
+
+Definition:
+
+In simplex communication, data flows only in one direction.
+
+Diagram:
+
+    A ----------------------------> B
+
+    A = Sender
+    B = Receiver
+
+The receiver does not send data back through the same communication
+channel in the simplex communication model.
+
+Simplex mental model:
+
+    ONE-WAY ROAD
+
+    A ===========================> B
+
+Traffic is allowed only in one direction.
+
+Examples:
+
+-   TV broadcast
+-   Radio broadcast
+-   Basic keyboard-to-computer input model
+
+Important: The examples are conceptual. Real systems can contain
+additional control or feedback mechanisms outside the simplex data
+channel.
+
+============================================================ 3.
+SIMPLEX - INTERNAL WORKING
+============================================================
+
+At a simplified physical level:
+
+    A                              B
+
+    TX --------------------------> RX
+           Physical Medium
+
+A has a transmitter (TX) that generates a signal.
+
+B has a receiver (RX) that detects and interprets the signal.
+
+Conceptual flow:
+
+    Application
+        |
+        v
+    Network Stack
+        |
+        v
+    NIC
+        |
+        v
+    Transmitter
+        |
+        v
+    Physical Signal
+        |
+        v
+    Cable / Fiber / Air
+        |
+        v
+    Receiver
+        |
+        v
+    NIC
+        |
+        v
+    Network Stack
+        |
+        v
+    Application
+
+The reverse transmission path is not available or not used for the
+simplex communication channel.
+
+============================================================ 4. HALF
+DUPLEX ============================================================
+
+Definition:
+
+In half-duplex communication, data can flow in both directions, but only
+one direction can transmit at a time.
+
+Diagram:
+
+    A ---------------------------> B
+
+Then:
+
+    A <--------------------------- B
+
+Both directions are possible, but not simultaneously.
+
+Half duplex mental model:
+
+    ONE-LANE ROAD WITH ALTERNATING TRAFFIC
+
+First: A -> B
+
+Then: B -> A
+
+Then: A -> B
+
+And so on.
+
+============================================================ 5. HALF
+DUPLEX - INTERNAL WORKING
+============================================================
+
+Both endpoints can have transmit and receive capability.
+
+Conceptually:
+
+    A                              B
+
+    TX --------------------------> RX
+    RX <-------------------------- TX
+
+However, the communication system controls when each side transmits.
+
+Time T1:
+
+    A = Transmitting
+    B = Receiving
+
+    A TX -----------------------> B RX
+
+Time T2:
+
+    A = Receiving
+    B = Transmitting
+
+    A RX <----------------------- B TX
+
+Therefore, the communication direction changes over time.
+
+The exact mechanism used to decide who transmits depends on the
+communication technology.
+
+Possible mechanisms include:
+
+-   Contention
+-   Collision detection
+-   Token passing
+-   Polling
+-   Scheduling
+-   Other media-access mechanisms
+
+============================================================ 6. HALF
+DUPLEX - SHARED ETHERNET EXAMPLE
+============================================================
+
+Traditional/shared Ethernet is a classic example for understanding
+half-duplex behavior.
+
+Conceptual topology:
+
+                 Shared Ethernet Medium
+                         |
+              +----------+----------+
+              |          |          |
+             PC1        PC2        PC3
+
+All devices share the same communication medium.
+
+Problem:
+
+If PC1 and PC2 transmit at the same time:
+
+    PC1 ------------------\
+                            X
+    PC2 ------------------/
+
+Their transmissions can interfere.
+
+This is called a collision.
+
+============================================================ 7. CSMA/CD
+============================================================
+
+Traditional half-duplex Ethernet used:
+
+CSMA/CD
+
+Full form:
+
+Carrier Sense Multiple Access with Collision Detection
+
+Basic conceptual process:
+
+STEP 1 - Carrier Sense
+
+The device checks whether the shared medium is busy.
+
+    Medium busy?
+        |
+        +-- YES -> Wait
+        |
+        +-- NO  -> Attempt transmission
+
+STEP 2 - Multiple Access
+
+Multiple devices can access the same shared medium.
+
+STEP 3 - Collision Detection
+
+If two devices transmit at the same time:
+
+    PC1 -----------\
+                    X
+    PC2 -----------/
+
+The collision is detected.
+
+STEP 4 - Stop / Abort
+
+The affected transmissions stop.
+
+STEP 5 - Backoff
+
+The devices wait for different/randomized intervals before attempting
+retransmission.
+
+Traditional Ethernet uses binary exponential backoff for this process.
+
+Important:
+
+CSMA/CD is associated with shared/half-duplex Ethernet.
+
+Modern switched full-duplex Ethernet does not use the traditional
+CSMA/CD collision mechanism for normal operation.
+
+============================================================ 8. FULL
+DUPLEX ============================================================
+
+Definition:
+
+In full-duplex communication, data can flow in both directions
+simultaneously.
+
+Diagram:
+
+    A ---------------------------> B
+    A <--------------------------- B
+
+Both directions can be active at the same time.
+
+Full duplex mental model:
+
+    TWO-WAY ROAD
+
+    A ===========================> B
+    A <=========================== B
+
+Traffic can move in both directions simultaneously.
+
+============================================================ 9. FULL
+DUPLEX - INTERNAL WORKING
+============================================================
+
+Both endpoints have transmit and receive capability.
+
+Conceptually:
+
+    A                              B
+
+    TX --------------------------> RX
+    RX <-------------------------- TX
+
+At the same moment:
+
+    A is transmitting to B
+    B is transmitting to A
+
+This is the major difference from half duplex.
+
+Example:
+
+    Time T:
+
+    A TX -----------------------> B RX
+    A RX <----------------------- B TX
+
+Both operations happen simultaneously.
+
+The actual physical signaling mechanism depends on the specific
+networking technology.
+
+============================================================ 10. WHY
+DON’T FULL-DUPLEX ETHERNET LINKS HAVE TRADITIONAL COLLISIONS?
+============================================================
+
+This is a very important networking question.
+
+Traditional half-duplex Ethernet:
+
+    Shared medium
+        |
+        v
+    Multiple devices
+        |
+        v
+    Simultaneous transmission possible
+        |
+        v
+    Collision possible
+        |
+        v
+    CSMA/CD required
+
+Modern switched full-duplex Ethernet:
+
+    Point-to-point link
+        |
+        v
+    Two endpoints
+        |
+        v
+    Both can transmit simultaneously
+        |
+        v
+    No traditional shared-medium collision
+        |
+        v
+    CSMA/CD is not needed for normal operation
+
+Modern switched Ethernet links are generally full duplex.
+
+============================================================ 11.
+ETHERNET FULL-DUPLEX EXAMPLE
+============================================================
+
+Consider:
+
+    Server NIC
+         |
+         |
+         v
+    Switch Port
+
+Conceptually:
+
+    Server TX ------------------> Switch RX
+    Server RX <------------------ Switch TX
+
+The server can send data to the switch while the switch can
+simultaneously send data to the server.
+
+This is full-duplex communication.
+
+============================================================ 12. WHAT
+HAPPENS INSIDE A SWITCH?
+============================================================
+
+Consider:
+
+    Server A
+        |
+        |
+      Switch
+        |
+        |
+    Server B
+
+Suppose Server A sends data to Server B.
+
+Conceptual process:
+
+STEP 1: Server A application generates data.
+
+STEP 2: The network stack processes the data.
+
+STEP 3: Transport layer may create a TCP segment or UDP datagram.
+
+STEP 4: Network layer creates an IP packet.
+
+STEP 5: Ethernet processing creates an Ethernet frame.
+
+STEP 6: Server A NIC/PHY converts the frame into physical signaling.
+
+STEP 7: The signal travels across the link to the switch.
+
+STEP 8: The switch receives the Ethernet frame.
+
+STEP 9: The switch processes the frame and determines the correct output
+port.
+
+STEP 10: The switch transmits the frame from the appropriate port.
+
+STEP 11: Server B receives the physical signal.
+
+STEP 12: Server B’s NIC/PHY converts the signal back into data.
+
+STEP 13: The frame is processed upward through the network stack.
+
+Conceptual path:
+
+    Server A
+       |
+       | Frame
+       v
+    Switch Port 1
+       |
+       v
+    Switching Logic / Switch Fabric
+       |
+       v
+    Switch Port 2
+       |
+       v
+    Server B
+
+============================================================ 13. WHAT
+ACTUALLY TRAVELS THROUGH THE CABLE?
+============================================================
+
+A common beginner misconception is:
+
+“0 and 1 physically travel through the cable.”
+
+More accurately, digital data is represented using physical signals.
+
+Depending on the technology, the physical representation may use:
+
+-   Electrical signaling
+-   Optical signaling
+-   Radio-frequency signaling
+
+Examples:
+
+Copper Ethernet: Electrical signals
+
+Fiber Ethernet: Optical signals
+
+Wi-Fi: Radio signals
+
+The exact encoding and signaling scheme depends on the physical-layer
+standard.
+
+============================================================ 14. DATA
+ENCAPSULATION AND PHYSICAL TRANSMISSION
+============================================================
+
+Suppose an application wants to send:
+
+    "Hello"
+
+The data moves through multiple layers.
+
+Conceptually:
+
+    Application Data
+          |
+          v
+    TCP Segment
+          |
+          v
+    IP Packet
+          |
+          v
+    Ethernet Frame
+          |
+          v
+    Physical Signals
+          |
+          v
+    Cable / Fiber / Air
+
+At the destination, the process is reversed:
+
+    Physical Signals
+          |
+          v
+    Ethernet Frame
+          |
+          v
+    IP Packet
+          |
+          v
+    TCP Segment
+          |
+          v
+    Application Data
+
+============================================================ 15. NIC,
+MAC, AND PHY
+============================================================
+
+A Network Interface Card (NIC) connects the host to the network.
+
+A simplified NIC architecture can be represented as:
+
+    +----------------------+
+    |         MAC          |
+    +----------------------+
+               |
+               v
+    +----------------------+
+    |         PHY          |
+    +----------------------+
+               |
+               v
+            Cable
+
+MAC: Media Access Control.
+
+Common responsibilities include Ethernet frame handling,
+source/destination MAC addressing, frame transmission and reception, and
+frame validation.
+
+PHY: Physical layer functionality.
+
+Common responsibilities include physical signaling, transmission,
+reception, encoding/decoding, and physical link characteristics.
+
+The exact architecture can vary by implementation.
+
+============================================================ 16. MAC VS
+PHY ============================================================
+
+MAC is primarily concerned with Ethernet frame and media access
+functions.
+
+PHY is concerned with converting digital information into physical
+signals and converting received physical signals back into data.
+
+Simplified:
+
+    Data
+      |
+      v
+    MAC
+      |
+      v
+    PHY
+      |
+      v
+    Physical Medium
+
+============================================================ 17.
+AUTO-NEGOTIATION
+============================================================
+
+Modern Ethernet links commonly use auto-negotiation.
+
+The two link partners can exchange their supported capabilities.
+
+Conceptually:
+
+    Server NIC                Switch Port
+
+    "I support..." <-------> "I support..."
+
+             |
+             v
+
+    Select compatible link parameters
+
+For example:
+
+    Speed  = 1 Gbps
+    Duplex = Full
+
+The exact negotiation behavior depends on the Ethernet standard and
+implementation.
+
+============================================================ 18. SPEED
+VS DUPLEX ============================================================
+
+These two concepts must not be confused.
+
+Speed tells us the data transfer rate.
+
+Duplex tells us whether communication can happen in one or both
+directions and whether both directions can operate simultaneously.
+
+Example:
+
+    1 Gbps Full Duplex
+
+means:
+
+    Speed:
+        1 Gbps
+
+    Duplex:
+        Full
+
+Therefore:
+
+    Duplex != Bandwidth
+
+Full duplex does not simply mean “double speed.”
+
+============================================================ 19. DUPLEX
+MISMATCH ============================================================
+
+A duplex mismatch occurs when two connected interfaces have incompatible
+duplex configurations.
+
+Example:
+
+    Server NIC:
+        Full Duplex
+
+    Switch Port:
+        Half Duplex
+
+This can lead to:
+
+-   Poor network performance
+-   Low throughput
+-   Errors
+-   Packet loss
+-   Retransmissions
+-   Latency/performance issues
+-   Application connectivity problems
+
+Modern auto-negotiation normally helps avoid such problems, but manually
+forced or incompatible settings can still cause issues.
+
+============================================================ 20.
+CHECKING DUPLEX ON LINUX
+============================================================
+
+A common Linux command is:
+
+    ethtool eth0
+
+Example output:
+
+    Speed: 1000Mb/s
+    Duplex: Full
+    Auto-negotiation: on
+    Link detected: yes
+
+Meaning:
+
+    Speed:
+        1000 Mbps
+
+    Duplex:
+        Full duplex
+
+    Auto-negotiation:
+        Enabled
+
+    Link detected:
+        Physical link is detected/up
+
+Other useful commands for network troubleshooting include:
+
+    ip addr
+    ip link
+    ethtool eth0
+    ss -tulnp
+    ping <destination>
+    traceroute <destination>
+
+These commands will be studied in more depth later.
+
+============================================================ 21. FULL
+DUPLEX DOES NOT NECESSARILY MEAN TWO CABLES
+============================================================
+
+Incorrect assumption:
+
+    Full duplex = always two physical cables
+
+This is not universally correct.
+
+Full duplex means that the communication system supports simultaneous
+transmission and reception.
+
+The physical implementation depends on the technology.
+
+Different technologies can use different signaling and physical
+arrangements to achieve full-duplex communication.
+
+============================================================ 22. COMMON
+MISCONCEPTIONS
+============================================================
+
+MISCONCEPTION 1:
+
+“Half duplex means one-way communication.”
+
+WRONG.
+
+Half duplex supports both directions, but only one direction can
+transmit at a time.
+
+MISCONCEPTION 2:
+
+“Full duplex means double bandwidth.”
+
+Not necessarily.
+
+Full duplex describes simultaneous bidirectional operation. Actual
+throughput depends on the link technology, capacity, and other factors.
+
+MISCONCEPTION 3:
+
+“All Ethernet uses CSMA/CD.”
+
+WRONG.
+
+Traditional shared/half-duplex Ethernet used CSMA/CD.
+
+Modern switched full-duplex Ethernet does not use the traditional
+CSMA/CD collision mechanism for normal operation.
+
+MISCONCEPTION 4:
+
+“Full duplex means there must be two cables.”
+
+Not universally true.
+
+Full duplex describes communication behavior, not a fixed physical cable
+arrangement.
+
+============================================================ 23. SIMPLEX
+VS HALF DUPLEX VS FULL DUPLEX
+============================================================
+
+Simplex:
+
+    A -----------------------> B
+
+    One direction only.
+
+Half Duplex:
+
+    A -----------------------> B
+    A <----------------------- B
+
+    Both directions possible,
+    but one at a time.
+
+Full Duplex:
+
+    A -----------------------> B
+    A <----------------------- B
+
+    Both directions possible
+    simultaneously.
+
+============================================================ 24.
+COMPARISON TABLE
+============================================================
+
+Simplex: Direction: One-way
+
+    Simultaneous communication:
+        Not applicable
+
+    Example:
+        TV broadcast
+
+    Mental model:
+        One-way road
+
+Half Duplex: Direction: Two-way
+
+    Simultaneous communication:
+        No
+
+    Example:
+        Walkie-talkie
+
+    Mental model:
+        One-lane road with alternating traffic
+
+Full Duplex: Direction: Two-way
+
+    Simultaneous communication:
+        Yes
+
+    Example:
+        Telephone conversation
+
+    Mental model:
+        Two-way road
+
+============================================================ 25.
+INTERVIEW QUESTIONS AND ANSWERS
+============================================================
+
+Q1. What is a transmission mode?
+
+Answer: A transmission mode defines the direction and timing in which
+data can flow between communicating devices.
+
+Q2. What is simplex?
+
+Answer: Simplex communication allows data to flow only in one direction.
+
+Q3. What is half duplex?
+
+Answer: Half-duplex communication allows data to flow in both
+directions, but only one direction can transmit at a time.
+
+Q4. What is full duplex?
+
+Answer: Full-duplex communication allows data to flow in both directions
+simultaneously.
+
+Q5. What is the main difference between half duplex and full duplex?
+
+Answer: Both support bidirectional communication. Half duplex allows
+only one direction at a time, while full duplex allows both directions
+simultaneously.
+
+Q6. Why did traditional half-duplex Ethernet need CSMA/CD?
+
+Answer: Because multiple devices could share the same medium and could
+attempt transmission simultaneously, creating the possibility of
+collisions.
+
+Q7. Why is CSMA/CD not needed in normal modern full-duplex switched
+Ethernet?
+
+Answer: Modern switched full-duplex links are point-to-point and allow
+both endpoints to transmit simultaneously, so the traditional
+shared-medium collision problem does not apply.
+
+Q8. Does full duplex mean higher speed?
+
+Answer: Not directly. Duplex describes communication direction. Speed
+describes the data rate.
+
+Q9. Can a half-duplex link send data in both directions?
+
+Answer: Yes, but not simultaneously.
+
+Q10. Can a full-duplex link transmit and receive at the same time?
+
+Answer: Yes.
+
+============================================================ 26. DEVOPS
+TROUBLESHOOTING MENTAL MODEL
+============================================================
+
+If a server has a networking performance problem, do not immediately
+assume the Internet is slow.
+
+Think through the complete path:
+
+    Application
+        |
+        v
+    Transport
+        |
+        v
+    IP
+        |
+        v
+    Ethernet
+        |
+        v
+    NIC
+        |
+        v
+    PHY
+        |
+        v
+    Cable / Fiber
+        |
+        v
+    Switch
+        |
+        v
+    Router / Firewall / Other Network Devices
+        |
+        v
+    Destination
+
+Potential things to investigate:
+
+-   Is the interface up?
+-   What speed is negotiated?
+-   What duplex mode is active?
+-   Is auto-negotiation enabled?
+-   Are there interface errors?
+-   Are packets being dropped?
+-   Is there packet loss?
+-   Is the route correct?
+-   Is the destination reachable?
+-   Is a firewall blocking traffic?
+-   Is the destination service listening?
+-   Is the application configuration correct?
+
+============================================================ 27.
+COMPLETE INTERNAL DATA FLOW EXAMPLE
+============================================================
+
+Suppose:
+
+    Server A:
+        IP = 10.0.0.10
+
+    Server B:
+        IP = 10.0.0.20
+
+Server A wants to send:
+
+    "Hello"
+
+STEP 1 - APPLICATION
+
+    "Hello"
+
+STEP 2 - TRANSPORT
+
+TCP may add transport information and create a TCP segment.
+
+STEP 3 - NETWORK
+
+IP adds:
+
+    Source IP:
+        10.0.0.10
+
+    Destination IP:
+        10.0.0.20
+
+Result:
+
+    IP Packet
+
+STEP 4 - DATA LINK
+
+Ethernet adds link-layer information, including source and destination
+MAC addresses.
+
+Result:
+
+    Ethernet Frame
+
+STEP 5 - NIC / PHY
+
+The frame is converted into physical signaling.
+
+STEP 6 - PHYSICAL MEDIUM
+
+The signal travels through:
+
+    Server A
+       |
+       v
+    Cable
+       |
+       v
+    Switch
+       |
+       v
+    Cable
+       |
+       v
+    Server B
+
+STEP 7 - DESTINATION
+
+Server B reverses the process:
+
+    Physical Signal
+        |
+        v
+    Ethernet Frame
+        |
+        v
+    IP Packet
+        |
+        v
+    TCP
+        |
+        v
+    Application Data
+
+Eventually the application receives:
+
+    "Hello"
+
+============================================================ 28. WHERE
+TRANSMISSION MODE FITS
+============================================================
+
+Transmission mode is mainly concerned with how the communication
+medium/link allows transmission and reception.
+
+A simplified stack:
+
+    Application
+        |
+    Transport
+        |
+    Network
+        |
+    Data Link
+        |
+    Physical
+        |
+    Medium
+
+The actual transmit/receive behavior is closely associated with the
+lower layers, especially the physical link and associated
+data-link/media-access behavior.
+
+Do not treat “simplex/half/full duplex” as an application-layer concept.
+
+============================================================ 29.
+IMPORTANT TERMS
+============================================================
+
+TX: Transmit / transmitter
+
+RX: Receive / receiver
+
+NIC: Network Interface Card / network interface
+
+MAC: Media Access Control
+
+PHY: Physical layer functionality
+
+Frame: Data-link-layer unit, such as an Ethernet frame
+
+Packet: Network-layer data unit, commonly an IP packet
+
+CSMA/CD: Carrier Sense Multiple Access with Collision Detection
+
+Auto-negotiation: Mechanism used by compatible Ethernet link partners to
+exchange capabilities and establish compatible parameters.
+
+============================================================ 30. CORE
+MEMORY TRICK
+============================================================
+
+SIMPLEX:
+
+    ONE WAY
+
+    A ---------> B
+
+HALF DUPLEX:
+
+    TWO WAY
+    ONE AT A TIME
+
+    A ---------> B
+    A <--------- B
+
+FULL DUPLEX:
+
+    TWO WAY
+    SAME TIME
+
+    A ---------> B
+    A <--------- B
+
+============================================================ 31. FINAL
+CONCEPTUAL SUMMARY
+============================================================
+
+The fundamental question is:
+
+“How can the two endpoints transmit and receive data?”
+
+Simplex: Only one endpoint transmits toward the other.
+
+Half Duplex: Both endpoints can transmit, but they take turns.
+
+Full Duplex: Both endpoints can transmit and receive at the same time.
+
+At the physical level, digital information is represented by signals
+such as electrical, optical, or radio signals.
+
+A simplified transmission path is:
+
+    Application
+        |
+        v
+    Transport
+        |
+        v
+    IP
+        |
+        v
+    Ethernet
+        |
+        v
+    NIC / MAC
+        |
+        v
+    PHY
+        |
+        v
+    Physical Medium
+
+Modern switched Ethernet links are generally full duplex.
+
+Traditional shared/half-duplex Ethernet could experience collisions and
+used CSMA/CD to manage them.
+
+Modern full-duplex switched Ethernet is point-to-point, allows
+simultaneous transmission and reception, and does not use the
+traditional CSMA/CD collision mechanism for normal operation.
+
+For DevOps troubleshooting, duplex and link speed can be checked on
+Linux with:
+
+    ethtool eth0
+
+Understanding transmission modes helps build the foundation for deeper
+networking topics such as Ethernet, MAC addresses, switching, TCP/IP,
+routing, and network troubleshooting.
+
+============================================================ 
+END OF
+NOTES ============================================================

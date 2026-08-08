@@ -1,0 +1,470 @@
+============================================================
+NETWORKING BASICS
+============================================================
+
+1. WHAT IS A NETWORK?
+------------------------------------------------------------
+
+A network is a collection of two or more devices connected
+together so that they can communicate and exchange data or
+share resources.
+
+Examples:
+- Laptop connected to Wi-Fi router
+- Computers connected through a switch
+- Servers connected inside a data center
+- Cloud resources connected through a virtual network
+
+Important:
+A network is not necessarily the Internet.
+
+Example:
+
+Laptop ---- Switch ---- Printer
+
+This is a network even if there is no Internet connection.
+
+
+============================================================
+2. WHAT IS NETWORKING?
+============================================================
+
+Networking is the process/field of designing, connecting,
+configuring, operating, securing, and troubleshooting networks
+so that devices and systems can communicate.
+
+Simple distinction:
+
+Network    = What exists
+Networking = How communication is established and managed
+
+
+============================================================
+3. MAIN PURPOSE OF NETWORKING
+============================================================
+
+The fundamental purpose of networking is:
+
+To allow information to move from one device/process to
+another device/process.
+
+Examples:
+- Browser communicating with a web server
+- Application communicating with a database
+- Laptop communicating with a printer
+- Kubernetes pods communicating with each other
+
+
+============================================================
+4. DATA AND PACKETS
+============================================================
+
+Data transmitted over a network is generally broken into
+smaller units called packets.
+
+Concept:
+
+Large Data
+   |
+   +---- Packet 1
+   +---- Packet 2
+   +---- Packet 3
+   +---- Packet 4
+   |
+Network
+   |
+Destination
+   |
+Reassembled data
+
+
+============================================================
+5. NETWORK DEVICES
+============================================================
+
+Important network devices:
+
+1. Switch
+   - Connects devices within a local network.
+   - Primarily forwards Ethernet frames based on MAC addresses.
+
+2. Router
+   - Connects different networks.
+   - Forwards IP packets toward the appropriate destination/
+     next hop.
+
+3. Firewall
+   - Controls network traffic according to security rules.
+   - Can allow or deny traffic based on IP, port, protocol,
+     direction, etc.
+
+4. Load Balancer
+   - Distributes traffic across multiple backend servers.
+
+
+============================================================
+6. END DEVICES
+============================================================
+
+Devices that generate or consume network data are called
+end devices.
+
+Examples:
+- Laptop
+- Desktop
+- Mobile
+- Server
+- Printer
+- IoT device
+
+
+============================================================
+7. ADDRESSING
+============================================================
+
+Networks need addressing so that data can reach the correct
+destination.
+
+Important addressing concepts:
+
+MAC Address
+- Used at the data-link layer.
+- Identifies a network interface on a local network.
+
+IP Address
+- Logical network address.
+- Used for communication and routing between networks.
+
+Port Number
+- Identifies a service/application endpoint on a host.
+
+Domain Name
+- Human-friendly name that can be resolved to an IP address.
+
+Example:
+
+10.0.0.10:443
+
+10.0.0.10 = IP address
+443        = port
+
+
+============================================================
+8. NETWORK VS INTERNET
+============================================================
+
+Network:
+A connected collection of devices/systems.
+
+Internet:
+A global system of interconnected networks.
+
+Important statement:
+
+Every Internet connection involves networking,
+but every network is not the Internet.
+
+
+============================================================
+9. COMMON NETWORK TYPES
+============================================================
+
+LAN
+- Local Area Network
+- Usually limited to a home, office, building, etc.
+
+WAN
+- Wide Area Network
+- Connects networks over larger geographic areas.
+
+Internet
+- Global interconnected network of networks.
+
+Intranet
+- Private/internal organizational network.
+
+
+============================================================
+10. PROTOCOL
+============================================================
+
+Protocol = Rules used for communication between systems.
+
+Protocols define things such as:
+- Message format
+- Communication behavior
+- Addressing
+- Error handling
+- Connection behavior
+- Data exchange rules
+
+Important networking protocols:
+
+HTTP
+HTTPS
+TCP
+UDP
+IP
+DNS
+ARP
+DHCP
+SSH
+ICMP
+BGP
+
+
+============================================================
+11. NETWORKING LAYERS
+============================================================
+
+Networking can be understood in layers.
+
+High-level model:
+
+Application
+    |
+Transport
+    |
+Network
+    |
+Data Link
+    |
+Physical
+
+Example HTTPS communication:
+
+Browser
+   |
+HTTPS
+   |
+TCP
+   |
+IP
+   |
+Ethernet/Wi-Fi
+   |
+Physical medium
+
+
+============================================================
+12. NETWORKING MENTAL MODEL
+============================================================
+
+WHO?
+    -> Addressing
+
+WHAT?
+    -> Data
+
+HOW?
+    -> Protocols
+
+WHERE?
+    -> Routing
+
+WHO IS ALLOWED?
+    -> Firewall/Security
+
+HOW DOES IT REACH?
+    -> Network Infrastructure
+
+
+============================================================
+13. DEVOPS IMPORTANCE
+============================================================
+
+Networking is extremely important for DevOps.
+
+DevOps systems commonly contain:
+
+Internet
+   |
+Load Balancer
+   |
+Web Servers
+   |
+Application Servers
+   |
+Database
+
+Networking determines:
+- How clients reach applications
+- How services communicate
+- Which ports are used
+- How traffic is routed
+- Which traffic is allowed/blocked
+- How DNS resolves services
+- How containers communicate
+- How Kubernetes services communicate
+- How cloud resources communicate
+
+
+============================================================
+14. DOCKER NETWORKING
+============================================================
+
+Docker containers communicate using Docker networking.
+
+Example:
+
+Frontend
+   |
+Backend
+   |
+Database
+
+Important Docker networking concepts:
+- Container IP
+- Bridge network
+- DNS/service discovery
+- Port mapping
+- NAT
+- Network namespace
+
+
+============================================================
+15. KUBERNETES NETWORKING
+============================================================
+
+Kubernetes networking includes:
+
+- Pod IP
+- Node IP
+- Service IP
+- ClusterIP
+- DNS
+- CNI
+- NetworkPolicy
+- Ingress
+- Load Balancing
+
+Example:
+
+User
+ |
+Load Balancer
+ |
+Kubernetes Service
+ |
+Pod
+ |
+Another Service
+ |
+Another Pod
+
+
+============================================================
+16. IMPORTANT NETWORKING TOPICS TO LEARN
+============================================================
+
+Recommended learning sequence:
+
+1. Networking Fundamentals
+2. OSI Model
+3. TCP/IP Model
+4. MAC Address
+5. IP Address
+6. IPv4
+7. IPv6
+8. Binary and Hexadecimal
+9. Subnetting
+10. CIDR
+11. Public vs Private IP
+12. MAC vs IP
+13. ARP
+14. Switching
+15. Routing
+16. Default Gateway
+17. NAT
+18. TCP
+19. UDP
+20. Ports
+21. DNS
+22. DHCP
+23. HTTP/HTTPS
+24. TLS
+25. Firewall
+26. Proxy
+27. Load Balancer
+28. VPN
+29. VLAN
+30. Cloud Networking
+31. Docker Networking
+32. Kubernetes Networking
+33. Network Troubleshooting
+
+
+============================================================
+17. INTERVIEW DEFINITION
+============================================================
+
+Computer networking is the process of connecting devices
+and systems so they can communicate and exchange data using
+defined protocols, addressing mechanisms, and network
+infrastructure such as switches, routers, and firewalls.
+
+
+============================================================
+18. CORE FORMULA
+============================================================
+
+Devices
++
+Connectivity
++
+Addressing
++
+Protocols
++
+Network Infrastructure
+=
+Networking
+
+
+============================================================
+19. DEVOPS TROUBLESHOOTING MINDSET
+============================================================
+
+If an application cannot connect to another service, ask:
+
+1. What is the destination?
+2. Is the hostname resolving correctly?
+3. What is the destination IP?
+4. Is a route available?
+5. Is the destination port reachable?
+6. Is a firewall/security rule blocking traffic?
+7. Is the destination service actually running?
+8. Is the service listening on the expected port?
+9. Is the correct protocol being used?
+10. Is the application configuration correct?
+
+This mindset is very useful for production
+DevOps troubleshooting.
+
+
+============================================================
+20. KEY TAKEAWAY
+============================================================
+
+Networking is fundamentally about communication.
+
+A complete communication path usually requires:
+
+Source
+  ->
+Addressing
+  ->
+Protocol
+  ->
+Network Infrastructure
+  ->
+Routing
+  ->
+Security Controls
+  ->
+Destination
+
+Understanding networking means understanding how data travels
+from the source to the destination and what can happen at
+each step.
+============================================================
