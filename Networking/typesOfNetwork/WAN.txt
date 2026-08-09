@@ -1,0 +1,1313 @@
+TOPIC: WAN (Wide Area Network) — Full Notes
+
+1. DEFINITION
+
+WAN = Wide Area Network.
+
+WAN ek network hai jo geographically far-away networks/sites ko connect karta hai.
+
+Typical scope:
+- Multiple cities
+- Multiple states
+- Multiple countries
+- Multiple continents
+
+Core definition:
+WAN ka purpose geographically separated LANs/networks ko connect karna hai.
+
+
+2. PAN → LAN → MAN → WAN
+
+PAN:
+- Personal Area Network
+- Person ke nearby devices
+
+LAN:
+- Local Area Network
+- Home/office/building
+
+MAN:
+- Metropolitan Area Network
+- City/metropolitan area
+
+WAN:
+- Wide Area Network
+- Large geographic area
+
+Mental model:
+
+PAN
+ ↓
+Person
+
+LAN
+ ↓
+Local site
+
+MAN
+ ↓
+City
+
+WAN
+ ↓
+Cities/countries/continents
+
+
+3. WHY WAN EXISTS
+
+Company ke geographically distributed locations ko connect karne ke liye WAN use hota hai.
+
+Example:
+
+Delhi Office
+Mumbai Office
+London Office
+Singapore Data Center
+
+Each site can have its own LAN.
+
+WAN:
+
+Delhi LAN
+    |
+   WAN
+    |
+Mumbai LAN
+    |
+   WAN
+    |
+London LAN
+    |
+   WAN
+    |
+Singapore LAN
+
+
+4. REAL-WORLD ANALOGY
+
+LAN:
+- Building ke internal roads
+
+MAN:
+- City ke roads
+
+WAN:
+- Cities/countries ko connect karne wali highways
+
+Simple:
+
+LAN = Local roads
+MAN = City roads
+WAN = Long-distance highways
+
+
+5. BASIC WAN ARCHITECTURE
+
+    Delhi LAN
+        |
+      Switch
+        |
+      Router
+        |
+        WAN
+        |
+   Provider Network
+        |
+      Router
+        |
+    Mumbai LAN
+        |
+      Switch
+        |
+    Server
+
+
+6. COMPLETE DATA FLOW
+
+Example:
+
+Delhi Server
+IP = 10.10.1.10
+
+Mumbai Server
+IP = 10.20.1.10
+
+Path:
+
+    Delhi Server
+         ↓
+      Switch
+         ↓
+    Delhi Router
+         ↓
+         WAN
+         ↓
+   Intermediate Routers
+         ↓
+    Mumbai Router
+         ↓
+      Switch
+         ↓
+    Mumbai Server
+
+
+7. STEP 1 — APPLICATION
+
+Source server par application data create hota hai.
+
+    Application
+        ↓
+    Application Data
+
+Example:
+"Hello Mumbai Server"
+
+
+8. STEP 2 — TRANSPORT LAYER
+
+Application data TCP/UDP segment mein encapsulate hota hai.
+
+Example TCP:
+
+    Application Data
+          ↓
+      TCP Segment
+
+TCP information:
+- Source port
+- Destination port
+- Sequence number
+- Acknowledgment information
+- Flags
+
+
+9. STEP 3 — IP PACKET
+
+TCP/UDP segment IP packet ke andar encapsulate hota hai.
+
+Example:
+
+    Source IP:
+    10.10.1.10
+
+    Destination IP:
+    10.20.1.10
+
+Concept:
+
+    Application Data
+          ↓
+      TCP/UDP
+          ↓
+       IP Packet
+
+
+10. STEP 4 — DESTINATION CHECK
+
+Source server check karta hai:
+
+    Destination = 10.20.1.10
+
+Suppose source local subnet:
+
+    10.10.1.0/24
+
+Destination different network mein hai.
+
+Therefore source server packet ko default gateway/router ki taraf bhejta hai.
+
+
+11. STEP 5 — SOURCE LAN
+
+Source path:
+
+    Server
+       ↓
+    Switch
+       ↓
+    Router
+
+IPv4 environment mein source host gateway ka MAC address ARP/neighbor resolution se determine kar sakta hai.
+
+Ethernet frame:
+
+    Source MAC:
+    Source Server MAC
+
+    Destination MAC:
+    Router MAC
+
+IP packet:
+
+    Source IP:
+    10.10.1.10
+
+    Destination IP:
+    10.20.1.10
+
+
+12. STEP 6 — SOURCE ROUTER
+
+Router packet receive karta hai.
+
+Conceptually:
+
+    Ethernet Frame
+          ↓
+      IP Packet
+          ↓
+    Destination IP
+          ↓
+    Routing Table Lookup
+          ↓
+       Next Hop
+          ↓
+         WAN
+
+Router determine karta hai ki destination network WAN ke through reachable hai.
+
+
+13. STEP 7 — WAN
+
+Packet metropolitan/local network se bahar wide-area network mein enter karta hai.
+
+Example:
+
+    Source Router
+         |
+      Provider Edge
+         |
+      Core Router
+         |
+      Core Router
+         |
+      Core Router
+         |
+    Destination Router
+
+
+14. INTERMEDIATE ROUTERS
+
+WAN mein packet multiple routers se pass ho sakta hai.
+
+Example:
+
+    Router A
+       ↓
+      R1
+       ↓
+      R2
+       ↓
+      R3
+       ↓
+      R4
+       ↓
+    Router B
+
+Each router:
+
+    Receive packet
+         ↓
+    Read destination IP
+         ↓
+    Routing table lookup
+         ↓
+    Select next hop
+         ↓
+    Forward packet
+
+
+15. HOP-BY-HOP CONCEPT
+
+WAN mein packet hop-by-hop forward hota hai.
+
+Example:
+
+    Delhi Router
+         ↓
+        R1
+         ↓
+        R2
+         ↓
+        R3
+         ↓
+      Mumbai Router
+
+Har router next hop decide karta hai.
+
+
+16. MAC VS IP DURING WAN TRAVEL
+
+Very important.
+
+Final destination IP:
+
+    10.20.1.10
+
+Generally end-to-end destination IP same rehta hai during routed forwarding.
+
+But Layer-2 frame information is hop-by-hop.
+
+Example:
+
+Router A → Router B:
+
+    Source MAC = Router A
+    Destination MAC = Router B
+
+Router B → Router C:
+
+    Source MAC = Router B
+    Destination MAC = Router C
+
+Therefore:
+
+    IP destination:
+    Final destination
+
+    Layer-2 destination:
+    Changes hop-by-hop
+
+
+17. DESTINATION ROUTER
+
+Destination router packet receive karta hai.
+
+Example:
+
+    Destination IP:
+    10.20.1.10
+
+Router dekhta hai:
+
+    10.20.1.0/24
+          ↓
+    Directly connected LAN
+
+Then destination server ka MAC resolve kiya ja sakta hai using ARP/neighbor discovery where appropriate.
+
+Path:
+
+    Destination Router
+          ↓
+        Switch
+          ↓
+    Destination Server
+
+
+18. COMPLETE END-TO-END FLOW
+
+    Application
+         ↓
+      TCP/UDP
+         ↓
+      IP Packet
+         ↓
+    Ethernet/Link Frame
+         ↓
+      Source LAN
+         ↓
+    Source Router
+         ↓
+         WAN
+         ↓
+    Router 1
+         ↓
+    Router 2
+         ↓
+    Router 3
+         ↓
+    Router 4
+         ↓
+    Destination Router
+         ↓
+    Destination LAN
+         ↓
+    Destination Server
+
+
+19. WAN IS NOT A SINGLE CABLE
+
+WAN ek single cable nahi hota.
+
+It can contain:
+- Multiple routers
+- Provider edge routers
+- Provider core routers
+- Fiber links
+- MPLS infrastructure
+- Internet links
+- VPN tunnels
+- SD-WAN infrastructure
+- Leased circuits
+- Cellular links
+
+
+20. COMMON WAN TECHNOLOGIES
+
+Common technologies/approaches:
+
+- MPLS
+- Internet VPN
+- IPsec VPN
+- SD-WAN
+- Leased Lines
+- Carrier Ethernet
+- Fiber-based private connectivity
+- Cellular 4G/5G
+- Satellite links
+- Private cloud connectivity
+
+
+21. MPLS
+
+MPLS = Multiprotocol Label Switching.
+
+MPLS is a forwarding technology.
+
+Typical architecture:
+
+    Site A
+      |
+     CE
+      |
+     PE
+      |
+   MPLS Core
+      |
+     PE
+      |
+     CE
+      |
+    Site B
+
+Terms:
+- CE = Customer Edge
+- PE = Provider Edge
+
+Important:
+MPLS is not the same thing as WAN.
+
+WAN = network scope
+MPLS = networking/forwarding technology
+
+
+22. INTERNET VPN
+
+Example:
+
+    Office A
+       |
+    VPN Router
+       |
+    Internet
+       |
+    VPN Router
+       |
+    Office B
+
+IPsec can provide encrypted site-to-site connectivity.
+
+Important:
+
+    WAN = wide-area connectivity concept
+    VPN = secure/encrypted tunnel mechanism
+
+
+23. SD-WAN
+
+SD-WAN can use multiple transports.
+
+Example:
+
+    Site A
+       |
+    SD-WAN Edge
+      /      \
+ Internet   MPLS
+      \      /
+       SD-WAN
+          |
+       Site B
+
+SD-WAN provides policy-driven management of WAN connectivity.
+
+Important:
+SD-WAN is not the same as WAN.
+It is an architecture/technology used to manage WAN connectivity.
+
+
+24. LEASED LINE
+
+Dedicated connectivity:
+
+    Office A
+       |
+    Dedicated Circuit
+       |
+    Office B
+
+Used where predictable connectivity/SLA is required.
+
+
+25. CELLULAR WAN
+
+Examples:
+- 4G
+- 5G
+
+Useful for:
+- Remote branches
+- Backup connectivity
+- Mobile infrastructure
+- IoT
+- Temporary sites
+
+
+26. SATELLITE WAN
+
+Example:
+
+    Remote Site
+        |
+    Satellite
+        |
+    Ground Station
+        |
+    Network
+
+Useful for remote locations where terrestrial connectivity is difficult.
+
+
+27. WAN AND ROUTING
+
+Routing is one of the most important concepts in WAN.
+
+Example:
+
+    Delhi:
+    10.10.0.0/16
+
+    Mumbai:
+    10.20.0.0/16
+
+Delhi router needs a route:
+
+    10.20.0.0/16
+          ↓
+      Next Hop
+          ↓
+         WAN
+
+
+28. ROUTING PROTOCOLS
+
+Common routing protocols:
+
+- OSPF
+- IS-IS
+- BGP
+- EIGRP in some environments
+- Static routes
+
+Important:
+
+    WAN = Network scope
+
+    OSPF/BGP/IS-IS
+         =
+    Routing protocols
+
+
+29. BGP
+
+BGP = Border Gateway Protocol.
+
+Used heavily in:
+- Internet
+- ISP networks
+- Large enterprise networks
+- Data centers
+- Multi-homing
+- Inter-AS routing
+
+Concept:
+
+    AS 100
+      |
+     BGP
+      |
+    AS 200
+      |
+     BGP
+      |
+    AS 300
+
+BGP exchanges reachability information between autonomous systems.
+
+BGP is not the same as WAN.
+
+
+30. OSPF
+
+OSPF = Open Shortest Path First.
+
+Can be used inside enterprise/private networks.
+
+Example:
+
+    Router A
+       |
+      OSPF
+       |
+    Router B
+       |
+      OSPF
+       |
+    Router C
+
+Routers learn topology and calculate routes.
+
+
+31. WAN REDUNDANCY
+
+Single path:
+
+    Delhi -------- Mumbai
+
+Failure:
+
+    Delhi ----X---- Mumbai
+
+Redundant:
+
+    Delhi ---------------- Mumbai
+      \                    /
+       \------------------/
+
+Multiple WAN paths improve availability.
+
+Possible redundancy:
+- Multiple links
+- Multiple routers
+- Multiple providers
+- Multiple technologies
+
+
+32. WAN LATENCY
+
+WAN generally has higher latency than a local LAN because:
+- Geographic distance is larger
+- More network hops
+- Longer physical paths
+- Provider routing
+- Queuing/congestion
+
+Latency depends on:
+- Distance
+- Fiber path
+- Number of hops
+- Routing
+- Congestion
+- Queuing
+
+
+33. BANDWIDTH VS LATENCY
+
+Bandwidth:
+- Amount of data that can be transmitted per unit time.
+
+Latency:
+- Time taken for data/packet to travel from source to destination.
+
+Important:
+
+High bandwidth does not automatically mean low latency.
+
+Example:
+
+    10 Gbps link
+    can still have
+    significant WAN latency.
+
+
+34. PACKET LOSS
+
+WAN packet loss can be caused by:
+- Congestion
+- Physical link issues
+- Provider problems
+- Interface errors
+- Routing issues
+- Firewall
+- MTU issues
+
+Basic test:
+
+    ping <destination>
+
+More advanced:
+
+    mtr <destination>
+
+
+35. MTU
+
+MTU = Maximum Transmission Unit.
+
+Typical Ethernet MTU:
+
+    1500 bytes
+
+VPN/tunneling can add extra headers.
+
+Concept:
+
+    Original Packet
+          ↓
+      VPN Header
+          ↓
+    Larger Packet
+
+Incorrect MTU/PMTUD behavior can cause:
+- Some applications work while others fail
+- Large packets fail
+- VPN problems
+- Intermittent connectivity
+- Websites/API requests hanging
+
+
+36. LINUX WAN COMMANDS
+
+Check interface:
+
+    ip link
+
+Check IP address:
+
+    ip addr
+
+Check routing:
+
+    ip route
+
+Check neighbor table:
+
+    ip neigh
+
+Test connectivity:
+
+    ping <destination>
+
+Trace path:
+
+    tracepath <destination>
+
+or:
+
+    traceroute <destination>
+
+Check route decision:
+
+    ip route get <destination>
+
+Check TCP/UDP listening ports:
+
+    ss -tulnp
+
+Packet capture:
+
+    sudo tcpdump -i eth0
+
+Advanced path/packet-loss analysis:
+
+    mtr <destination>
+
+
+37. WAN TROUBLESHOOTING
+
+Use layered troubleshooting.
+
+    Physical
+       ↓
+    Interface
+       ↓
+    IP Configuration
+       ↓
+    Default Gateway
+       ↓
+    Local Routing
+       ↓
+    WAN Routing
+       ↓
+    Firewall/ACL
+       ↓
+    MTU
+       ↓
+    TCP/UDP Port
+       ↓
+    Application
+
+
+38. TROUBLESHOOTING FLOW
+
+Suppose Delhi server cannot reach Mumbai server.
+
+Step 1:
+    ip link
+
+Step 2:
+    ip addr
+
+Step 3:
+    ip route
+
+Step 4:
+    ping <local-gateway>
+
+Step 5:
+    ping <remote-ip>
+
+Step 6:
+    tracepath <remote-ip>
+
+Step 7:
+    mtr <remote-ip>
+
+Step 8:
+    nc -vz <remote-ip> 443
+
+Step 9:
+    ss -tulnp
+
+Step 10:
+    sudo tcpdump -i eth0 host <remote-ip>
+
+
+39. DEVOPS AND WAN
+
+Typical CI/CD path:
+
+    Developer
+       ↓
+      Git
+       ↓
+    CI/CD
+       ↓
+      WAN
+       ↓
+    Data Center
+       ↓
+    Kubernetes
+       ↓
+    Application
+
+WAN issues can affect:
+- Git clone
+- Artifact downloads
+- Docker image pulls
+- Deployments
+- API calls
+- Monitoring
+- Logging
+- Remote server access
+
+
+40. CLOUD AND WAN
+
+Typical architecture:
+
+    Corporate Office
+          |
+         WAN
+          |
+    Cloud Connectivity
+          |
+        Cloud
+          |
+       VPC/VNet
+          |
+     Application
+
+Connectivity may use:
+- Site-to-site VPN
+- Dedicated private connectivity
+- SD-WAN
+- Internet
+- MPLS integration
+
+
+41. KUBERNETES AND WAN
+
+Multiple clusters:
+
+    Cluster A
+    Delhi
+       |
+      WAN
+       |
+    Cluster B
+    Mumbai
+
+Possible use cases:
+- Disaster recovery
+- Multi-site deployment
+- Data replication
+- Backup
+- Central monitoring
+
+WAN characteristics affect distributed systems:
+- Latency
+- Packet loss
+- Bandwidth
+- Jitter
+- Availability
+- Consistency
+
+
+42. DATABASE REPLICATION AND WAN
+
+Example:
+
+    Primary DB
+        |
+       WAN
+        |
+    Replica DB
+
+WAN latency matters.
+
+Synchronous replication across long distances can be difficult because writes may wait for remote acknowledgement.
+
+Therefore distributed systems must consider:
+- Latency
+- Consistency
+- Availability
+- Replication strategy
+
+
+43. WAN MONITORING
+
+Important metrics:
+
+- Latency
+- Packet loss
+- Jitter
+- Bandwidth
+- Interface errors
+- Link availability
+- Route changes
+- BGP state
+- VPN state
+- Tunnel state
+
+Monitoring tools may include:
+- Prometheus
+- Grafana
+- Zabbix
+- SNMP-based systems
+- Vendor network monitoring platforms
+
+
+44. WAN VS LAN
+
+LAN:
+
+    Device
+      ↓
+    Switch
+      ↓
+    Device
+
+WAN:
+
+    LAN
+      ↓
+    Router
+      ↓
+    WAN
+      ↓
+    Router
+      ↓
+    LAN
+
+
+45. WAN VS MAN
+
+MAN:
+
+    LAN
+      ↓
+    Router
+      ↓
+    Metro Network
+      ↓
+    Router
+      ↓
+    LAN
+
+WAN:
+
+    LAN
+      ↓
+    Router
+      ↓
+    Wide Area Network
+      ↓
+    Multiple Routers/Provider Network
+      ↓
+    Router
+      ↓
+    LAN
+
+MAN:
+- Metropolitan/city scale
+
+WAN:
+- Large geographic scale
+
+
+46. COMMON MISCONCEPTIONS
+
+Misconception:
+"Internet and WAN are the same."
+
+Correct:
+WAN is a wide-area networking concept.
+Internet is the global public interconnection of networks.
+A private enterprise WAN does not require the public Internet.
+
+Misconception:
+"MPLS is WAN."
+
+Correct:
+MPLS is a networking/forwarding technology that can be used in WANs.
+
+Misconception:
+"Router is WAN."
+
+Correct:
+Router is a network device used to connect/route between networks.
+
+Misconception:
+"All WAN traffic uses Internet."
+
+Correct:
+Private WANs can use MPLS, leased circuits, carrier Ethernet, private optical networks and other transport technologies.
+
+Misconception:
+"High bandwidth means low latency."
+
+Correct:
+Bandwidth and latency are different properties.
+
+Misconception:
+"Ping works, so application works."
+
+Correct:
+Ping only tests ICMP reachability. Firewall, port, service or application problems can still exist.
+
+
+47. INTERVIEW Q&A
+
+Q1. What is WAN?
+A:
+WAN stands for Wide Area Network. It connects geographically distributed networks/sites over large distances.
+
+Q2. Why do we need WAN?
+A:
+To connect offices, data centers, branches and other networks located across cities, countries or continents.
+
+Q3. What is the difference between LAN and WAN?
+A:
+LAN covers a local area and commonly uses switches for local connectivity. WAN connects geographically separated networks using routers and wide-area transport.
+
+Q4. What is the difference between MAN and WAN?
+A:
+MAN generally covers metropolitan/city-scale connectivity, while WAN covers larger geographic areas such as multiple cities, countries or continents.
+
+Q5. Is WAN a protocol?
+A:
+No. WAN is a network scope/classification.
+
+Q6. What technologies can be used for WAN?
+A:
+MPLS, IPsec VPN, SD-WAN, leased lines, carrier Ethernet, fiber, cellular and satellite connectivity.
+
+Q7. What is MPLS?
+A:
+Multiprotocol Label Switching is a forwarding technology commonly used in provider and enterprise WAN networks.
+
+Q8. What is BGP?
+A:
+Border Gateway Protocol is a routing protocol used to exchange reachability information between autonomous systems and is fundamental to Internet routing.
+
+Q9. What happens when a packet travels through multiple WAN routers?
+A:
+Each router receives the packet, examines the destination IP, performs a routing lookup, selects a next hop and forwards it toward the destination.
+
+Q10. Does destination IP change at every router?
+A:
+Normally the final destination IP remains the same during standard routing, while Layer-2 framing changes hop-by-hop. Some technologies such as NAT can modify IP addresses, but that is a separate function.
+
+Q11. Why is WAN latency usually higher than LAN latency?
+A:
+Because WAN traffic travels greater geographic distances and may pass through more links, routers and queues.
+
+Q12. How do you troubleshoot WAN connectivity from Linux?
+A:
+Use:
+    ip link
+    ip addr
+    ip route
+    ip route get <destination>
+    ping <destination>
+    tracepath <destination>
+    mtr <destination>
+    nc -vz <destination> <port>
+    tcpdump
+
+Q13. What is WAN redundancy?
+A:
+Using multiple paths, links, routers or providers so that connectivity can continue when one path fails.
+
+Q14. Is the Internet a WAN?
+A:
+The Internet is a global interconnection of networks and can be viewed as a global wide-area environment, but WAN and Internet are not synonymous. Private WANs also exist.
+
+
+48. COMPLETE WAN DATA FLOW
+
+Source:
+
+    Application
+         ↓
+      TCP/UDP
+         ↓
+       IP
+         ↓
+     Ethernet
+         ↓
+    Source LAN
+         ↓
+    Source Router
+         ↓
+========================
+          WAN
+========================
+         ↓
+    Router 1
+         ↓
+    Router 2
+         ↓
+    Router 3
+         ↓
+    Router 4
+         ↓
+ Destination Router
+         ↓
+   Destination LAN
+         ↓
+       Switch
+         ↓
+ Destination Server
+
+
+49. CORE ROUTER LOGIC
+
+At each router:
+
+    Receive packet
+         ↓
+    Remove/process incoming
+    Layer-2 framing
+         ↓
+    Read destination IP
+         ↓
+    Routing table lookup
+         ↓
+    Select next hop/interface
+         ↓
+    Create/forward appropriate
+    outgoing Layer-2 frame
+         ↓
+    Send to next hop
+
+
+50. FINAL MENTAL MODEL
+
+PAN:
+
+    Device
+      ↓
+    Bluetooth/BLE
+      ↓
+    Device
+
+LAN:
+
+    Device
+      ↓
+    Switch
+      ↓
+    Device
+
+MAN:
+
+    LAN
+      ↓
+    Router
+      ↓
+    Metropolitan Network
+      ↓
+    Router
+      ↓
+    LAN
+
+WAN:
+
+    LAN
+      ↓
+    Router
+      ↓
+    Wide Area Network
+      ↓
+    Multiple Routers/Provider Network
+      ↓
+    Router
+      ↓
+    LAN
+
+
+51. GOLDEN CONCEPT
+
+WAN mein data:
+
+    Source Application
+          ↓
+       TCP/UDP
+          ↓
+       IP Packet
+          ↓
+      Source LAN
+          ↓
+      Source Router
+          ↓
+          WAN
+          ↓
+    Intermediate Routers
+          ↓
+    Destination Router
+          ↓
+    Destination LAN
+          ↓
+    Destination Application
+
+Most important idea:
+
+WAN mein packet generally source ke local LAN se router ke through WAN mein enter karta hai, multiple intermediate routers/provider networks ke through hop-by-hop forward hota hai, destination-site router tak pahunchta hai, aur phir destination LAN ke through final device ko deliver hota hai.
+
+
+52. ONE-LINE SUMMARY
+
+WAN is a wide-area networking environment that connects geographically distributed networks; data travels from the source LAN to a router, crosses one or more WAN/provider routers through routing decisions, reaches the destination router, and is finally delivered across the destination LAN to the target device.

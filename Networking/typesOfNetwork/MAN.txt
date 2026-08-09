@@ -1,0 +1,3004 @@
+# MAN — Metropolitan Area Network
+
+Ab PAN → LAN ke baad next logical network type hai **MAN**. Isko sirf “LAN se bada network” yaad karna enough nahi hai. Practical networking mein MAN ko samajhne ke liye **geographic scope, inter-building connectivity, fiber, Layer 2/Layer 3, service-provider networks, routing, redundancy, Metro Ethernet aur DevOps/data-center connectivity** ko connect karna important hai.
+
+---
+
+# 1. Simple Definition
+
+**MAN = Metropolitan Area Network**
+
+MAN ek network hai jo **ek city ya metropolitan area ke relatively large geographic region** mein multiple LANs ko connect karta hai.
+
+Simple mental model:
+
+```text
+                 MAN
+                  |
+        +---------+---------+
+        |         |         |
+      LAN 1     LAN 2     LAN 3
+        |         |         |
+     Office A  Office B  Data Center
+```
+
+Matlab:
+
+> **LAN ek building/organization ke andar local connectivity provide karta hai, while MAN multiple LANs/sites ko metropolitan/city-level area mein connect kar sakta hai.**
+
+---
+
+# 2. PAN → LAN → MAN → WAN
+
+Network types ko geographic scope ke perspective se dekho:
+
+```text
+PAN
+ |
+ | Person ke around
+ |
+ ↓
+LAN
+ |
+ | Home / Office / Building
+ |
+ ↓
+MAN
+ |
+ | City / Metropolitan Area
+ |
+ ↓
+WAN
+ |
+ | Country / Continent / Global
+ |
+ ↓
+Internet
+```
+
+Roughly:
+
+```text
+PAN  → very small
+LAN  → local
+MAN  → metropolitan/city
+WAN  → large geographic
+```
+
+Important:
+
+> Ye strict physical hierarchy nahi hai. Ye primarily **network coverage/scope classification** hai.
+
+---
+
+# 3. Real-World Analogy
+
+Ek city imagine karo.
+
+Ek office building ke andar roads:
+
+```text
+Building A
+   |
+Internal roads
+   |
+LAN
+```
+
+Ab city mein multiple buildings hain:
+
+```text
+Building A ──\
+Building B ───\
+Building C ────> City-wide network
+Building D ───/
+```
+
+Ye city-wide connectivity:
+
+```text
+MAN
+```
+
+Aur city ke bahar:
+
+```text
+City A
+   |
+   ↓
+WAN
+   |
+City B
+```
+
+So:
+
+```text
+LAN = Building ke internal roads
+
+MAN = City ke roads connecting multiple buildings
+
+WAN = Highways connecting cities/countries
+```
+
+---
+
+# 4. MAN Ki Need Kyun Padi?
+
+Suppose ek company ke paas ek city mein multiple offices hain:
+
+```text
+Head Office
+    |
+Branch Office 1
+    |
+Branch Office 2
+    |
+Data Center
+```
+
+Har location ka apna LAN hai:
+
+```text
+LAN A
+LAN B
+LAN C
+LAN D
+```
+
+Ab requirement hai:
+
+* Employees ko centralized application access mile
+* Data center access ho
+* Internal VoIP chale
+* Monitoring centralized ho
+* Backup traffic move ho
+* Internal services communicate karein
+* Sites securely connected rahen
+
+Sirf individual LANs enough nahi hain.
+
+Need:
+
+```text
+LAN A ─────── MAN ─────── LAN B
+              |
+              +────────── LAN C
+              |
+              +────────── Data Center
+```
+
+MAN multiple local networks/sites ko metropolitan area mein interconnect karne mein help karta hai.
+
+---
+
+# 5. Example — Bank
+
+Suppose ek bank ki ek city mein:
+
+```text
+                 Bank Data Center
+                       |
+              +--------+--------+
+              |        |        |
+            Branch1  Branch2  Branch3
+              |        |        |
+             LAN      LAN      LAN
+```
+
+Branches ke andar:
+
+```text
+PC
+ |
+Switch
+ |
+Router
+ |
+Branch LAN
+```
+
+Branches ke beech:
+
+```text
+Branch LAN
+    |
+Router
+    |
+Metro Network
+    |
+Router
+    |
+Data Center LAN
+```
+
+Entire city-level connectivity:
+
+```text
+              MAN
+               |
+    +----------+----------+
+    |          |          |
+ Branch 1   Branch 2   Data Center
+   LAN        LAN          LAN
+```
+
+---
+
+# 6. MAN ka Core Concept
+
+MAN ko samajhne ka best mental model:
+
+> **MAN = multiple geographically separated LANs connected across a metropolitan area.**
+
+Example:
+
+```text
+             Metropolitan Network
+
+     +---------+       +---------+
+     | Office A|-------| Office B|
+     |   LAN   |       |   LAN   |
+     +---------+       +---------+
+          \               /
+           \             /
+            \           /
+             +---------+
+             |   DC    |
+             |   LAN   |
+             +---------+
+```
+
+---
+
+# 7. MAN mein LAN ka Role
+
+MAN LAN ko replace nahi karta.
+
+Instead:
+
+```text
+LAN → local connectivity
+
+MAN → multiple LANs ko interconnect karta hai
+```
+
+Example:
+
+```text
+Office A:
+
+PC
+ |
+Switch
+ |
+LAN
+ |
+Router
+ |
+MAN
+ |
+Router
+ |
+LAN
+ |
+Switch
+ |
+Server
+```
+
+So LAN aur MAN complementary concepts hain.
+
+---
+
+# 8. MAN ka Typical Geographic Scope
+
+MAN generally:
+
+* City
+* Metropolitan region
+* Large urban area
+* Multiple nearby campuses
+* Multiple branches within a city
+
+cover kar sakta hai.
+
+Exact physical range fixed nahi hoti.
+
+Don't memorize:
+
+```text
+MAN = exactly X kilometers
+```
+
+Better:
+
+> MAN is a metropolitan-scale network, typically larger than a LAN and smaller than a WAN.
+
+---
+
+# 9. MAN mein Kaunsi Technologies Use Hoti Hain?
+
+Ye important question hai.
+
+MAN koi single protocol nahi hai.
+
+MAN ek **network scope/category** hai.
+
+Different technologies MAN implement kar sakti hain.
+
+Common examples include:
+
+* Metro Ethernet
+* Fiber-optic networks
+* Carrier Ethernet
+* MPLS-based provider networks
+* SDH/SONET in traditional telecom environments
+* DWDM-based optical transport
+* Wireless metropolitan links
+* IP/MPLS services
+
+Technology depends on:
+
+* Provider
+* Distance
+* Required bandwidth
+* Redundancy
+* SLA
+* Cost
+* Application
+* Security requirements
+
+---
+
+# 10. Metro Ethernet
+
+MAN ke context mein **Metro Ethernet** extremely important term hai.
+
+Metro Ethernet basically Ethernet-based connectivity ko metropolitan area mein extend karta hai.
+
+Concept:
+
+```text
+Office A
+   |
+Ethernet
+   |
+Provider Metro Network
+   |
+Ethernet
+   |
+Office B
+```
+
+Customer ko conceptually Ethernet service mil sakti hai even though provider network city-wide ho.
+
+---
+
+# 11. Metro Ethernet Example
+
+Suppose:
+
+```text
+Office A
+192.168.10.0/24
+
+Office B
+192.168.20.0/24
+```
+
+Provider metro network ke through connection:
+
+```text
+Office A
+   |
+Customer Router
+   |
+Metro Ethernet
+   |
+Provider Network
+   |
+Metro Ethernet
+   |
+Customer Router
+   |
+Office B
+```
+
+Then routing customer side par ho sakti hai:
+
+```text
+Office A Router
+       |
+       ↓
+Provider Metro Network
+       |
+       ↓
+Office B Router
+```
+
+---
+
+# 12. MAN vs WAN
+
+Ye interview mein important distinction hai.
+
+## MAN
+
+```text
+City
+ |
+ +-- Office A
+ +-- Office B
+ +-- Data Center
+```
+
+## WAN
+
+```text
+City A
+   |
+WAN
+   |
+City B
+   |
+WAN
+   |
+Country B
+```
+
+Comparison:
+
+| Feature              | MAN                                      | WAN                                                     |
+| -------------------- | ---------------------------------------- | ------------------------------------------------------- |
+| Full form            | Metropolitan Area Network                | Wide Area Network                                       |
+| Scope                | City/metropolitan                        | Large geographic                                        |
+| Connects             | Multiple local sites                     | Cities/countries/regions                                |
+| Typical technologies | Metro Ethernet, fiber, provider networks | MPLS, Internet, SD-WAN, leased links, optical transport |
+| Latency              | Usually lower within metro region        | Often higher                                            |
+| Ownership            | Enterprise/provider                      | Enterprise/provider/multiple carriers                   |
+| Example              | City-wide branch network                 | Mumbai ↔ Delhi ↔ London                                 |
+
+---
+
+# 13. MAN vs LAN
+
+| Feature        | LAN                      | MAN                                           |
+| -------------- | ------------------------ | --------------------------------------------- |
+| Scope          | Building/home/local site | City/metropolitan                             |
+| Typical size   | Small                    | Larger                                        |
+| Connects       | Devices                  | Multiple LANs/sites                           |
+| Common devices | Switches, APs            | Routers, provider switches, optical equipment |
+| Common medium  | Ethernet, Wi-Fi          | Fiber, Metro Ethernet, provider links         |
+| Latency        | Very low                 | Usually higher than LAN                       |
+| Ownership      | Usually organization     | Organization/provider                         |
+| Example        | Office network           | Multiple offices across a city                |
+
+---
+
+# 14. MAN vs WAN — Practical Understanding
+
+Suppose company has:
+
+```text
+Delhi Office
+Noida Office
+Gurgaon Office
+```
+
+These may be connected through a metropolitan provider network:
+
+```text
+Delhi
+  |
+  +------ MAN ------+
+                    |
+Noida               |
+  |                 |
+  +------ MAN ------+
+                    |
+Gurgaon ------------+
+```
+
+But:
+
+```text
+Delhi
+  |
+  WAN
+  |
+Mumbai
+```
+
+is clearly a larger geographic WAN scenario.
+
+Again, exact classification depends on architecture/provider terminology.
+
+---
+
+# 15. MAN Physical Infrastructure
+
+Modern metropolitan networks often heavily depend on **fiber optics**.
+
+Conceptually:
+
+```text
+Office A
+   |
+Fiber
+   |
+Provider POP
+   |
+Fiber Ring
+   |
+Provider POP
+   |
+Fiber
+   |
+Office B
+```
+
+Why fiber?
+
+* High bandwidth
+* Long distance
+* Low attenuation
+* EMI immunity
+* Suitable for dense metro traffic
+* Supports high-speed optical technologies
+
+---
+
+# 16. MAN Ring Topology
+
+Historically and in carrier/transport architectures, ring designs have been common because they can provide redundancy.
+
+Example:
+
+```text
+             Site A
+            /      \
+           /        \
+       Site B ------ Site D
+          \          /
+           \        /
+             Site C
+```
+
+If one link fails:
+
+```text
+Site A ----X---- Site B
+```
+
+Traffic may potentially take another path:
+
+```text
+Site A
+  |
+  ↓
+Site D
+  |
+  ↓
+Site C
+  |
+  ↓
+Site B
+```
+
+This is one reason ring-based metro architectures have historically been popular.
+
+Modern networks can use more complex topologies, including rings, meshes, and provider-specific architectures.
+
+---
+
+# 17. Redundancy
+
+MAN infrastructure mein redundancy very important hai.
+
+Suppose:
+
+```text
+Office A -------- Office B
+```
+
+Single link fail:
+
+```text
+Office A ----X---- Office B
+```
+
+Connectivity lost.
+
+Better:
+
+```text
+             Link 1
+Office A ------------- Office B
+    \                    /
+     \                  /
+      +---- Link 2 ----+
+```
+
+Now one path fail hone par alternate path available ho sakta hai.
+
+---
+
+# 18. Why Redundancy Matters in DevOps
+
+Suppose city-level data center connectivity hai:
+
+```text
+Office
+   |
+   MAN
+   |
+Data Center
+```
+
+Agar MAN link fail hua:
+
+```text
+Office
+   X
+Data Center
+```
+
+Applications inaccessible ho sakti hain.
+
+Impact:
+
+* CI/CD
+* Monitoring
+* Database access
+* Internal APIs
+* Authentication
+* Logging
+* Backup
+* Operations
+
+all affected ho sakte hain.
+
+Hence production MAN designs often focus heavily on:
+
+* High availability
+* Redundant links
+* Redundant devices
+* Failover
+* SLA
+* Monitoring
+
+---
+
+# 19. MAN aur Routing
+
+Suppose multiple LANs hain:
+
+```text
+LAN A = 10.10.1.0/24
+LAN B = 10.10.2.0/24
+LAN C = 10.10.3.0/24
+```
+
+Routers connect them:
+
+```text
+LAN A
+  |
+Router A
+  |
+MAN
+  |
+Router B
+  |
+LAN B
+```
+
+Router ko routes pata hone chahiye.
+
+Linux routing table example:
+
+```bash
+ip route
+```
+
+Example:
+
+```text
+10.10.1.0/24 dev eth0
+10.10.2.0/24 via 10.10.1.1
+default via 10.10.1.1
+```
+
+Actual enterprise MAN routing much more complex ho sakti hai.
+
+---
+
+# 20. Layer 2 MAN vs Layer 3 MAN
+
+Ye advanced but important distinction hai.
+
+MAN service Layer 2 ya Layer 3 nature ki ho sakti hai.
+
+## Layer 2 connectivity
+
+Provider customer sites ko Ethernet-like connectivity provide kar sakta hai.
+
+```text
+Site A
+ VLAN/Ethernet
+    |
+Provider L2 Service
+    |
+Site B
+ VLAN/Ethernet
+```
+
+Customer routing khud manage kar sakta hai.
+
+---
+
+## Layer 3 connectivity
+
+Provider routing service provide kar sakta hai.
+
+```text
+Site A
+   |
+Customer Router
+   |
+Provider L3 Network
+   |
+Customer Router
+   |
+Site B
+```
+
+Provider routing infrastructure traffic ko appropriate destination ki taraf forward karta hai.
+
+---
+
+# 21. MAN and MPLS
+
+**MPLS = Multiprotocol Label Switching**
+
+MPLS historically enterprise WAN/MAN/provider networks mein extensively use hua hai.
+
+Conceptually:
+
+```text
+Customer Site A
+      |
+    CE Router
+      |
+    PE Router
+      |
+   MPLS Core
+      |
+    PE Router
+      |
+    CE Router
+      |
+Customer Site B
+```
+
+Terms:
+
+* CE = Customer Edge
+* PE = Provider Edge
+
+Provider network:
+
+```text
+PE ─── P ─── P ─── PE
+```
+
+MPLS labels traffic forwarding mein use hote hain.
+
+Important:
+
+> MPLS khud "MAN" nahi hai. MPLS ek forwarding technology hai jo provider networks mein MAN/WAN services implement karne ke liye use ho sakti hai.
+
+---
+
+# 22. MAN and SD-WAN
+
+Modern enterprise networks mein **SD-WAN** bhi important hai.
+
+Suppose:
+
+```text
+Office A
+   |
+   +---- Internet
+   |
+   +---- MPLS
+```
+
+SD-WAN software-defined policies ke through multiple transport links use kar sakta hai.
+
+Across metropolitan/corporate environments:
+
+```text
+Site A
+  |
+SD-WAN Edge
+  |
+Internet/MPLS/Other Transport
+  |
+SD-WAN Edge
+  |
+Site B
+```
+
+Again:
+
+> SD-WAN itself MAN nahi hai. Ye WAN connectivity ko intelligently manage karne ka architecture/technology approach hai.
+
+---
+
+# 23. MAN and Data Centers
+
+DevOps ke liye ye especially important hai.
+
+Suppose company ke:
+
+```text
+Office
+Data Center
+Backup Data Center
+Cloud Connectivity
+```
+
+same metropolitan region mein hain.
+
+Architecture:
+
+```text
+                 Primary DC
+                    |
+                   MAN
+              /      |      \
+             /       |       \
+        Office    DR Site   Cloud POP
+```
+
+Applications:
+
+```text
+Users
+ ↓
+Office LAN
+ ↓
+MAN
+ ↓
+Data Center
+ ↓
+Application
+```
+
+Database replication:
+
+```text
+Primary DB
+    |
+    | MAN
+    ↓
+Replica DB
+```
+
+High-speed metro connectivity can be important for:
+
+* Database replication
+* Backup
+* Disaster recovery
+* Storage replication
+* Application traffic
+* Centralized monitoring
+
+---
+
+# 24. MAN and Disaster Recovery
+
+Suppose:
+
+```text
+Primary Data Center
+        |
+        | Metro Fiber
+        |
+Backup Data Center
+```
+
+Primary DC fail:
+
+```text
+Primary DC
+    X
+```
+
+Traffic/application workload can potentially shift to:
+
+```text
+Backup DC
+```
+
+But successful DR requires more than connectivity:
+
+* DNS
+* Routing
+* Application failover
+* Database replication
+* Storage
+* Authentication
+* Monitoring
+* Automation
+
+MAN is only one part of the architecture.
+
+---
+
+# 25. MAN and Linux
+
+Linux server itself doesn't have a special "MAN command."
+
+Linux simply participates in the underlying IP network.
+
+Useful commands:
+
+```bash
+ip addr
+```
+
+IP configuration.
+
+```bash
+ip route
+```
+
+Routing table.
+
+```bash
+ip neigh
+```
+
+ARP/neighbor information.
+
+```bash
+ping <destination>
+```
+
+Connectivity test.
+
+```bash
+traceroute <destination>
+```
+
+or:
+
+```bash
+tracepath <destination>
+```
+
+Path analysis.
+
+```bash
+ss -tulnp
+```
+
+Listening ports.
+
+```bash
+tcpdump -i eth0
+```
+
+Packet capture.
+
+---
+
+# 26. Linux MAN Troubleshooting
+
+Suppose:
+
+```text
+Office A Server
+      |
+      MAN
+      |
+Data Center Server
+```
+
+Office A server can't reach DC.
+
+Start from local host:
+
+### Step 1 — Interface
+
+```bash
+ip link
+```
+
+Check:
+
+```text
+UP
+LOWER_UP
+```
+
+### Step 2 — IP
+
+```bash
+ip addr
+```
+
+### Step 3 — Route
+
+```bash
+ip route
+```
+
+### Step 4 — Gateway
+
+Check default route:
+
+```bash
+ip route
+```
+
+Example:
+
+```text
+default via 10.10.1.1 dev eth0
+```
+
+### Step 5 — Ping local gateway
+
+```bash
+ping 10.10.1.1
+```
+
+### Step 6 — Ping remote destination
+
+```bash
+ping 10.20.1.10
+```
+
+### Step 7 — Trace path
+
+```bash
+tracepath 10.20.1.10
+```
+
+### Step 8 — Packet capture
+
+```bash
+sudo tcpdump -i eth0 host 10.20.1.10
+```
+
+---
+
+# 27. MAN Troubleshooting — Layered Approach
+
+Production troubleshooting:
+
+```text
+Physical
+   ↓
+Optical/Ethernet Link
+   ↓
+Layer 2
+   ↓
+VLAN
+   ↓
+Layer 3
+   ↓
+Routing
+   ↓
+Firewall/ACL
+   ↓
+TCP/UDP
+   ↓
+Application
+```
+
+For fiber:
+
+```text
+Server
+ ↓
+NIC
+ ↓
+Switch
+ ↓
+Optical Transceiver
+ ↓
+Fiber
+ ↓
+Provider Network
+ ↓
+Fiber
+ ↓
+Optical Transceiver
+ ↓
+Router
+ ↓
+Destination LAN
+```
+
+Each layer can fail independently.
+
+---
+
+# 28. Fiber Troubleshooting
+
+MAN frequently involves fiber, so basic optical troubleshooting useful hai.
+
+Possible issues:
+
+* Fiber cut
+* Dirty connector
+* Bad SFP/SFP+
+* Wrong optic type
+* Wrong wavelength
+* Excessive optical loss
+* Port failure
+* Provider-side issue
+
+Linux itself may expose link state:
+
+```bash
+ip link
+```
+
+NIC information:
+
+```bash
+sudo ethtool eth0
+```
+
+Depending on hardware/driver, optical module information may be available:
+
+```bash
+sudo ethtool -m eth0
+```
+
+But support varies by NIC/driver/module.
+
+---
+
+# 29. MAN Monitoring
+
+Production MAN should be monitored continuously.
+
+Metrics:
+
+```text
+Link status
+Bandwidth utilization
+Packet loss
+Latency
+Jitter
+Errors
+Interface drops
+Optical power
+CPU/memory of network devices
+Route changes
+BGP/OSPF status
+```
+
+Monitoring tools may include:
+
+* Prometheus
+* Grafana
+* SNMP-based systems
+* Zabbix
+* Network vendor monitoring platforms
+
+DevOps/SRE mindset:
+
+```text
+Network
+  ↓
+Metrics
+  ↓
+Monitoring
+  ↓
+Alert
+  ↓
+Incident
+  ↓
+Troubleshooting
+  ↓
+Recovery
+```
+
+---
+
+# 30. MAN Security
+
+Metropolitan networks connect multiple sites, so security is critical.
+
+Potential threats:
+
+* Unauthorized access
+* Traffic interception
+* Route manipulation
+* Misconfiguration
+* DDoS
+* VLAN leakage
+* Compromised branch device
+
+Security controls:
+
+```text
+Site
+ |
+Firewall
+ |
+Router
+ |
+Encrypted VPN
+ |
+MAN/Provider
+ |
+Router
+ |
+Firewall
+ |
+Destination
+```
+
+Encryption may be used depending on architecture and trust model.
+
+For sensitive enterprise traffic:
+
+* IPsec VPN
+* MACsec
+* TLS at application layer
+* Provider isolation
+* ACLs
+* Firewalls
+* Network segmentation
+
+may be used.
+
+---
+
+# 31. MAN and VPN
+
+Suppose provider MAN connectivity is available:
+
+```text
+Office A
+   |
+MAN
+   |
+Office B
+```
+
+If application traffic needs encryption:
+
+```text
+Office A
+   |
+VPN/IPsec
+   |
+MAN
+   |
+VPN/IPsec
+   |
+Office B
+```
+
+The MAN provides transport; VPN provides an additional security layer.
+
+Important:
+
+> MAN and VPN solve different problems.
+
+MAN:
+
+> "How do we connect these sites?"
+
+VPN:
+
+> "How do we securely carry traffic between them?"
+
+---
+
+# 32. MAN and Cloud
+
+Modern companies often have:
+
+```text
+Office
+ |
+MAN
+ |
+Data Center
+ |
+Cloud Connectivity
+ |
+Cloud
+```
+
+or:
+
+```text
+Office
+ |
+Internet/MPLS/Metro
+ |
+Cloud
+```
+
+Cloud providers also have metro/region-level infrastructure, though their architectures are not simply "MANs" in the textbook sense.
+
+Enterprise connectivity may involve:
+
+* Direct Connect-style private links
+* Cloud interconnects
+* VPN
+* Carrier Ethernet
+* MPLS
+* Internet
+* SD-WAN
+
+---
+
+# 33. MAN in CI/CD
+
+Suppose CI runner office mein hai aur deployment environment data center mein:
+
+```text
+Git
+ ↓
+CI Runner
+ ↓
+Office LAN
+ ↓
+MAN
+ ↓
+Data Center LAN
+ ↓
+Kubernetes Cluster
+```
+
+Deployment:
+
+```text
+CI Runner
+     |
+     | SSH/API
+     ↓
+MAN
+     |
+     ↓
+K8s API / Server
+```
+
+If MAN fails:
+
+```text
+CI Runner
+    |
+    X
+Data Center
+```
+
+Deployment pipeline fail ho sakti hai even though:
+
+* Git is working
+* CI runner is healthy
+* Application is healthy
+
+This is why infrastructure engineers need network visibility.
+
+---
+
+# 34. MAN and Kubernetes
+
+Suppose multiple Kubernetes clusters exist across city sites:
+
+```text
+Cluster A
+  |
+  LAN
+  |
+  MAN
+  |
+  LAN
+  |
+Cluster B
+```
+
+Possible use cases:
+
+* Multi-site workloads
+* Disaster recovery
+* Backup
+* Data replication
+* Central monitoring
+
+But Kubernetes networking and MAN are different layers.
+
+```text
+Kubernetes networking
+        ↓
+Host networking
+        ↓
+LAN
+        ↓
+MAN
+        ↓
+Other site
+```
+
+---
+
+# 35. Common Mistakes
+
+## Mistake 1: "MAN is just a large LAN."
+
+Not exactly.
+
+MAN is a **metropolitan network scope**, often interconnecting multiple LANs/sites.
+
+```text
+LAN → local site
+MAN → multiple local sites across metro area
+```
+
+---
+
+## Mistake 2: "MAN is a protocol."
+
+Wrong.
+
+MAN is a network classification.
+
+Technologies can include:
+
+* Metro Ethernet
+* Fiber
+* MPLS
+* Optical transport
+* Wireless links
+
+---
+
+## Mistake 3: "MPLS = MAN."
+
+Wrong.
+
+MPLS is a networking technology.
+
+It can be used in MAN/WAN provider networks.
+
+```text
+MAN ≠ MPLS
+WAN ≠ MPLS
+```
+
+---
+
+## Mistake 4: "Fiber = MAN."
+
+Wrong.
+
+Fiber is a physical medium.
+
+It can be used in:
+
+* LAN
+* MAN
+* WAN
+* Data centers
+* Long-haul networks
+
+---
+
+## Mistake 5: "MAN always belongs to one company."
+
+Not necessarily.
+
+A MAN can be:
+
+* Enterprise-owned
+* Telecom-provider operated
+* Carrier-managed
+* Public/private infrastructure
+
+---
+
+# 36. Interview Questions
+
+### Q1. What is MAN?
+
+**Answer:**
+
+MAN stands for Metropolitan Area Network. It is a network designed to connect multiple LANs or sites across a metropolitan or city-scale geographic area.
+
+---
+
+### Q2. Difference between LAN and MAN?
+
+**Answer:**
+
+LAN covers a local site such as a home, office or building. MAN covers a larger metropolitan area and can interconnect multiple LANs/sites.
+
+---
+
+### Q3. Difference between MAN and WAN?
+
+**Answer:**
+
+MAN generally operates at metropolitan/city scale, while WAN covers much larger geographic areas such as multiple cities, countries or continents.
+
+---
+
+### Q4. Is MAN a protocol?
+
+**Answer:**
+
+No. MAN is a network classification based on geographic scope.
+
+---
+
+### Q5. What technologies are commonly used in MAN?
+
+**Answer:**
+
+Metro Ethernet, carrier Ethernet, fiber-optic networks, MPLS-based services, optical transport technologies and some wireless metropolitan links.
+
+---
+
+### Q6. What is Metro Ethernet?
+
+**Answer:**
+
+Metro Ethernet is Ethernet-based connectivity delivered across a metropolitan area, often by a service provider.
+
+---
+
+### Q7. Why is fiber commonly used in MAN?
+
+**Answer:**
+
+Because fiber provides high bandwidth, long-distance transmission, low attenuation and immunity to electromagnetic interference.
+
+---
+
+### Q8. Why is redundancy important in MAN?
+
+**Answer:**
+
+Because MAN can connect critical sites such as offices and data centers. Redundant paths reduce the impact of a single link or device failure.
+
+---
+
+### Q9. What is MPLS?
+
+**Answer:**
+
+MPLS is a packet-forwarding technology that uses labels to influence forwarding. It is widely used in provider and enterprise WAN/metro services.
+
+---
+
+### Q10. Is MPLS the same as MAN?
+
+**Answer:**
+
+No. MAN describes network scope, while MPLS is a forwarding technology that can be used to implement services across MAN/WAN networks.
+
+---
+
+### Q11. How would you troubleshoot a MAN connectivity issue from Linux?
+
+**Answer:**
+
+Start with:
+
+```bash
+ip link
+ip addr
+ip route
+ip neigh
+ping <destination>
+tracepath <destination>
+ss -tulnp
+sudo tcpdump -i eth0
+```
+
+Then check switch/router/VLAN/firewall/provider link status.
+
+---
+
+### Q12. What is the role of a router in MAN?
+
+**Answer:**
+
+Routers provide Layer-3 connectivity between different sites/subnets and forward packets based on routing information.
+
+---
+
+### Q13. What is the role of a switch?
+
+**Answer:**
+
+A switch primarily provides Layer-2 connectivity and forwards Ethernet frames based on MAC addresses.
+
+---
+
+### Q14. Why is MAN important for data centers?
+
+**Answer:**
+
+It can provide metropolitan connectivity between offices, primary data centers, disaster recovery sites, backup locations and other critical infrastructure.
+
+---
+
+# 37. MAN — Complete Architecture Mental Model
+
+Keep this diagram in mind:
+
+```text
+                 METROPOLITAN AREA
+
+        Office A              Office B
+        LAN                   LAN
+         |                     |
+       Switch                Switch
+         |                     |
+       Router                Router
+         |                     |
+         +-------- MAN --------+
+                   |
+                Provider
+                Network
+                   |
+              +----+----+
+              |         |
+           Data Center  DR Site
+              LAN         LAN
+```
+
+Inside each site:
+
+```text
+PC
+ |
+Switch
+ |
+LAN
+ |
+Router
+ |
+MAN
+```
+
+So:
+
+```text
+End Device
+    ↓
+NIC
+    ↓
+Ethernet
+    ↓
+Switch
+    ↓
+LAN
+    ↓
+Router
+    ↓
+MAN
+    ↓
+Router
+    ↓
+Remote LAN
+    ↓
+Switch
+    ↓
+Destination
+```
+
+---
+
+# 38. Most Important Mental Model
+
+Don't memorize MAN as only:
+
+> "City network."
+
+Instead remember:
+
+```text
+                 MAN
+                  |
+        Connects multiple LANs
+                  |
+       +----------+----------+
+       |          |          |
+     LAN A      LAN B      LAN C
+       |          |          |
+    Office     Branch     Data Center
+```
+
+And technologies:
+
+```text
+MAN
+ |
+ +-- Metro Ethernet
+ +-- Carrier Ethernet
+ +-- Fiber
+ +-- MPLS
+ +-- Optical transport
+ +-- Wireless metro links
+```
+
+And infrastructure:
+
+```text
+LAN
+ ↓
+Router
+ ↓
+Metro Network
+ ↓
+Router
+ ↓
+LAN
+```
+
+And production concerns:
+
+```text
+MAN
+ |
+ +-- Routing
+ +-- Redundancy
+ +-- Latency
+ +-- Bandwidth
+ +-- Security
+ +-- Monitoring
+ +-- SLA
+ +-- Failover
+```
+
+---
+
+# 39. Final Connection: Networking → Linux → DevOps
+
+Ye complete chain yaad rakho:
+
+```text
+                 DEVOPS APPLICATION
+                         |
+                      TCP/UDP
+                         |
+                         IP
+                         |
+                    Linux NIC
+                         |
+                      Ethernet
+                         |
+                       Switch
+                         |
+                        LAN
+                         |
+                       Router
+                         |
+                        MAN
+                         |
+                       Router
+                         |
+                    Remote LAN
+                         |
+                       Server
+```
+
+Agar application unreachable hai, toh problem kahin bhi ho sakti hai:
+
+```text
+Application
+    ↓
+Port
+    ↓
+Firewall
+    ↓
+Routing
+    ↓
+MAN
+    ↓
+Router
+    ↓
+Switch
+    ↓
+LAN
+    ↓
+NIC
+    ↓
+Physical link
+```
+
+Yahi layered troubleshooting mindset ek strong **Network + Linux + DevOps engineer** ko differentiate karta hai.
+
+---
+
+## Complete Revision Summary — `.txt` Ready
+
+```text
+TOPIC: MAN (Metropolitan Area Network) — Full Notes
+
+1. DEFINITION
+
+MAN = Metropolitan Area Network.
+
+MAN ek network hai jo metropolitan/city-scale geographic area mein multiple LANs, offices, branches, campuses ya data centers ko connect kar sakta hai.
+
+Simple definition:
+
+MAN = Multiple LANs/sites connected across a metropolitan area.
+
+Typical scope:
+- City
+- Metropolitan region
+- Multiple nearby campuses
+- Multiple branches within a city
+- Metropolitan data-center connectivity
+
+Important:
+MAN ka exact distance fixed nahi hota.
+MAN ko geographic scope ke concept ke roop mein samajhna chahiye.
+
+
+2. NETWORK TYPES BY SCOPE
+
+PAN:
+- Personal Area Network
+- Person ke around
+- Phone, watch, earbuds
+
+LAN:
+- Local Area Network
+- Home, office, building
+- PCs, servers, printers
+
+MAN:
+- Metropolitan Area Network
+- City/metropolitan area
+- Multiple LANs/sites
+
+WAN:
+- Wide Area Network
+- Large geographic area
+- Cities, countries, continents
+
+Basic model:
+
+PAN
+ ↓
+LAN
+ ↓
+MAN
+ ↓
+WAN
+
+Note:
+Ye strict physical hierarchy nahi hai.
+Ye primarily network coverage/scope classification hai.
+
+
+3. WHY MAN EXISTS
+
+Suppose company ke multiple offices same city mein hain:
+
+    Head Office
+    Branch 1
+    Branch 2
+    Data Center
+
+Har location ka apna LAN ho sakta hai:
+
+    LAN A
+    LAN B
+    LAN C
+    LAN D
+
+In LANs ko metropolitan area mein connect karne ke liye MAN-type connectivity use ho sakti hai.
+
+Example:
+
+    LAN A
+      |
+    Router
+      |
+      MAN
+      |
+    Router
+      |
+    LAN B
+
+
+4. REAL-WORLD ANALOGY
+
+Office building ke internal roads:
+
+    Building
+       ↓
+    Internal roads
+       ↓
+      LAN
+
+City ke andar multiple buildings ko connect karne wali roads:
+
+    Building A
+       \
+    Building B ---- City Network ---- Building C
+       /
+    Building D
+
+Ye city-level network MAN ke concept ke similar hai.
+
+Analogy:
+- LAN = building ke internal roads
+- MAN = city roads connecting buildings
+- WAN = highways connecting cities/countries
+
+
+5. CORE MAN CONCEPT
+
+MAN ka primary role:
+
+    Multiple LANs/sites
+           ↓
+    Metropolitan Network
+           ↓
+    Multiple LANs/sites
+
+Example:
+
+    Office A LAN
+         |
+       Router
+         |
+         MAN
+         |
+       Router
+         |
+    Office B LAN
+
+
+6. MAN IS NOT A PROTOCOL
+
+Important:
+
+MAN koi single protocol nahi hai.
+
+MAN = network scope/category.
+
+MAN implement karne ke liye different technologies use ho sakti hain:
+
+- Metro Ethernet
+- Carrier Ethernet
+- Fiber-optic networks
+- MPLS-based services
+- Optical transport technologies
+- SDH/SONET in traditional telecom environments
+- DWDM-based optical transport
+- Wireless metropolitan links
+- IP/MPLS networks
+
+
+7. METRO ETHERNET
+
+Metro Ethernet = Ethernet-based connectivity delivered across a metropolitan area.
+
+Example:
+
+    Office A
+       |
+    Ethernet
+       |
+    Provider Metro Network
+       |
+    Ethernet
+       |
+    Office B
+
+Customer ko Ethernet-like connectivity mil sakti hai even though provider network city-wide ho.
+
+
+8. TYPICAL METRO ETHERNET ARCHITECTURE
+
+    Office A
+       |
+    Customer Router
+       |
+    Metro Ethernet
+       |
+    Provider Network
+       |
+    Metro Ethernet
+       |
+    Customer Router
+       |
+    Office B
+
+Customer-side routing:
+- Customer routers may perform Layer-3 routing.
+- Provider may provide Layer-2 Ethernet service.
+
+Exact architecture provider/service ke according vary karti hai.
+
+
+9. MAN PHYSICAL INFRASTRUCTURE
+
+Modern MAN networks mein fiber optics commonly important hoti hai.
+
+Example:
+
+    Office A
+       |
+     Fiber
+       |
+    Provider POP
+       |
+    Fiber Ring
+       |
+    Provider POP
+       |
+     Fiber
+       |
+    Office B
+
+Fiber advantages:
+- High bandwidth
+- Long distance
+- Low attenuation
+- EMI immunity
+- High-speed optical transmission
+- Dense traffic ke liye suitable
+
+
+10. MAN RING TOPOLOGY
+
+Metro/carrier networks mein ring architecture historically common raha hai because it can provide path redundancy.
+
+Example:
+
+             Site A
+            /      \
+           /        \
+       Site B ------ Site D
+          \          /
+           \        /
+             Site C
+
+Agar ek link fail ho:
+
+    Site A ----X---- Site B
+
+Traffic potentially alternate direction se travel kar sakta hai:
+
+    Site A
+      ↓
+    Site D
+      ↓
+    Site C
+      ↓
+    Site B
+
+Modern networks ring, mesh aur other topologies use kar sakte hain.
+
+
+11. REDUNDANCY
+
+Production MAN mein redundancy very important hai.
+
+Single link:
+
+    Office A -------- Office B
+
+Failure:
+
+    Office A ----X---- Office B
+
+Redundant design:
+
+    Office A ------------- Office B
+        \                   /
+         \-----------------/
+
+Multiple paths:
+- Link redundancy
+- Device redundancy
+- Provider redundancy
+- Power redundancy
+
+Goal:
+- High availability
+- Failover
+- Reduced downtime
+
+
+12. MAN VS LAN
+
+LAN:
+- Local site
+- Home/office/building
+- Connects devices
+- Ethernet/Wi-Fi common
+- Switches important
+
+MAN:
+- Metropolitan/city scope
+- Connects multiple sites/LANs
+- Fiber/Metro Ethernet/provider networks common
+- Routers/provider equipment important
+
+Example:
+
+    LAN:
+    PC → Switch → Server
+
+    MAN:
+    LAN → Router → Metro Network → Router → LAN
+
+
+13. MAN VS WAN
+
+MAN:
+- Metropolitan/city scale
+- Multiple nearby sites
+- Metro Ethernet/fiber/provider networks
+
+WAN:
+- Large geographic scale
+- Multiple cities/countries/continents
+- MPLS, Internet, SD-WAN, leased links, optical transport etc.
+
+Example:
+
+    Delhi Office
+         |
+        MAN
+         |
+    Delhi Data Center
+
+vs
+
+    Delhi
+      |
+     WAN
+      |
+    Mumbai
+      |
+     WAN
+      |
+    London
+
+
+14. MAN AND ROUTING
+
+Multiple LANs usually have different IP networks.
+
+Example:
+
+    LAN A = 10.10.1.0/24
+    LAN B = 10.10.2.0/24
+    LAN C = 10.10.3.0/24
+
+Routers provide Layer-3 connectivity.
+
+Concept:
+
+    LAN A
+      |
+    Router A
+      |
+     MAN
+      |
+    Router B
+      |
+    LAN B
+
+Routers use routing information to forward packets.
+
+
+15. LAYER 2 MAN
+
+Provider may offer Layer-2 Ethernet service.
+
+Example:
+
+    Site A
+       |
+    Ethernet
+       |
+    Provider L2 Service
+       |
+    Ethernet
+       |
+    Site B
+
+Customer may perform routing between sites.
+
+
+16. LAYER 3 MAN
+
+Provider may offer Layer-3 connectivity.
+
+Example:
+
+    Site A
+       |
+    Customer Router
+       |
+    Provider L3 Network
+       |
+    Customer Router
+       |
+    Site B
+
+Provider may participate in routing between customer sites.
+
+Important:
+MAN service can be Layer 2 or Layer 3 depending on architecture.
+
+
+17. MPLS AND MAN
+
+MPLS = Multiprotocol Label Switching.
+
+MPLS is a forwarding technology.
+
+It is NOT the same thing as MAN.
+
+MPLS can be used to implement services across MAN/WAN provider networks.
+
+Typical provider architecture:
+
+    Customer Site A
+          |
+        CE Router
+          |
+        PE Router
+          |
+       MPLS Core
+          |
+        PE Router
+          |
+        CE Router
+          |
+    Customer Site B
+
+Terms:
+- CE = Customer Edge
+- PE = Provider Edge
+- P = Provider core router
+
+
+18. MAN VS MPLS
+
+MAN:
+- Describes network geographic scope.
+
+MPLS:
+- Describes a forwarding/networking technology.
+
+Therefore:
+
+    MAN ≠ MPLS
+
+MPLS can be used inside MAN/WAN networks.
+
+
+19. SD-WAN CONNECTION
+
+SD-WAN is a software-defined WAN architecture.
+
+Example:
+
+    Site A
+       |
+    SD-WAN Edge
+       |
+    Internet/MPLS/Other Transport
+       |
+    SD-WAN Edge
+       |
+    Site B
+
+SD-WAN can manage multiple transport links using policies.
+
+Important:
+SD-WAN is not the same as MAN.
+
+MAN:
+- Geographic/network scope.
+
+SD-WAN:
+- Network architecture/management approach for WAN connectivity.
+
+
+20. MAN AND DATA CENTERS
+
+Typical metropolitan enterprise architecture:
+
+                Primary Data Center
+                       |
+                      MAN
+                 /      |      \
+                /       |       \
+             Office    DR Site  Other Site
+
+MAN can connect:
+- Offices
+- Primary data center
+- Disaster recovery site
+- Backup site
+- Storage/replication infrastructure
+- Other critical infrastructure
+
+
+21. MAN AND DISASTER RECOVERY
+
+Example:
+
+    Primary DC
+        |
+     Metro Fiber
+        |
+     Backup DC
+
+If primary DC fails:
+
+    Primary DC
+        X
+
+Traffic/workloads may fail over to:
+
+    Backup DC
+
+But DR requires more than MAN connectivity:
+- DNS
+- Routing
+- Application failover
+- Database replication
+- Storage
+- Authentication
+- Monitoring
+- Automation
+
+
+22. MAN AND DEVOPS
+
+Example CI/CD architecture:
+
+    Git
+     ↓
+    CI Runner
+     ↓
+    Office LAN
+     ↓
+    Router
+     ↓
+    MAN
+     ↓
+    Data Center LAN
+     ↓
+    Kubernetes Cluster
+
+If MAN fails:
+
+    CI Runner
+       |
+       X
+    Data Center
+
+Possible impact:
+- Deployments
+- Monitoring
+- Internal APIs
+- Database access
+- Authentication
+- Logging
+- Backup operations
+
+
+23. MAN AND KUBERNETES
+
+Multiple clusters/sites:
+
+    Cluster A
+       |
+      LAN
+       |
+      MAN
+       |
+      LAN
+       |
+    Cluster B
+
+MAN provides underlying site connectivity.
+
+Above MAN:
+- Host networking
+- Kubernetes networking
+- Pod networking
+- Service networking
+- Network policies
+
+Conceptual stack:
+
+    Kubernetes
+        ↓
+    Host Network
+        ↓
+       LAN
+        ↓
+       MAN
+        ↓
+    Remote Site
+
+
+24. MAN AND VPN
+
+MAN provides site connectivity.
+
+VPN provides secure/encrypted communication.
+
+Example:
+
+    Office A
+       |
+    VPN/IPsec
+       |
+      MAN
+       |
+    VPN/IPsec
+       |
+    Office B
+
+Important:
+
+    MAN = connectivity/transport scope
+    VPN = secure communication mechanism
+
+They solve different problems.
+
+
+25. MAN SECURITY
+
+MAN connects multiple sites, so security is important.
+
+Threats:
+- Unauthorized access
+- Traffic interception
+- Route manipulation
+- Misconfiguration
+- DDoS
+- VLAN leakage
+- Compromised network devices
+
+Security controls:
+- Firewalls
+- ACLs
+- VPN/IPsec
+- MACsec where appropriate
+- TLS at application layer
+- Network segmentation
+- Provider isolation
+- Monitoring
+
+
+26. LINUX AND MAN
+
+Linux does not have a special "MAN protocol" or "MAN command."
+
+Linux participates in the IP network normally.
+
+Important commands:
+
+Check interfaces:
+
+    ip link
+
+Check IP:
+
+    ip addr
+
+Check routing:
+
+    ip route
+
+Check ARP/neighbor table:
+
+    ip neigh
+
+Test connectivity:
+
+    ping <destination>
+
+Trace path:
+
+    tracepath <destination>
+
+or:
+
+    traceroute <destination>
+
+Check listening services:
+
+    ss -tulnp
+
+Packet capture:
+
+    sudo tcpdump -i eth0
+
+
+27. MAN TROUBLESHOOTING
+
+Example:
+
+    Office A Server
+         |
+        MAN
+         |
+    Data Center Server
+
+Server cannot reach Data Center.
+
+Troubleshoot in layers:
+
+    Physical
+       ↓
+    Link
+       ↓
+    Layer 2
+       ↓
+    VLAN
+       ↓
+    Layer 3
+       ↓
+    Routing
+       ↓
+    Firewall/ACL
+       ↓
+    TCP/UDP
+       ↓
+    Application
+
+
+28. LINUX TROUBLESHOOTING COMMANDS
+
+Step 1:
+    ip link
+
+Check:
+- Interface UP
+- LOWER_UP
+
+Step 2:
+    ip addr
+
+Check:
+- IP address
+- Prefix
+- Interface assignment
+
+Step 3:
+    ip route
+
+Check:
+- Default route
+- Remote network routes
+
+Step 4:
+    ip neigh
+
+Check:
+- Neighbor/ARP state
+
+Step 5:
+    ping <gateway>
+
+Step 6:
+    ping <remote destination>
+
+Step 7:
+    tracepath <remote destination>
+
+Step 8:
+    ss -tulnp
+
+Check:
+- Service listening
+- Correct port
+
+Step 9:
+    sudo tcpdump -i eth0 host <remote-ip>
+
+Check:
+- Packet leaving
+- Packet returning
+- TCP handshake
+- ICMP response
+
+
+29. FIBER TROUBLESHOOTING
+
+MAN often uses fiber.
+
+Possible problems:
+- Fiber cut
+- Dirty connector
+- Bad SFP/SFP+
+- Wrong optic
+- Wrong wavelength
+- Excessive optical loss
+- Port failure
+- Provider-side failure
+
+Linux commands:
+
+    ip link
+
+    sudo ethtool eth0
+
+Where supported:
+
+    sudo ethtool -m eth0
+
+Note:
+Optical module information support depends on NIC, driver and hardware.
+
+
+30. MAN MONITORING
+
+Production MAN should be monitored.
+
+Important metrics:
+- Link status
+- Bandwidth utilization
+- Packet loss
+- Latency
+- Jitter
+- Interface errors
+- Drops
+- Optical power
+- Device CPU
+- Device memory
+- Routing state
+- BGP/OSPF state where applicable
+
+Possible monitoring tools:
+- Prometheus
+- Grafana
+- SNMP-based systems
+- Zabbix
+- Vendor monitoring platforms
+
+
+31. COMMON MAN PROBLEMS
+
+Physical:
+- Fiber cut
+- Bad optic
+- Bad connector
+- Cable issue
+
+Layer 2:
+- VLAN mismatch
+- Switching problem
+- MAC learning issue
+- STP issue
+
+Layer 3:
+- Wrong IP
+- Wrong subnet
+- Wrong gateway
+- Missing route
+- Routing protocol problem
+
+Security:
+- Firewall block
+- ACL block
+- VPN problem
+
+Transport:
+- TCP port blocked
+- Service not listening
+
+Application:
+- Service failure
+- DNS issue
+- Application configuration problem
+
+
+32. COMMON MISTAKES
+
+Mistake:
+"MAN is just a large LAN."
+
+Correct:
+MAN is a metropolitan network scope and often connects multiple LANs/sites.
+
+Mistake:
+"MAN is a protocol."
+
+Correct:
+MAN is a network classification.
+
+Mistake:
+"MPLS is MAN."
+
+Correct:
+MPLS is a forwarding technology that can be used in MAN/WAN provider networks.
+
+Mistake:
+"Fiber means MAN."
+
+Correct:
+Fiber is a physical medium that can be used in LAN, MAN and WAN.
+
+Mistake:
+"MAN always belongs to one company."
+
+Correct:
+A MAN can be enterprise-owned, provider-operated, carrier-managed or a combination depending on architecture.
+
+Mistake:
+"VPN and MAN are the same."
+
+Correct:
+MAN provides network connectivity; VPN provides secure/encrypted communication.
+
+
+33. IMPORTANT COMPARISON
+
+PAN:
+- Personal
+- Very small
+- Phone/watch/earbuds
+
+LAN:
+- Local
+- Home/office/building
+- PCs/servers/printers
+
+MAN:
+- Metropolitan
+- City/multiple sites
+- Offices/data centers/branches
+
+WAN:
+- Wide
+- Cities/countries/continents
+- Large distributed networks
+
+
+34. INTERVIEW Q&A
+
+Q1. What is MAN?
+A:
+MAN stands for Metropolitan Area Network. It connects multiple LANs/sites across a metropolitan or city-scale geographic area.
+
+Q2. Difference between LAN and MAN?
+A:
+LAN covers a local site such as an office or building. MAN connects multiple LANs/sites across a metropolitan area.
+
+Q3. Difference between MAN and WAN?
+A:
+MAN operates at metropolitan/city scale, while WAN covers much larger geographic areas such as multiple cities, countries or continents.
+
+Q4. Is MAN a protocol?
+A:
+No. MAN is a network scope/classification.
+
+Q5. What technologies are used in MAN?
+A:
+Metro Ethernet, carrier Ethernet, fiber-optic networks, MPLS-based services, optical transport and some wireless metropolitan technologies.
+
+Q6. What is Metro Ethernet?
+A:
+Ethernet-based connectivity delivered across a metropolitan area, commonly by a service provider.
+
+Q7. Why is fiber common in MAN?
+A:
+Fiber provides high bandwidth, long-distance transmission, low attenuation and immunity to electromagnetic interference.
+
+Q8. Why is redundancy important in MAN?
+A:
+MAN often connects critical sites such as offices and data centers. Redundant paths improve availability and reduce downtime.
+
+Q9. What is MPLS?
+A:
+MPLS is a packet-forwarding technology that uses labels and is commonly used in provider and enterprise WAN/metro networks.
+
+Q10. Is MPLS the same as MAN?
+A:
+No. MAN defines geographic scope; MPLS is a networking/forwarding technology.
+
+Q11. What is the role of router in MAN?
+A:
+Router provides Layer-3 connectivity between different networks/sites and forwards packets based on routing information.
+
+Q12. How would you troubleshoot MAN connectivity from Linux?
+A:
+Use:
+
+    ip link
+    ip addr
+    ip route
+    ip neigh
+    ping
+    tracepath
+    ss
+    tcpdump
+
+Then inspect switches, routers, VLANs, firewalls and provider links.
+
+
+35. COMPLETE MAN ARCHITECTURE
+
+                 METROPOLITAN AREA
+
+        Office A              Office B
+        LAN                   LAN
+         |                     |
+       Switch                Switch
+         |                     |
+       Router                Router
+         |                     |
+         +-------- MAN --------+
+                   |
+             Provider Network
+                   |
+              +----+----+
+              |         |
+          Data Center   DR Site
+             LAN          LAN
+
+
+36. END-TO-END NETWORK PATH
+
+    End Device
+        ↓
+       NIC
+        ↓
+    Ethernet
+        ↓
+      Switch
+        ↓
+       LAN
+        ↓
+      Router
+        ↓
+       MAN
+        ↓
+      Router
+        ↓
+    Remote LAN
+        ↓
+     Switch
+        ↓
+    Destination
+
+
+37. DEVOPS END-TO-END PATH
+
+    Application
+         ↓
+       TCP/UDP
+         ↓
+         IP
+         ↓
+     Linux NIC
+         ↓
+      Ethernet
+         ↓
+       Switch
+         ↓
+        LAN
+         ↓
+      Router
+         ↓
+        MAN
+         ↓
+      Router
+         ↓
+     Remote LAN
+         ↓
+       Server
+
+If application fails, possible failure points include:
+- Application
+- TCP/UDP port
+- Firewall
+- Routing
+- MAN
+- Router
+- Switch
+- LAN
+- NIC
+- Physical link
+
+
+38. MOST IMPORTANT MENTAL MODEL
+
+MAN:
+
+    Multiple LANs
+         |
+         ↓
+    Metropolitan Network
+         |
+    +----+----+----+
+    |    |    |    |
+   LAN  LAN  LAN  DC
+
+Technologies:
+
+    MAN
+     |
+     +-- Metro Ethernet
+     +-- Carrier Ethernet
+     +-- Fiber
+     +-- MPLS
+     +-- Optical transport
+     +-- Wireless metro links
+
+Production concerns:
+
+    MAN
+     |
+     +-- Routing
+     +-- Redundancy
+     +-- Latency
+     +-- Bandwidth
+     +-- Security
+     +-- Monitoring
+     +-- SLA
+     +-- Failover
+
+
+39. FINAL ONE-LINE SUMMARY
+
+MAN is a metropolitan-scale network used to connect multiple LANs, branches, campuses or data centers across a city/metro area; it is a network classification rather than a protocol and may use technologies such as Metro Ethernet, fiber, MPLS and optical transport.
+
+40. FINAL MEMORY TRICK
+
+PAN:
+    Person
+
+LAN:
+    Local Building
+
+MAN:
+    Metropolitan City
+
+WAN:
+    Wide Geographic Area
+
+Think:
+
+    Person
+       ↓
+      PAN
+
+    Office
+       ↓
+      LAN
+
+    City
+       ↓
+      MAN
+
+    Country/World
+       ↓
+      WAN
+```

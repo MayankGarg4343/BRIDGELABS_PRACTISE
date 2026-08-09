@@ -1,0 +1,1217 @@
+TOPIC: LAN (Local Area Network) — Full Notes
+
+1. DEFINITION
+
+LAN = Local Area Network
+
+LAN ek network hai jo limited geographical area ke andar multiple devices ko connect karta hai.
+
+Typical LAN locations:
+- Home
+- Office
+- School
+- College/lab
+- Building
+- Data-center
+- Small enterprise environment
+
+LAN ka purpose:
+- Data exchange
+- Resource sharing
+- Server access
+- Application access
+- Printer sharing
+- Internet access
+- Internal device communication
+
+
+2. PAN VS LAN
+
+PAN:
+- Personal Area Network
+- Individual ke personal devices
+- Very small area
+- Example: Phone + Watch + Earbuds
+
+LAN:
+- Local Area Network
+- Multiple devices in a local area
+- Home/office/building/data-center
+- Example: PCs + Servers + Printers + Wi-Fi clients
+
+Simple:
+
+    PAN
+     |
+     +-- Phone
+     +-- Watch
+     +-- Earbuds
+
+    LAN
+     |
+     +-- PC
+     +-- PC
+     +-- Server
+     +-- Printer
+     +-- Wi-Fi Clients
+
+
+3. WHY LAN EXISTS
+
+Without LAN:
+
+    PC1       PC2       PC3
+     |         |         |
+   Manual    Manual    Manual
+   transfer  transfer  transfer
+
+LAN ke saath:
+
+    PC1 ──┐
+    PC2 ──┤
+    PC3 ──┤
+          |
+        Switch
+          |
+        Server
+
+Benefits:
+- Fast communication
+- Centralized resources
+- File sharing
+- Server access
+- Printer sharing
+- Application access
+- Internet connectivity
+- Easier management
+
+
+4. REAL-WORLD ANALOGY
+
+LAN ko office building ke internal road system ki tarah imagine karo.
+
+    Rooms
+      |
+      ↓
+Internal Roads
+      |
+      ↓
+Main Gate
+      |
+      ↓
+Outside World
+
+Mapping:
+
+    Internal Roads = LAN
+    Main Gate      = Router/Gateway
+    Outside World  = Internet/WAN
+
+Example:
+
+    PC
+     ↓
+    Switch
+     ↓
+    LAN
+     ↓
+    Router
+     ↓
+    Internet
+
+
+5. TYPICAL LAN ARCHITECTURE
+
+    Internet
+       |
+     Router
+       |
+    Firewall
+       |
+    Core/Distribution Switch
+       |
+   +---+---+---------+
+   |   |   |         |
+  PC  PC Server    Wi-Fi AP
+                      |
+                 Wireless Clients
+
+Small home LAN:
+
+    Internet
+       |
+    ISP Router
+       |
+   Home Router/AP
+    /    |     \
+ Laptop Phone  TV
+
+
+6. MAIN COMPONENTS OF LAN
+
+A. End Devices
+- PC
+- Laptop
+- Server
+- Printer
+- IP Camera
+- IP Phone
+- IoT device
+
+B. NIC
+- Network Interface Card/Controller
+- Device ko network se connect karta hai
+- Usually MAC address associated hota hai
+
+C. Switch
+- Multiple LAN devices ko connect karta hai
+- Ethernet frames forward karta hai
+- MAC addresses ke basis par forwarding karta hai
+
+D. Router
+- Different IP networks ko connect karta hai
+- Layer-3 packets forward karta hai
+
+E. Wireless Access Point
+- Wi-Fi devices ko LAN se connect karta hai
+
+F. Firewall
+- Network traffic ko security rules ke according allow/deny karta hai
+
+
+7. NIC
+
+NIC = Network Interface Card/Controller
+
+Example:
+
+    Server
+      |
+     NIC
+      |
+   Ethernet
+      |
+    Switch
+
+Linux mein network interfaces dekhne ke liye:
+
+    ip link
+
+Example interfaces:
+
+    eth0
+    ens33
+    enp0s3
+
+
+8. SWITCH
+
+Switch LAN ka major Layer-2 device hai.
+
+Example:
+
+          Switch
+        /    |    \
+       /     |     \
+     PC1    PC2   Server
+
+Switch primarily Ethernet frames ko MAC address ke basis par forward karta hai.
+
+
+9. SWITCH MAC ADDRESS TABLE
+
+Example:
+
+    Port 1 → PC1 MAC
+    Port 2 → PC2 MAC
+    Port 3 → Server MAC
+
+Agar switch ko pata hai:
+
+    MAC A → Port 1
+    MAC B → Port 2
+
+Aur frame:
+
+    Source MAC      = A
+    Destination MAC = B
+
+Switch:
+
+    Port 1
+      ↓
+    MAC lookup
+      ↓
+    Destination B
+      ↓
+    Port 2
+
+Therefore:
+
+    PC1 ──► Switch ──► PC2
+
+
+10. MAC ADDRESS
+
+MAC address Layer-2/link-layer address hai.
+
+Example:
+
+    AA:BB:CC:DD:EE:FF
+
+LAN mein Ethernet frame delivery ke liye MAC addresses important hote hain.
+
+IP address:
+- Layer 3 addressing
+
+MAC address:
+- Layer 2 addressing
+
+
+11. ARP
+
+ARP = Address Resolution Protocol
+
+Purpose:
+- IPv4 address ko local network mein corresponding MAC address se resolve karna.
+
+Example:
+
+PC1:
+    IP = 192.168.1.10
+
+PC2:
+    IP = 192.168.1.20
+    MAC = BB:BB:BB:BB:BB:BB
+
+PC1 asks:
+
+    Who has 192.168.1.20?
+
+Broadcast:
+
+    FF:FF:FF:FF:FF:FF
+
+PC2 replies:
+
+    192.168.1.20 is at
+    BB:BB:BB:BB:BB:BB
+
+Linux command:
+
+    ip neigh
+
+
+12. BROADCAST
+
+Ethernet broadcast MAC:
+
+    FF:FF:FF:FF:FF:FF
+
+Example:
+
+    PC1
+      |
+      | Broadcast
+      ↓
+    Switch
+    / | \
+   PC2 PC3 PC4
+
+Devices in the same Layer-2 broadcast domain can receive the broadcast.
+
+ARP request is a classic IPv4 LAN broadcast example.
+
+
+13. BROADCAST DOMAIN
+
+Broadcast domain = Layer-2 network area in which a broadcast can propagate.
+
+Example:
+
+    PC1 ──┐
+    PC2 ──┤
+    PC3 ──┤
+          Switch
+    PC4 ──┘
+
+Without VLAN segmentation:
+- These devices can belong to the same broadcast domain.
+
+Routers separate Layer-2 broadcast domains.
+
+VLANs can also logically divide a switched network into multiple broadcast domains.
+
+
+14. VLAN
+
+VLAN = Virtual Local Area Network
+
+VLAN logically separates a physical switched network into multiple Layer-2 broadcast domains.
+
+Example:
+
+    Physical Switch
+          |
+      +---+---+
+      |       |
+   VLAN 10  VLAN 20
+   Finance  Engineering
+
+Possible setup:
+
+    VLAN 10 → Management
+    VLAN 20 → Application
+    VLAN 30 → Database
+    VLAN 40 → Monitoring
+    VLAN 50 → Guest
+
+Benefits:
+- Segmentation
+- Isolation
+- Security
+- Broadcast control
+- Easier management
+
+
+15. IP ADDRESSING IN LAN
+
+Example:
+
+    PC1      = 192.168.1.10/24
+    PC2      = 192.168.1.20/24
+    Server   = 192.168.1.30/24
+    Gateway  = 192.168.1.1/24
+
+Network:
+
+    192.168.1.0/24
+
+Subnet mask:
+
+    255.255.255.0
+
+Typical usable addresses:
+
+    192.168.1.1
+       ...
+    192.168.1.254
+
+Broadcast:
+
+    192.168.1.255
+
+
+16. SAME SUBNET COMMUNICATION
+
+Example:
+
+    PC1 = 192.168.1.10/24
+    PC2 = 192.168.1.20/24
+
+Both belong to:
+
+    192.168.1.0/24
+
+PC1 generally communicates directly with PC2 at Layer 2 after resolving PC2's MAC address using ARP.
+
+Concept:
+
+    PC1
+     |
+    ARP
+     |
+     ↓
+    PC2 MAC
+     |
+     ↓
+  Ethernet frame
+     |
+     ↓
+    PC2
+
+
+17. DIFFERENT SUBNET COMMUNICATION
+
+Example:
+
+    PC1:
+    192.168.1.10/24
+
+    Server:
+    192.168.2.10/24
+
+Different networks:
+
+    192.168.1.0/24
+    192.168.2.0/24
+
+PC1 generally sends traffic to the default gateway.
+
+    PC1
+     |
+     ↓
+Default Gateway
+192.168.1.1
+     |
+     ↓
+Router
+     |
+     ↓
+192.168.2.0/24
+     |
+     ↓
+Server
+
+
+18. DEFAULT GATEWAY
+
+Default gateway is the Layer-3 device a host uses to reach destinations outside its local subnet.
+
+Example:
+
+    IP:
+    192.168.1.10/24
+
+    Gateway:
+    192.168.1.1
+
+Local destination:
+
+    192.168.1.20
+          ↓
+       Direct LAN communication
+
+Remote destination:
+
+    8.8.8.8
+       ↓
+    Gateway
+       ↓
+    Router
+       ↓
+    Internet
+
+
+19. ROUTER
+
+Router connects different IP networks.
+
+Example:
+
+    LAN 1
+    192.168.1.0/24
+          |
+        Router
+          |
+    LAN 2
+    192.168.2.0/24
+
+Main job:
+- Layer-3 forwarding
+- Connect different networks
+- Select routes
+- Provide gateway functionality
+
+
+20. ACCESS POINT
+
+Access Point provides wireless connectivity to the LAN.
+
+Example:
+
+    Laptop ))))
+               \
+    Phone ))))) → Access Point
+               /
+    Tablet ))))
+                   |
+                 Switch
+                   |
+                  LAN
+
+Important:
+- Wi-Fi is wireless LAN technology.
+- Access Point commonly bridges wireless clients into the LAN.
+
+
+21. DATA FLOW INSIDE A LAN
+
+Suppose PC1 sends data to PC2.
+
+Application data is encapsulated:
+
+    Application Data
+          ↓
+    TCP/UDP Segment
+          ↓
+      IP Packet
+          ↓
+    Ethernet Frame
+          ↓
+    Physical Bits
+          ↓
+        NIC
+          ↓
+       Switch
+          ↓
+        NIC
+          ↓
+        PC2
+
+This is the basic encapsulation/decapsulation concept.
+
+
+22. LAN DATA FLOW WITH REMOTE NETWORK
+
+If destination is outside the local subnet:
+
+    Application
+       ↓
+     TCP/UDP
+       ↓
+       IP
+       ↓
+    Ethernet
+       ↓
+      NIC
+       ↓
+     Switch
+       ↓
+     Router
+       ↓
+  Other Network
+       ↓
+  Destination
+
+LAN provides local connectivity, while router provides connectivity to other networks.
+
+
+23. LAN TECHNOLOGIES
+
+Common LAN technologies:
+
+- Ethernet
+- Wi-Fi/WLAN
+
+Ethernet:
+- Wired LAN technology
+- Common in servers, switches, desktops and data centers
+
+Wi-Fi:
+- Wireless LAN technology
+- Common for laptops, phones and wireless clients
+
+
+24. ETHERNET
+
+Ethernet is one of the most important LAN technologies.
+
+It defines mechanisms for:
+- Ethernet frames
+- MAC addressing
+- Local frame delivery
+- Physical/link communication
+
+Concept:
+
+    Application
+        ↓
+       TCP
+        ↓
+        IP
+        ↓
+    Ethernet
+        ↓
+       NIC
+        ↓
+     Switch
+
+
+25. LAN AND DEVOPS
+
+LAN is foundational to DevOps infrastructure.
+
+Typical environment:
+
+    Load Balancer
+          |
+       LAN/VLAN
+          |
+    +-----+-----+
+    |           |
+ App Server  App Server
+    |
+   LAN/VLAN
+    |
+  Database
+
+Other DevOps components:
+- CI/CD runners
+- Git servers
+- Container registries
+- Kubernetes nodes
+- Monitoring systems
+- Logging systems
+- Databases
+- Load balancers
+- Storage systems
+
+
+26. KUBERNETES CONNECTION
+
+Kubernetes nodes communicate over the underlying network.
+
+Concept:
+
+    Node 1 ──┐
+    Node 2 ──┤
+    Node 3 ──┼── LAN ── Switch
+    Node 4 ──┘
+
+Above the physical LAN, Kubernetes adds virtual networking layers.
+
+Therefore LAN fundamentals help understand:
+- Pod networking
+- Node networking
+- Service networking
+- Network policies
+- Load balancing
+- Cluster troubleshooting
+
+
+27. LINUX NETWORKING COMMANDS
+
+Check interfaces:
+
+    ip link
+
+Check IP addresses:
+
+    ip addr
+
+Check routing table:
+
+    ip route
+
+Check ARP/neighbor table:
+
+    ip neigh
+
+Test connectivity:
+
+    ping 192.168.1.20
+
+Check route decision:
+
+    ip route get 192.168.1.20
+
+Check listening TCP/UDP ports:
+
+    ss -tulnp
+
+Check interface statistics:
+
+    ip -s link
+
+Check detailed NIC statistics:
+
+    sudo ethtool -S eth0
+
+
+28. PACKET CAPTURE
+
+tcpdump is very important for LAN troubleshooting.
+
+Capture all traffic:
+
+    sudo tcpdump -i eth0
+
+Capture ICMP:
+
+    sudo tcpdump -i eth0 icmp
+
+Capture ARP:
+
+    sudo tcpdump -i eth0 arp
+
+Capture traffic to/from a host:
+
+    sudo tcpdump -i eth0 host 192.168.1.20
+
+Packet capture helps determine:
+- Is packet leaving the host?
+- Is packet arriving?
+- Is ARP working?
+- Is TCP connection being attempted?
+- Is traffic being dropped?
+
+
+29. LAN TROUBLESHOOTING METHODOLOGY
+
+Always troubleshoot layer by layer.
+
+    Physical
+       ↓
+    Link
+       ↓
+    IP
+       ↓
+    ARP/Neighbor
+       ↓
+    Routing
+       ↓
+    Firewall
+       ↓
+    TCP/UDP Port
+       ↓
+    Service
+       ↓
+    Application
+
+
+30. SERVER NOT ACCESSIBLE — TROUBLESHOOTING
+
+Step 1:
+Check interface:
+
+    ip link
+
+Look for:
+- UP
+- LOWER_UP
+
+
+Step 2:
+Check IP:
+
+    ip addr
+
+
+Step 3:
+Check route:
+
+    ip route
+
+
+Step 4:
+Check ARP/neighbor:
+
+    ip neigh
+
+
+Step 5:
+Test IP connectivity:
+
+    ping <destination>
+
+
+Step 6:
+Check destination port:
+
+    nc -vz <server> 22
+
+or:
+
+    nc -vz <server> 443
+
+
+Step 7:
+Check local listening services:
+
+    ss -tulnp
+
+
+Step 8:
+Check firewall:
+
+    sudo nft list ruleset
+
+or, where applicable:
+
+    sudo ufw status
+
+
+Step 9:
+Capture packets:
+
+    sudo tcpdump -i eth0 host <destination>
+
+
+31. COMMON LAN PROBLEMS
+
+Physical:
+- Bad cable
+- Loose connector
+- Failed NIC
+- Failed switch port
+
+Layer 2:
+- Wrong VLAN
+- VLAN mismatch
+- MAC learning issue
+- STP-related issue
+- Duplex/speed problem
+
+Layer 3:
+- Wrong IP
+- Wrong subnet mask
+- Wrong gateway
+- Missing route
+- IP conflict
+
+ARP:
+- Incorrect/stale neighbor information
+- ARP resolution failure
+
+Transport:
+- Port blocked
+- Service not listening
+- Firewall filtering
+
+Application:
+- Service crashed
+- Wrong configuration
+- DNS issue
+- Application-level failure
+
+
+32. COMMON MISCONCEPTIONS
+
+Misconception:
+"LAN means Ethernet only."
+
+Correct:
+LAN is a network category/scope. Ethernet and Wi-Fi are common LAN technologies.
+
+Misconception:
+"Switch and router are the same."
+
+Correct:
+Switch primarily forwards Layer-2 frames using MAC addresses.
+Router forwards Layer-3 packets between IP networks.
+
+Misconception:
+"All LAN devices must have the same IP address range."
+
+Correct:
+Devices in the same IP subnet normally share the same subnet, but one physical LAN infrastructure can contain multiple VLANs/subnets.
+
+Misconception:
+"MAC address replaces IP address."
+
+Correct:
+MAC and IP operate at different layers and serve different purposes.
+
+Misconception:
+"If ping works, application must work."
+
+Correct:
+Ping tests IP/ICMP reachability. Application ports and services can still be blocked or unavailable.
+
+Misconception:
+"LAN means Internet."
+
+Correct:
+LAN is local connectivity. Internet access is provided through a router/gateway and external networks.
+
+
+33. IMPORTANT DIFFERENCE: SWITCH VS ROUTER
+
+Switch:
+- Layer 2 primarily
+- Uses MAC addresses
+- Connects devices within a LAN/VLAN
+- Forwards Ethernet frames
+
+Router:
+- Layer 3
+- Uses IP addresses/routing table
+- Connects different networks
+- Forwards IP packets
+
+
+34. IMPORTANT DIFFERENCE: MAC VS IP
+
+MAC:
+- Layer 2/link-layer address
+- Used for local Ethernet frame delivery
+- Example:
+  AA:BB:CC:DD:EE:FF
+
+IP:
+- Layer 3 address
+- Used for logical addressing and routing
+- Example:
+  192.168.1.10
+
+
+35. IMPORTANT DIFFERENCE: LAN VS VLAN
+
+LAN:
+- Local network concept
+
+VLAN:
+- Logical segmentation of a Layer-2 network
+
+Example:
+
+    Physical Switch
+         |
+    +----+----+
+    |         |
+  VLAN 10   VLAN 20
+    |         |
+  Users     Servers
+
+VLANs create separate Layer-2 broadcast domains.
+
+
+36. LAN LEARNING ROADMAP
+
+After understanding LAN, important next topics are:
+
+    LAN
+     |
+     +-- Ethernet
+     |
+     +-- MAC Address
+     |
+     +-- Ethernet Frame
+     |
+     +-- Switch
+     |
+     +-- ARP
+     |
+     +-- IP Addressing
+     |
+     +-- Subnetting
+     |
+     +-- VLAN
+     |
+     +-- Trunking
+     |
+     +-- STP
+     |
+     +-- DHCP
+     |
+     +-- DNS
+     |
+     +-- Routing
+     |
+     +-- Wi-Fi/WLAN
+     |
+     +-- Network Security
+
+
+37. OSI CONNECTION
+
+LAN concepts span multiple OSI layers.
+
+Physical Layer:
+- Cables
+- Fiber
+- Radio
+- Electrical/optical signaling
+
+Data Link Layer:
+- Ethernet
+- MAC addresses
+- Frames
+- Switches
+- VLANs
+- STP
+
+Network Layer:
+- IPv4/IPv6
+- IP addresses
+- Subnets
+- Routers
+- Routing
+
+Transport Layer:
+- TCP
+- UDP
+- Ports
+
+Application Layer:
+- HTTP
+- DNS
+- SSH
+- APIs
+- Applications
+
+
+38. COMPLETE LAN MENTAL MODEL
+
+                         INTERNET
+                            |
+                         Router
+                            |
+                         Firewall
+                            |
+                       LAN / VLAN
+                            |
+                         Switch
+              +-------------+-------------+
+              |             |             |
+             PC           Server        Printer
+              |
+             NIC
+              |
+          Ethernet
+              |
+         MAC Address
+              |
+             ARP
+              |
+         IP Address
+              |
+       Default Gateway
+              |
+          Other Networks
+
+
+39. LINUX SERVER MENTAL MODEL
+
+    Application
+         ↓
+      TCP/UDP
+         ↓
+         IP
+         ↓
+      Ethernet
+         ↓
+        NIC
+         ↓
+       Switch
+         ↓
+      VLAN/LAN
+         ↓
+    Router/Firewall
+         ↓
+    Other Network
+         ↓
+      Internet
+
+
+40. INTERVIEW QUESTIONS AND ANSWERS
+
+Q1. What is LAN?
+A:
+LAN stands for Local Area Network. It connects devices within a limited geographical area such as a home, office, building or data center.
+
+Q2. What is the primary device used to connect devices in a LAN?
+A:
+A network switch is commonly used for Layer-2 connectivity between Ethernet devices.
+
+Q3. What is a switch?
+A:
+A switch forwards Ethernet frames primarily using MAC addresses.
+
+Q4. What is a router?
+A:
+A router forwards IP packets between different networks.
+
+Q5. What is MAC address?
+A:
+A Layer-2/link-layer address associated with a network interface and used for local Ethernet frame delivery.
+
+Q6. What is ARP?
+A:
+ARP resolves an IPv4 address to a MAC address on the local network.
+
+Q7. What is a broadcast domain?
+A:
+A Layer-2 area in which a broadcast can propagate.
+
+Q8. What is VLAN?
+A:
+VLAN stands for Virtual Local Area Network and logically separates a switched network into multiple Layer-2 broadcast domains.
+
+Q9. What is default gateway?
+A:
+The router address used by a host to reach destinations outside its local subnet.
+
+Q10. How do you check IP configuration in Linux?
+A:
+    ip addr
+
+Q11. How do you check routing?
+A:
+    ip route
+
+Q12. How do you check ARP/neighbor information?
+A:
+    ip neigh
+
+Q13. How do you check listening ports?
+A:
+    ss -tulnp
+
+Q14. How do you capture LAN traffic?
+A:
+    sudo tcpdump -i eth0
+
+Q15. Can LAN access the Internet?
+A:
+Yes. A router/default gateway connects the LAN to external networks such as the Internet.
+
+Q16. What is the difference between a switch and router?
+A:
+Switch primarily operates at Layer 2 using MAC addresses; router operates at Layer 3 using IP addresses and routing information.
+
+Q17. What happens when a host communicates with another host on the same subnet?
+A:
+The sender determines the destination is local, resolves the destination MAC using ARP for IPv4, and sends an Ethernet frame directly through the local Layer-2 network.
+
+Q18. What happens when the destination is outside the local subnet?
+A:
+The host sends the packet toward its default gateway, which routes it toward the destination network.
+
+
+41. FINAL MEMORY TRICK
+
+LAN = Local Area Network
+
+Think:
+
+    Local devices
+         ↓
+       Switch
+         ↓
+       LAN
+         ↓
+   Router/Gateway
+         ↓
+    Other networks
+
+Layer-2:
+    Ethernet
+    MAC
+    Switch
+    VLAN
+    ARP
+
+Layer-3:
+    IP
+    Subnet
+    Gateway
+    Routing
+
+Linux tools:
+    ip link
+    ip addr
+    ip route
+    ip neigh
+    ping
+    ss
+    tcpdump
+    ethtool
+
+
+42. ONE-LINE SUMMARY
+
+LAN is a local networking environment where devices communicate using technologies such as Ethernet and Wi-Fi;
+switches provide local Layer-2 connectivity using MAC addresses, IP provides Layer-3 addressing, ARP resolves 
+IPv4-to-MAC mappings, VLANs provide logical segmentation, and routers connect the LAN to other networks.
