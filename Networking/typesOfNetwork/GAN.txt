@@ -1,0 +1,1500 @@
+Bilkul. Neeche **GAN (Global Area Network)** ka complete revision summary diya hai, exactly `.txt` file mein copy-paste karne layak format mein.
+
+```text
+TOPIC: GAN (Global Area Network) — Full Notes
+
+1. DEFINITION
+
+GAN = Global Area Network.
+
+GAN ek global-scale networking concept hai jo geographically distributed
+networks ko countries aur continents ke across connect karta hai.
+
+Simple meaning:
+GAN ka scope worldwide/global level ka hota hai.
+
+Important:
+GAN ko PAN/LAN/MAN/WAN ki tarah universally standardized technical
+category nahi maana jata. Ye mostly global-scale networking ko describe
+karne ke liye conceptual term hai.
+
+
+2. NETWORK TYPES — BASIC ORDER
+
+PAN
+- Personal Area Network
+- Personal devices ke around
+- Example: Phone ↔ Smartwatch
+
+LAN
+- Local Area Network
+- Home, office, building
+- Example: PC → Switch → Server
+
+MAN
+- Metropolitan Area Network
+- City/metropolitan area
+- Example: Office A → MAN → Office B
+
+WAN
+- Wide Area Network
+- Large geographic area
+- Example: Delhi → Mumbai
+
+GAN
+- Global Area Network
+- Worldwide/global scale
+- Example: India → USA → Europe → Singapore
+
+
+3. IMPORTANT CLARIFICATION
+
+GAN ko WAN ka strict "next technical layer" nahi samajhna chahiye.
+
+WAN already:
+- Multiple cities
+- Countries
+- Continents
+
+ko connect kar sakta hai.
+
+GAN ka main idea:
+- Global-scale connectivity
+- Multiple WANs
+- Global provider networks
+- Internet/global backbone
+- International fiber
+- Submarine cables
+- Global routing
+
+Simple:
+
+WAN = Wide-area connectivity
+
+GAN = Global-scale networking concept
+
+
+4. WHY GAN EXISTS
+
+Modern organizations geographically distributed hoti hain.
+
+Example:
+
+- India Office
+- USA Office
+- UK Office
+- Singapore Office
+- Australia Office
+- Global Data Centers
+- Cloud Regions
+
+Har location ka apna LAN ho sakta hai.
+
+GAN/global networking ka purpose:
+
+- Global offices connect karna
+- Global data centers connect karna
+- Cloud regions connect karna
+- Global applications support karna
+- Data replication
+- Disaster Recovery
+- Global monitoring
+- Global CI/CD
+- Remote access
+- Worldwide service delivery
+
+
+5. REAL-WORLD ANALOGY
+
+PAN:
+- Person ke personal roads/devices
+
+LAN:
+- Building ke internal roads
+
+MAN:
+- City ke roads
+
+WAN:
+- Cities ko connect karne wali highways
+
+GAN:
+- Worldwide transportation/network system
+
+Mental model:
+
+LAN = Local
+MAN = City
+WAN = Large geographic area
+GAN = Global
+
+
+6. BASIC GAN ARCHITECTURE
+
+Conceptual architecture:
+
+                    GLOBAL NETWORK
+
+       India
+         |
+        WAN
+         |
+      Provider
+         |
+   Global Backbone
+      /        \
+   USA        Europe
+    |            |
+   WAN          WAN
+    |            |
+Singapore     Other Sites
+
+
+7. EXAMPLE
+
+Suppose:
+
+India Server
+    |
+India LAN
+    |
+India Router
+    |
+WAN
+    |
+International Network
+    |
+USA Router
+    |
+USA LAN
+    |
+USA Server
+
+This is global-scale connectivity.
+
+
+8. HOW DATA FLOWS IN GAN
+
+Example:
+
+India Server → USA Server
+
+Basic flow:
+
+India Server
+    ↓
+Switch
+    ↓
+India Router
+    ↓
+Local ISP
+    ↓
+Regional Network
+    ↓
+International Provider
+    ↓
+Global Backbone
+    ↓
+Long-Distance/International Links
+    ↓
+USA Provider
+    ↓
+USA Router
+    ↓
+USA Switch
+    ↓
+USA Server
+
+
+9. STEP-BY-STEP DATA FLOW
+
+Step 1:
+Application creates data.
+
+    Application
+        ↓
+    Application Data
+
+
+Step 2:
+Transport layer encapsulates the data.
+
+    Application Data
+          ↓
+      TCP/UDP
+
+
+Step 3:
+IP packet is created.
+
+Example:
+
+    Source IP:
+    10.10.1.10
+
+    Destination IP:
+    10.50.1.10
+
+
+Step 4:
+Source host checks whether destination is local.
+
+If destination is not local:
+
+    Source Host
+        ↓
+    Default Gateway
+        ↓
+      Router
+
+
+Step 5:
+Source LAN forwards the frame to the router.
+
+    Server
+       ↓
+    Switch
+       ↓
+    Router
+
+
+Step 6:
+Router checks destination IP and routing table.
+
+    Destination IP
+          ↓
+    Routing Table Lookup
+          ↓
+       Next Hop
+          ↓
+      WAN/Provider
+
+
+Step 7:
+Packet enters WAN/international network.
+
+    Source Router
+         ↓
+      Provider
+         ↓
+    WAN/Backbone
+         ↓
+    Intermediate Routers
+
+
+Step 8:
+Multiple routers forward the packet.
+
+Each router:
+
+    Receive
+      ↓
+    Read Destination IP
+      ↓
+    Routing Table Lookup
+      ↓
+    Select Next Hop
+      ↓
+    Forward
+
+
+Step 9:
+Packet reaches destination provider/network.
+
+    Global Network
+         ↓
+    USA Provider
+         ↓
+    USA Router
+
+
+Step 10:
+Destination router forwards packet into destination LAN.
+
+    USA Router
+         ↓
+      Switch
+         ↓
+    USA Server
+
+
+10. COMPLETE DATA FLOW
+
+    Application
+         ↓
+      TCP/UDP
+         ↓
+       IP Packet
+         ↓
+    Source LAN
+         ↓
+    Source Router
+         ↓
+       Local ISP
+         ↓
+    Regional Network
+         ↓
+ International Provider
+         ↓
+   Global Backbone
+         ↓
+ Intermediate Routers
+         ↓
+ Destination Provider
+         ↓
+ Destination Router
+         ↓
+ Destination LAN
+         ↓
+ Destination Server
+
+
+11. ROUTING IN GAN
+
+Routing is one of the most important concepts.
+
+Routers decide:
+
+"Destination network ke liye next hop kya hai?"
+
+Example:
+
+    Destination:
+    10.50.0.0/16
+
+Router routing table:
+
+    10.50.0.0/16
+          ↓
+      Next Hop
+          ↓
+      WAN Interface
+
+
+12. BGP
+
+BGP = Border Gateway Protocol.
+
+BGP ek routing protocol hai.
+
+Main purpose:
+Different Autonomous Systems ke beech network reachability information
+exchange karna.
+
+Example:
+
+    AS 100
+    India Network
+         |
+        BGP
+         |
+    AS 200
+    ISP
+         |
+        BGP
+         |
+    AS 300
+    International Provider
+         |
+        BGP
+         |
+    AS 400
+    USA Network
+
+
+13. IMPORTANT BGP FACT
+
+BGP GAN nahi hai.
+
+BGP:
+- Routing protocol
+
+GAN:
+- Global networking concept
+
+Correct:
+
+    GAN = Global networking scope/concept
+
+    BGP = Routing protocol used in large-scale networks
+
+
+14. AUTONOMOUS SYSTEM (AS)
+
+AS = Autonomous System.
+
+Simple definition:
+
+Autonomous System ek administratively controlled collection of IP networks
+and routers hota hai jo common routing policy ke under operate karta hai.
+
+Examples:
+
+    ISP
+      ↓
+     AS
+
+    Large Company
+      ↓
+     AS
+
+    Cloud Provider
+      ↓
+     AS
+
+
+15. BGP AND AS RELATIONSHIP
+
+Concept:
+
+    AS 100
+       |
+      BGP
+       |
+    AS 200
+       |
+      BGP
+       |
+    AS 300
+
+BGP autonomous systems ke beech reachability information exchange karta hai.
+
+
+16. IP VS MAC IN GLOBAL DATA FLOW
+
+Important concept:
+
+Final destination IP:
+
+    10.50.1.10
+
+Routing ke dauran final destination IP generally same rehta hai.
+
+But Layer-2 information hop-by-hop change hoti hai.
+
+Example:
+
+Router A → Router B:
+
+    Source MAC:
+    Router A
+
+    Destination MAC:
+    Router B
+
+Next hop:
+
+Router B → Router C:
+
+    Source MAC:
+    Router B
+
+    Destination MAC:
+    Router C
+
+Therefore:
+
+IP:
+- End-to-end destination addressing
+
+Layer 2:
+- Hop-by-hop forwarding
+
+
+17. GLOBAL PHYSICAL INFRASTRUCTURE
+
+Global networking ke peeche physical infrastructure hoti hai.
+
+Important components:
+
+- Fiber-optic cables
+- Submarine cables
+- Data centers
+- Routers
+- Provider networks
+- Internet exchange points
+- Optical transmission systems
+- Satellite systems
+- Ground stations
+
+
+18. SUBMARINE CABLES
+
+Continents ko connect karne ke liye undersea fiber-optic cables use hote hain.
+
+Concept:
+
+    India
+      |
+      |
+========================
+    Submarine Fiber
+========================
+      |
+     USA
+
+These cables carry huge amounts of international traffic.
+
+Benefits:
+- Very high bandwidth
+- Long-distance connectivity
+- Efficient optical transmission
+
+
+19. SATELLITE CONNECTIVITY
+
+Remote locations ke liye satellite connectivity use ho sakti hai.
+
+    Remote Site
+        |
+        ↑
+     Satellite
+        |
+        ↓
+    Ground Station
+        |
+      Network
+
+Use cases:
+- Remote areas
+- Ships
+- Aircraft
+- Disaster recovery
+- Locations without terrestrial connectivity
+
+
+20. GLOBAL NETWORK TECHNOLOGIES
+
+GAN/global connectivity mein multiple technologies combine ho sakti hain.
+
+Examples:
+
+- BGP
+- IP routing
+- MPLS
+- SD-WAN
+- IPsec VPN
+- Internet
+- Fiber
+- Submarine cables
+- Satellite
+- Private WAN
+- Cloud provider backbone
+- Dedicated connectivity
+
+
+21. MPLS
+
+MPLS = Multiprotocol Label Switching.
+
+MPLS ek forwarding technology hai.
+
+Example:
+
+    Site A
+      |
+     CE
+      |
+     PE
+      |
+  MPLS Core
+      |
+     PE
+      |
+     CE
+      |
+    Site B
+
+Important:
+
+WAN = network scope
+
+MPLS = networking/forwarding technology
+
+
+22. SD-WAN
+
+SD-WAN multiple WAN transports ko manage kar sakta hai.
+
+Example:
+
+        Site A
+          |
+      SD-WAN Edge
+       /       \
+  Internet    MPLS
+       \       /
+        SD-WAN
+           |
+        Site B
+
+Benefits:
+- Policy-based routing
+- Multiple links
+- Failover
+- Centralized management
+- Application-aware traffic handling
+
+
+23. VPN
+
+Global connectivity secure karne ke liye VPN use ho sakta hai.
+
+Example:
+
+    India Office
+         |
+     VPN Router
+         |
+      Internet
+         |
+     VPN Router
+         |
+      USA Office
+
+IPsec VPN commonly site-to-site secure connectivity ke liye use hota hai.
+
+
+24. GAN AND INTERNET
+
+Important:
+
+GAN and Internet exactly same terms nahi hain.
+
+Internet:
+- Global interconnected network of networks
+
+GAN:
+- Global-scale networking concept
+
+Internet GAN-scale global networking ka major example ho sakta hai.
+
+
+25. GAN AND CLOUD
+
+Modern cloud providers global networking infrastructure operate karte hain.
+
+Example:
+
+    India
+      |
+    WAN
+      |
+  Cloud Region
+    Mumbai
+      |
+ Global Backbone
+      |
+  Cloud Region
+   Singapore
+      |
+ Global Backbone
+      |
+  Cloud Region
+   Frankfurt
+
+
+26. MULTI-REGION APPLICATION
+
+Example:
+
+    Users - India
+          |
+       Mumbai
+       Region
+          |
+      Global Network
+          |
+      Singapore
+       Region
+          |
+      Global Network
+          |
+       Europe
+       Region
+
+Use cases:
+- Global availability
+- Disaster Recovery
+- Multi-region deployment
+- Failover
+- Lower user latency
+- Business continuity
+
+
+27. GAN AND DEVOPS
+
+Global DevOps architecture:
+
+    Developer
+       |
+      Git
+       |
+     CI/CD
+       |
+   Global Network
+      /      \
+     /        \
+Mumbai       USA
+Cluster      Cluster
+     \        /
+      \      /
+     Monitoring
+
+
+WAN/GAN connectivity can affect:
+
+- Git clone
+- Git push
+- CI/CD
+- Docker image pulls
+- Artifact downloads
+- Kubernetes deployments
+- Remote API calls
+- Monitoring
+- Logging
+- Backup
+- Database replication
+
+
+28. GAN AND KUBERNETES
+
+Multiple Kubernetes clusters:
+
+    Cluster A
+      India
+        |
+       WAN
+        |
+     Global
+     Network
+        |
+       WAN
+        |
+    Cluster B
+      USA
+
+Possible uses:
+- Multi-region Kubernetes
+- Disaster Recovery
+- Global applications
+- Backup
+- Central monitoring
+
+
+29. GAN AND DATABASE REPLICATION
+
+Example:
+
+    Primary DB
+     Mumbai
+        |
+       WAN
+        |
+    Global Network
+        |
+       WAN
+        |
+    Replica DB
+       USA
+
+Challenges:
+- Latency
+- Packet loss
+- Bandwidth
+- Jitter
+- Consistency
+- Replication delay
+
+Synchronous replication across large geographic distances can increase
+application latency because remote acknowledgement may be required.
+
+
+30. LATENCY
+
+Global networks generally have higher latency than local networks.
+
+Possible reasons:
+- Geographic distance
+- Long physical paths
+- Multiple routers
+- Provider networks
+- Queuing
+- Congestion
+
+Concept:
+
+    LAN
+      ↓
+    Very low latency
+
+    MAN
+      ↓
+    Usually higher
+
+    WAN
+      ↓
+    Higher
+
+    Intercontinental
+      ↓
+    Potentially significantly higher
+
+
+31. BANDWIDTH VS LATENCY
+
+Bandwidth:
+- Amount of data that can be transferred per unit time.
+
+Latency:
+- Time required for data/packet to travel.
+
+Important:
+
+High bandwidth does NOT automatically mean low latency.
+
+Example:
+
+    10 Gbps
+       +
+    High latency
+
+is completely possible in global networking.
+
+
+32. PACKET LOSS
+
+Possible causes:
+
+- Congestion
+- Physical link problems
+- Provider outage
+- Interface errors
+- Routing issues
+- Firewall
+- MTU problems
+- Network instability
+
+Basic test:
+
+    ping <destination>
+
+Advanced:
+
+    mtr <destination>
+
+
+33. MTU
+
+MTU = Maximum Transmission Unit.
+
+Typical Ethernet MTU:
+
+    1500 bytes
+
+VPN/tunneling can add additional headers.
+
+Concept:
+
+    Original Packet
+          ↓
+      VPN Header
+          ↓
+    Larger Packet
+
+Incorrect MTU can cause:
+- Large packets failing
+- Some websites working and others failing
+- VPN issues
+- Application timeouts
+- Intermittent connectivity
+
+
+34. LINUX COMMANDS FOR GLOBAL CONNECTIVITY
+
+Check interface:
+
+    ip link
+
+Check IP:
+
+    ip addr
+
+Check routing table:
+
+    ip route
+
+Check route to destination:
+
+    ip route get <destination>
+
+Check neighbor table:
+
+    ip neigh
+
+Test connectivity:
+
+    ping <destination>
+
+Trace route:
+
+    traceroute <destination>
+
+Alternative:
+
+    tracepath <destination>
+
+Packet-loss/path analysis:
+
+    mtr <destination>
+
+Test a specific port:
+
+    nc -vz <destination> 443
+
+Check sockets:
+
+    ss -tulnp
+
+Packet capture:
+
+    sudo tcpdump -i eth0 host <destination>
+
+
+35. GLOBAL CONNECTIVITY TROUBLESHOOTING
+
+Use layered approach:
+
+    Physical
+       ↓
+    Interface
+       ↓
+    IP Configuration
+       ↓
+    Default Gateway
+       ↓
+    Local Routing
+       ↓
+    WAN
+       ↓
+    BGP/Provider Routing
+       ↓
+    Firewall/ACL
+       ↓
+    MTU
+       ↓
+    TCP/UDP Port
+       ↓
+    Application
+
+
+36. TROUBLESHOOTING EXAMPLE
+
+Problem:
+
+India Server cannot reach USA Server.
+
+Step 1:
+    ip link
+
+Step 2:
+    ip addr
+
+Step 3:
+    ip route
+
+Step 4:
+    ping <gateway>
+
+Step 5:
+    ping <USA-IP>
+
+Step 6:
+    tracepath <USA-IP>
+
+Step 7:
+    mtr <USA-IP>
+
+Step 8:
+    nc -vz <USA-IP> 443
+
+Step 9:
+    sudo tcpdump -i eth0 host <USA-IP>
+
+Then investigate:
+- Local network
+- ISP
+- WAN
+- Routing
+- BGP
+- Provider
+- Firewall
+- MTU
+- Destination server
+
+
+37. GLOBAL ROUTING PROBLEMS
+
+Possible issues:
+
+- Missing route
+- Incorrect BGP advertisement
+- Route withdrawal
+- Prefix filtering
+- Routing policy
+- Provider outage
+- AS path problems
+- Incorrect next-hop
+- Firewall/ACL
+- Return path issue
+
+
+38. SECURITY IN GLOBAL NETWORKS
+
+Security mechanisms:
+
+- TLS
+- IPsec
+- VPN
+- Firewalls
+- ACLs
+- Network segmentation
+- Authentication
+- Encryption
+- Zero Trust
+
+Example:
+
+    User
+      ↓
+    TLS
+      ↓
+   Application
+      ↓
+   VPN/IPsec
+      ↓
+ Global Network
+      ↓
+ Destination
+
+
+39. ZERO TRUST AND GLOBAL NETWORKING
+
+Modern global organizations often avoid trusting traffic simply because
+it comes from a particular network.
+
+Concept:
+
+    User
+      ↓
+ Authentication
+      ↓
+ Authorization
+      ↓
+ Policy Check
+      ↓
+ Application
+
+Network location alone is not sufficient for trust.
+
+
+40. COMMON MISCONCEPTIONS
+
+Mistake 1:
+"GAN is just a bigger WAN."
+
+Better:
+GAN is a global-scale networking concept that can involve multiple WANs
+and global infrastructure.
+
+Mistake 2:
+"GAN is a protocol."
+
+Correct:
+GAN is not a protocol.
+
+Mistake 3:
+"GAN means Internet."
+
+Correct:
+GAN and Internet are not exactly synonymous.
+
+Mistake 4:
+"BGP is GAN."
+
+Correct:
+BGP is a routing protocol.
+GAN is a global networking concept.
+
+Mistake 5:
+"Submarine cable is GAN."
+
+Correct:
+Submarine cable is physical infrastructure used for global connectivity.
+
+Mistake 6:
+"High bandwidth means low latency."
+
+Correct:
+Bandwidth and latency are different properties.
+
+
+41. INTERVIEW QUESTIONS AND ANSWERS
+
+Q1. What is GAN?
+
+A:
+GAN stands for Global Area Network. It is a global-scale networking
+concept used to describe connectivity across countries and continents.
+
+Q2. Is GAN a protocol?
+
+A:
+No. GAN is a network classification/concept, not a protocol.
+
+Q3. What is the difference between WAN and GAN?
+
+A:
+WAN describes wide-area connectivity, while GAN describes global/worldwide
+scale networking. GAN can involve multiple WANs and global infrastructure.
+
+Q4. Is the Internet a GAN?
+
+A:
+The Internet is a global interconnected network and can be considered an
+example of global-scale networking, but GAN and Internet are not strictly
+synonymous.
+
+Q5. What technologies enable global networking?
+
+A:
+BGP, IP routing, fiber-optic networks, submarine cables, MPLS, SD-WAN,
+VPNs, satellite links and cloud/global backbone infrastructure.
+
+Q6. What is BGP?
+
+A:
+BGP stands for Border Gateway Protocol. It is a routing protocol used to
+exchange network reachability information between Autonomous Systems.
+
+Q7. What is an Autonomous System?
+
+A:
+An Autonomous System is a collection of IP networks and routers under
+common administrative control and routing policy.
+
+Q8. How does data travel from India to USA?
+
+A:
+
+    India Server
+        ↓
+    India LAN
+        ↓
+    India Router
+        ↓
+    ISP
+        ↓
+    Regional Network
+        ↓
+    International Provider
+        ↓
+    Global Backbone
+        ↓
+    USA Provider
+        ↓
+    USA Router
+        ↓
+    USA LAN
+        ↓
+    USA Server
+
+Actual path depends on routing and provider architecture.
+
+Q9. Why is global network latency high?
+
+A:
+Because of geographic distance, physical path length, intermediate
+networking equipment, routing and queuing/congestion.
+
+Q10. How do you troubleshoot global connectivity in Linux?
+
+A:
+Use:
+
+    ip link
+    ip addr
+    ip route
+    ip route get <destination>
+    ping <destination>
+    tracepath <destination>
+    traceroute <destination>
+    mtr <destination>
+    nc -vz <destination> 443
+    tcpdump
+
+Then investigate routing, firewall, provider and application issues.
+
+
+42. COMPLETE GAN DATA FLOW DIAGRAM
+
+                GLOBAL NETWORK
+
+ INDIA                                      USA
+
++-----------+                          +-----------+
+| Application|                         | Application|
++-----+-----+                          +-----+-----+
+      |                                      ↑
+    Server A                              Server B
+      |                                      |
+    Switch                                  Switch
+      |                                      |
+   Router A                                Router B
+      |                                      |
+      ↓                                      ↑
+    ISP                                     ISP
+      |                                      |
+      +----------- Global Network -----------+
+                     |
+              Global Backbone
+                     |
+            International Links
+                     |
+              Submarine Fiber
+
+
+43. DATA FLOW IN ONE LINE
+
+Source Device
+    ↓
+Source LAN
+    ↓
+Source Router
+    ↓
+Local/Regional WAN
+    ↓
+International Provider
+    ↓
+Global Backbone
+    ↓
+Multiple Routers
+    ↓
+Destination Provider
+    ↓
+Destination Router
+    ↓
+Destination LAN
+    ↓
+Destination Device
+
+
+44. GAN VS WAN
+
+WAN:
+- Wide Area Network
+- Large geographic area
+- Can span cities, countries or continents
+- Uses routers and WAN technologies
+
+GAN:
+- Global Area Network
+- Global/worldwide networking concept
+- Can involve multiple WANs
+- Uses global routing and international infrastructure
+- Less standardized as a networking category
+
+
+45. GAN VS INTERNET
+
+Internet:
+- Global interconnected network of networks
+- Public/global infrastructure
+
+GAN:
+- Global-scale networking concept
+
+Important:
+Internet is not simply another name for GAN.
+
+
+46. MOST IMPORTANT MENTAL MODEL
+
+PAN:
+
+    Device
+       ↓
+    Bluetooth/BLE
+       ↓
+    Device
+
+
+LAN:
+
+    Device
+       ↓
+    Switch
+       ↓
+    Device
+
+
+MAN:
+
+    LAN
+       ↓
+    Router
+       ↓
+    Metropolitan Network
+       ↓
+    Router
+       ↓
+    LAN
+
+
+WAN:
+
+    LAN
+       ↓
+    Router
+       ↓
+    WAN
+       ↓
+    Multiple Routers/Provider Network
+       ↓
+    Router
+       ↓
+    LAN
+
+
+GAN:
+
+    LAN
+       ↓
+    Router
+       ↓
+    WAN
+       ↓
+    International/Global Networks
+       ↓
+    Global Backbone
+       ↓
+    WAN
+       ↓
+    Router
+       ↓
+    LAN
+
+
+47. GOLDEN CONCEPT
+
+GAN mein data:
+
+    Source Application
+          ↓
+       TCP/UDP
+          ↓
+       IP Packet
+          ↓
+      Source LAN
+          ↓
+      Source Router
+          ↓
+       WAN/ISP
+          ↓
+    Global Backbone
+          ↓
+    Multiple Routers
+          ↓
+   Destination Provider
+          ↓
+    Destination Router
+          ↓
+    Destination LAN
+          ↓
+    Destination Application
+
+
+48. FINAL ONE-LINE SUMMARY
+
+GAN (Global Area Network) ek global-scale networking concept hai jisme
+different countries aur continents mein distributed networks ko multiple
+WANs, global provider networks, BGP routing, fiber/submarine cables,
+VPNs, satellite systems aur cloud/global backbone infrastructure ke
+combination se connect kiya ja sakta hai.
+
+
+49. KEY TERMS TO REMEMBER
+
+GAN
+- Global Area Network
+
+WAN
+- Wide Area Network
+
+BGP
+- Border Gateway Protocol
+
+AS
+- Autonomous System
+
+ISP
+- Internet Service Provider
+
+MPLS
+- Multiprotocol Label Switching
+
+VPN
+- Virtual Private Network
+
+IPsec
+- Internet Protocol Security
+
+SD-WAN
+- Software-Defined Wide Area Network
+
+MTU
+- Maximum Transmission Unit
+
+LAN
+- Local Area Network
+
+MAN
+- Metropolitan Area Network
+
+
+50. FINAL MEMORY TRICK
+
+PAN:
+PERSON
+
+LAN:
+LOCAL
+
+MAN:
+METRO/CITY
+
+WAN:
+WIDE
+
+GAN:
+GLOBAL
+
+
+Core flow:
+
+PAN:
+Device → Device
+
+LAN:
+Device → Switch → Device
+
+MAN:
+LAN → Router → MAN → Router → LAN
+
+WAN:
+LAN → Router → WAN → Multiple Routers → Router → LAN
+
+GAN:
+LAN → Router → WAN → Global/International Networks → Multiple Routers
+→ WAN → Router → LAN
+```
