@@ -1,0 +1,882 @@
+TOPIC: BRIDGE — Full Notes
+
+1. DEFINITION
+
+Bridge ek Layer-2 (Data Link Layer) networking device hai jo different
+network segments ko connect karta hai aur Ethernet frames ko MAC
+addresses ke basis par forward ya filter karta hai.
+
+Simple definition:
+
+Bridge ek smart Layer-2 gatekeeper hai jo decide karta hai ki frame ko
+doosre network segment par bhejna hai ya nahi.
+
+
+2. OSI LAYER
+
+Bridge:
+Layer 2 = Data Link Layer
+
+Important concepts:
+- Ethernet Frame
+- MAC Address
+
+
+3. MAIN PURPOSE
+
+Bridge ka main purpose:
+
+- Network segments connect karna
+- Unnecessary traffic ko filter karna
+- MAC addresses learn karna
+- Frames ko correct segment par forward karna
+- Collision domains separate karna
+
+
+4. BASIC DIAGRAM
+
+Segment A                 Segment B
+
+PC1 ---- PC2 ---- [ BRIDGE ] ---- PC3 ---- PC4
+
+
+5. BRIDGE KE FOUR MAIN OPERATIONS
+
+1. Learning
+2. Forwarding
+3. Filtering
+4. Flooding
+
+
+6. MAC LEARNING
+
+Bridge incoming frame ke SOURCE MAC address ko dekhta hai.
+
+Example:
+
+Source MAC:
+AA:AA:AA:AA:AA:01
+
+Incoming Port:
+Port 1
+
+Bridge learns:
+
+AA:AA:AA:AA:AA:01 → Port 1
+
+
+7. MAC TABLE
+
+Example:
+
+MAC Address          Port
+
+AA:AA:AA:AA:AA:01    Port 1
+BB:BB:BB:BB:BB:02    Port 1
+CC:CC:CC:CC:CC:03    Port 2
+DD:DD:DD:DD:DD:04    Port 2
+
+
+8. SOURCE VS DESTINATION MAC
+
+Source MAC:
+Used for learning.
+
+Destination MAC:
+Used for forwarding/filtering decision.
+
+Golden rule:
+
+Source MAC → Learn
+
+Destination MAC → Decide
+
+
+9. FRAME PROCESSING
+
+Bridge receives frame.
+
+Step 1:
+Learn source MAC.
+
+Step 2:
+Look at destination MAC.
+
+Step 3:
+Search MAC table.
+
+Step 4:
+Choose:
+
+- Filter
+- Forward
+- Flood
+
+
+10. FILTERING
+
+If destination is on the same incoming segment:
+
+Do not forward the frame to another segment.
+
+Example:
+
+Segment A:
+PC1 → PC2
+
+Bridge knows:
+
+PC2 → Segment A
+
+Therefore:
+
+Frame stays in Segment A.
+
+
+11. FORWARDING
+
+If destination is on another segment:
+
+Example:
+
+PC1 → PC3
+
+Bridge knows:
+
+PC3 → Segment B
+
+Therefore:
+
+Segment A
+   ↓
+Bridge
+   ↓
+Segment B
+
+
+12. FLOODING
+
+If destination MAC is unknown:
+
+Unknown unicast flooding occurs.
+
+Example:
+
+Source:
+PC1
+
+Destination:
+Unknown MAC
+
+Bridge:
+
+PC1
+ ↓
+Bridge
+ ↓ ↓ ↓
+Other relevant segments/interfaces
+
+
+13. BROADCAST
+
+Broadcast MAC:
+
+FF:FF:FF:FF:FF:FF
+
+Bridge floods broadcast within the Layer-2 broadcast domain.
+
+Example:
+
+PC1
+ ↓
+Bridge
+ ↓ ↓
+PC2 PC3
+
+
+14. UNKNOWN UNICAST
+
+If destination MAC is not in MAC table:
+
+Bridge floods the frame to other relevant ports/interfaces.
+
+The destination host accepts it.
+
+Other hosts normally discard it.
+
+
+15. FIRST PACKET VS LATER PACKETS
+
+Initial state:
+
+MAC table:
+EMPTY
+
+PC1 → PC3
+
+Bridge learns:
+
+PC1 → Segment A
+
+PC3 unknown
+
+Therefore:
+Flood.
+
+PC3 replies.
+
+Bridge learns:
+
+PC3 → Segment B
+
+Now table:
+
+PC1 → Segment A
+PC3 → Segment B
+
+Next PC1 → PC3:
+
+Bridge knows destination.
+
+Forward directly to Segment B.
+
+
+16. MAC AGING
+
+MAC entries are not permanent.
+
+Entries can expire after inactivity.
+
+Reason:
+Devices can move/change ports.
+
+Example:
+
+Old:
+AAA → Port 1
+
+Later:
+AAA → Port 2
+
+Bridge can update:
+
+AAA → Port 2
+
+
+17. COLLISION DOMAIN
+
+Bridge separates collision domains.
+
+Example:
+
+Segment A:
+PC1 + PC2
+
+Segment B:
+PC3 + PC4
+
+Bridge between them.
+
+Collision Domain 1:
+PC1 + PC2
+
+Collision Domain 2:
+PC3 + PC4
+
+
+18. BROADCAST DOMAIN
+
+Traditional bridge does NOT normally separate broadcast domains.
+
+Broadcast can cross a bridge.
+
+Therefore:
+
+Bridge:
+Collision domains → separated
+
+Bridge:
+Broadcast domain → generally not separated
+
+
+19. BRIDGE VS ROUTER
+
+Bridge:
+- Layer 2
+- MAC
+- Ethernet Frame
+- Same Layer-2 network/domain
+- Does not perform IP routing
+
+Router:
+- Layer 3
+- IP
+- Packet
+- Connects different IP networks
+- Uses routing table
+
+
+20. BRIDGE VS SWITCH
+
+A modern Ethernet switch is essentially a high-performance
+multiport bridge.
+
+Bridge:
+- Layer 2
+- MAC learning
+- Frame forwarding
+- Usually fewer ports historically
+
+Switch:
+- Layer 2
+- MAC learning
+- Many ports
+- Hardware/ASIC-based high-speed forwarding
+- Modern LAN standard
+
+
+21. TRANSPARENT BRIDGE
+
+Transparent bridge means:
+
+End hosts do not normally need to know that a bridge exists.
+
+Example:
+
+PC1 ---- Bridge ---- PC2
+
+Bridge transparently forwards Layer-2 frames.
+
+
+22. ETHERNET FRAME
+
+Conceptual:
+
++------------------------------------------------+
+| Dest MAC | Source MAC | Type | Payload | FCS |
++------------------------------------------------+
+
+Bridge mainly uses:
+
+- Source MAC
+- Destination MAC
+
+
+23. BRIDGE DOES NOT NEED IP
+
+Traditional bridge forwarding is based on MAC addresses.
+
+It does not need:
+
+- Source IP
+- Destination IP
+- TCP port
+- UDP port
+
+for basic Layer-2 forwarding.
+
+
+24. LAYER COMPARISON
+
+Repeater:
+Layer 1
+Signal
+
+Hub:
+Layer 1
+Signal
+
+Bridge:
+Layer 2
+MAC + Frame
+
+Switch:
+Layer 2
+MAC + Frame
+
+Router:
+Layer 3
+IP + Packet
+
+
+25. BRIDGE AND LOOPS
+
+Layer-2 loops are dangerous.
+
+Example:
+
+       Bridge1
+       /     \
+      /       \
+   Bridge2 -- Bridge3
+
+Possible problems:
+
+- Broadcast storms
+- Unknown-unicast flooding loops
+- Duplicate frames
+- MAC table instability
+- MAC flapping
+
+
+26. MAC FLAPPING
+
+Example:
+
+AAA → Port 1
+AAA → Port 2
+AAA → Port 1
+AAA → Port 2
+
+Meaning:
+Same MAC appears on multiple ports repeatedly.
+
+Possible causes:
+- Layer-2 loop
+- Misconfiguration
+- Redundant topology problem
+
+
+27. STP
+
+STP:
+Spanning Tree Protocol
+
+Purpose:
+Prevent Layer-2 loops while maintaining redundancy.
+
+Example:
+
+       SW1
+      /   \
+    SW2---SW3
+
+STP can logically block one redundant path.
+
+If active path fails:
+Blocked path may become active.
+
+
+28. STP VARIANTS
+
+- STP
+- RSTP
+- MSTP
+
+Modern switches implement these or related Layer-2 loop prevention
+mechanisms.
+
+
+29. VLAN CONNECTION
+
+VLAN-aware switches can create separate Layer-2 broadcast domains.
+
+Example:
+
+Physical switch:
+
+VLAN 10
+VLAN 20
+
+VLAN 10 traffic does not automatically cross into VLAN 20.
+
+Routing is required for inter-VLAN communication.
+
+
+30. IMPORTANT VLAN DISTINCTION
+
+Do not say:
+
+"Any basic bridge creates VLANs."
+
+Correct:
+
+"VLAN-aware bridges/switches can provide VLAN segmentation."
+
+
+31. LINUX BRIDGE
+
+Linux provides software bridge functionality.
+
+Example:
+
+             Linux Bridge
+           /      |      \
+         eth0    veth1   veth2
+                  |       |
+              Container Container
+
+
+32. CREATE LINUX BRIDGE
+
+Command:
+
+sudo ip link add name br0 type bridge
+
+Bring up:
+
+sudo ip link set br0 up
+
+Check:
+
+ip link show type bridge
+
+Bridge interfaces:
+
+bridge link
+
+MAC forwarding database:
+
+bridge fdb show
+
+
+33. ATTACH INTERFACE TO LINUX BRIDGE
+
+Example:
+
+sudo ip link set eth0 master br0
+
+Check:
+
+bridge link
+
+
+34. LINUX BRIDGE FORWARDING
+
+Concept:
+
+Frame arrives
+     ↓
+Learn Source MAC
+     ↓
+Lookup Destination MAC
+     ↓
+Forward / Filter / Flood
+
+
+35. DOCKER CONNECTION
+
+Typical conceptual architecture:
+
+Container
+   ↓
+veth
+   ↓
+docker0/Linux bridge
+   ↓
+Host NIC
+   ↓
+Physical Network
+
+
+36. VM CONNECTION
+
+VM
+ ↓
+Virtual NIC
+ ↓
+Linux Bridge
+ ↓
+Physical NIC
+ ↓
+Switch
+ ↓
+Network
+
+
+37. KUBERNETES CONNECTION
+
+Possible architecture:
+
+Pod
+ ↓
+veth
+ ↓
+Linux bridge/CNI
+ ↓
+Node NIC
+ ↓
+Underlay network
+
+Important:
+Not every Kubernetes CNI uses a Linux bridge.
+
+Modern CNIs may use:
+- Routing
+- eBPF
+- VXLAN
+- Geneve
+- Native cloud networking
+
+
+38. BRIDGE VS NAT
+
+Bridge:
+Layer 2
+MAC forwarding
+
+NAT:
+Usually IP/port translation
+
+Example:
+
+Private IP
+192.168.1.10
+   ↓
+NAT
+   ↓
+Public IP
+
+
+39. BRIDGE VS FIREWALL
+
+Bridge:
+Connectivity and Layer-2 forwarding.
+
+Firewall:
+Security policy and traffic filtering.
+
+Firewall can inspect:
+- IP
+- Ports
+- Protocol
+- Connection state
+- Application data depending on firewall
+
+
+40. ROUTER CHANGES L2 HEADER
+
+Host → Router:
+
+Source MAC = Host
+Destination MAC = Router
+
+Router forwards IP packet.
+
+New Ethernet frame:
+
+Source MAC = Router interface
+Destination MAC = Next-hop host/router
+
+Bridge does not perform this Layer-3 forwarding behavior.
+
+
+41. LINUX TROUBLESHOOTING
+
+Interfaces:
+
+ip link
+
+IP addresses:
+
+ip addr
+
+Routes:
+
+ip route
+
+Neighbors:
+
+ip neigh
+
+Bridge:
+
+bridge link
+
+MAC database:
+
+bridge fdb show
+
+Packet capture:
+
+sudo tcpdump -i br0
+
+or:
+
+sudo tcpdump -i any
+
+
+42. COMMON TROUBLESHOOTING ISSUES
+
+Possible bridge problems:
+
+- Wrong MAC learning
+- MAC flapping
+- Layer-2 loop
+- STP issue
+- VLAN mismatch
+- Wrong bridge membership
+- Incorrect interface configuration
+- Broadcast flooding
+- Unknown-unicast flooding
+
+
+43. COMMON MISTAKES
+
+Mistake:
+"Bridge is Layer 1."
+
+Correct:
+Bridge = Layer 2.
+
+Mistake:
+"Bridge uses IP addresses."
+
+Correct:
+Traditional bridge forwarding uses MAC addresses.
+
+Mistake:
+"Bridge blocks broadcasts."
+
+Correct:
+Traditional bridge forwards/floods broadcasts within the Layer-2 domain.
+
+Mistake:
+"Bridge and switch are completely different."
+
+Correct:
+A switch is essentially a multiport bridge.
+
+Mistake:
+"Unknown destination is discarded."
+
+Correct:
+Unknown unicast is normally flooded within the relevant Layer-2 domain.
+
+
+44. INTERVIEW Q&A
+
+Q: What is a bridge?
+A:
+A Layer-2 device that connects network segments and forwards/filters
+Ethernet frames based on MAC addresses.
+
+Q: Which OSI layer?
+A:
+Layer 2.
+
+Q: What address does it use?
+A:
+MAC address.
+
+Q: How does it learn?
+A:
+It learns source MAC addresses from incoming frames.
+
+Q: What does destination MAC do?
+A:
+It determines forwarding/filtering behavior.
+
+Q: What if destination MAC is known?
+A:
+Forward to the associated interface if it is a different interface.
+
+Q: What if destination MAC is unknown?
+A:
+Flood to other relevant interfaces.
+
+Q: What happens with broadcast?
+A:
+Flood within the Layer-2 broadcast domain.
+
+Q: Does bridge separate collision domains?
+A:
+Yes.
+
+Q: Does bridge separate broadcast domains?
+A:
+Traditional bridge does not.
+
+Q: What is transparent bridging?
+A:
+Forwarding Layer-2 frames without requiring hosts to know the bridge exists.
+
+Q: Why is STP needed?
+A:
+To prevent Layer-2 loops while maintaining redundant paths.
+
+Q: What is MAC flapping?
+A:
+A MAC address repeatedly appearing on different ports/interfaces.
+
+Q: Bridge vs switch?
+A:
+A switch is essentially a high-performance multiport bridge.
+
+Q: Bridge vs router?
+A:
+Bridge uses MAC/frame at Layer 2; router uses IP/packet at Layer 3.
+
+
+45. GOLDEN MENTAL MODEL
+
+Bridge receives frame.
+
+Step 1:
+Learn Source MAC.
+
+Step 2:
+Read Destination MAC.
+
+Step 3:
+Check MAC table.
+
+If destination is same incoming segment:
+FILTER.
+
+If destination is another known segment:
+FORWARD.
+
+If destination is unknown:
+FLOOD.
+
+If destination is broadcast:
+FLOOD.
+
+
+46. NETWORKING DEVICE EVOLUTION
+
+Repeater:
+"Signal ko repeat karo."
+
+Hub:
+"Signal ko multiple ports par repeat karo."
+
+Bridge:
+"MAC address dekhkar frame ko filter/forward karo."
+
+Switch:
+"Same bridge logic, but many ports and high-speed hardware forwarding."
+
+Router:
+"IP address/routing table ke basis par next hop choose karo."
+
+
+47. FINAL MEMORY
+
+Bridge =
+Layer 2
++
+MAC Address
++
+Ethernet Frame
++
+MAC Learning
++
+Forwarding
++
+Filtering
++
+Flooding
++
+Collision Domain Separation
++
+No normal Broadcast Domain Separation
+
+
+48. FINAL ONE-LINE SUMMARY
+
+A bridge is a Layer-2 device that learns source MAC addresses, uses the
+destination MAC to decide whether to forward or filter frames, and floods
+unknown/broadcast traffic within the Layer-2 domain, thereby connecting
+and segmenting network segments while separating collision domains.
