@@ -1,0 +1,791 @@
+TOPIC: HUB — Full Notes
+
+1. DEFINITION
+
+Hub ek Layer 1 (Physical Layer) networking device hai.
+
+Hub ka main function:
+- Incoming physical signal receive karna
+- Signal ko regenerate/repeat karna
+- Signal ko other connected ports par send karna
+
+Hub ko multiport repeater bhi kaha ja sakta hai.
+
+Most important:
+Hub forwarding decision MAC address ya IP address ke basis par nahi karta.
+
+
+2. OSI LAYER
+
+Hub:
+Layer 1 = Physical Layer
+
+Hub primarily:
+- Bits
+- Electrical signals
+- Physical transmission
+
+ke level par operate karta hai.
+
+Hub:
+- IP routing nahi karta
+- MAC learning nahi karta
+- Routing table maintain nahi karta
+- VLAN intelligence nahi hoti
+- Destination MAC ke basis par forwarding decision nahi karta
+
+
+3. BASIC HUB DIAGRAM
+
+             PC1
+              |
+              |
+PC2 -------- HUB -------- PC3
+              |
+             PC4
+
+
+4. HUB KA BASIC BEHAVIOR
+
+Agar PC1 signal send karta hai:
+
+PC1
+ ↓
+HUB
+ ↓ ↓ ↓
+PC2 PC3 PC4
+
+Hub incoming signal ko other ports par repeat karta hai.
+
+Important:
+Hub ko destination nahi pata.
+
+Receiving NIC decide karti hai ki frame accept karna hai ya discard.
+
+
+5. REAL-WORLD ANALOGY
+
+Ek room mein 4 log hain.
+
+A loudspeaker par message bolta hai:
+
+A → Everyone
+
+Sab sunenge.
+
+Sirf intended person message process karega.
+
+Hub ka behavior similar hai.
+
+
+6. DATA FLOW
+
+Suppose:
+
+PC1:
+IP = 192.168.1.10
+MAC = AA-AA-AA-AA-AA-01
+
+PC2:
+IP = 192.168.1.20
+MAC = BB-BB-BB-BB-BB-02
+
+PC3:
+IP = 192.168.1.30
+MAC = CC-CC-CC-CC-CC-03
+
+PC1 → PC2
+
+Application:
+Data
+
+Transport:
+TCP/UDP
+
+Network:
+Source IP = 192.168.1.10
+Destination IP = 192.168.1.20
+
+Data Link:
+Source MAC = AA-AA-AA-AA-AA-01
+Destination MAC = BB-BB-BB-BB-BB-02
+
+Physical:
+Electrical signal
+
+Hub:
+Receives signal
+      ↓
+Repeats signal
+      ↓
+PC2 + PC3 + other ports
+
+PC2:
+Destination MAC matches
+      ↓
+Accept
+
+PC3:
+Destination MAC does not match
+      ↓
+Discard
+
+
+7. HUB DOES NOT LEARN MAC ADDRESSES
+
+Switch:
+
+MAC → Port
+
+Hub:
+
+No MAC table
+
+Hub does not make selective forwarding decisions.
+
+
+8. HUB VS SWITCH
+
+Hub:
+- Layer 1
+- Repeats signals
+- No MAC learning
+- One shared collision domain
+- Half duplex
+- Poor scalability
+- Obsolete in modern networks
+
+Switch:
+- Layer 2
+- Forwards Ethernet frames
+- Learns MAC addresses
+- Each port generally separate collision domain
+- Full duplex commonly
+- Better performance
+- Modern standard
+
+
+9. HUB VS ROUTER
+
+Hub:
+- Layer 1
+- Signal repetition
+- No IP routing
+
+Router:
+- Layer 3
+- Routes IP packets
+- Uses routing table
+- Connects different IP networks
+
+
+10. HUB VS REPEATER
+
+Repeater:
+- Layer 1
+- Regenerates/repeats signal
+- Usually used between two segments
+
+Hub:
+- Layer 1
+- Multiport repeater
+
+
+11. COLLISION DOMAIN
+
+All devices connected through a traditional Ethernet hub share:
+
+ONE COLLISION DOMAIN
+
+Example:
+
+PC1
+PC2
+PC3
+PC4
+ |
+HUB
+
+All are in one shared collision domain.
+
+
+12. COLLISION
+
+If two devices transmit simultaneously:
+
+PC1 → transmit
+PC3 → transmit
+
+Signals interfere.
+
+Result:
+Collision
+
+
+13. CSMA/CD
+
+Full form:
+
+Carrier Sense Multiple Access with Collision Detection
+
+Process:
+
+1. Device checks whether medium is free.
+2. If free, it transmits.
+3. If multiple devices transmit simultaneously:
+   collision occurs.
+4. Devices detect collision.
+5. Transmission stops.
+6. Random backoff occurs.
+7. Device retries.
+
+Classic shared Ethernet/hub networks use this concept.
+
+
+14. HALF DUPLEX
+
+Hub-based Ethernet is traditionally half-duplex.
+
+Meaning:
+Communication can happen in either direction, but shared-medium devices
+cannot reliably transmit simultaneously.
+
+Analogy:
+Walkie-talkie.
+
+
+15. FULL DUPLEX
+
+Modern switched Ethernet links commonly operate full-duplex.
+
+Meaning:
+Transmit and receive can happen simultaneously.
+
+Analogy:
+Telephone call.
+
+
+16. HUB AND BROADCAST
+
+Hub repeats the physical signal to other ports.
+
+If broadcast frame is sent:
+
+Destination MAC:
+FF:FF:FF:FF:FF:FF
+
+Hub repeats signal to other ports.
+
+All connected hosts can receive it.
+
+Important:
+Hub doesn't understand broadcast semantics.
+It simply repeats the signal.
+
+
+17. HUB AND UNICAST
+
+Suppose:
+
+PC1 → PC2
+
+Hub does:
+
+PC1
+ ↓
+HUB
+ ↓ ↓ ↓
+PC2 PC3 PC4
+
+PC2 accepts.
+
+PC3/PC4 normally discard after their NIC checks destination MAC.
+
+Important:
+Even unicast traffic is physically propagated to other hub ports.
+
+
+18. HUB AND MULTICAST
+
+Hub does not intelligently filter multicast.
+
+It repeats the physical signal to other ports.
+
+
+19. HUB AND ARP
+
+PC1 wants:
+192.168.1.20
+
+But does not know its MAC.
+
+ARP request:
+
+"Who has 192.168.1.20?"
+
+Destination MAC:
+FF:FF:FF:FF:FF:FF
+
+Flow:
+
+PC1
+ ↓
+Hub
+ ↓ ↓ ↓
+PC2 PC3 PC4
+
+Correct host replies.
+
+Then PC1 learns destination MAC.
+
+
+20. PACKET/FLOW LAYERS
+
+Application
+   ↓
+TCP/UDP
+   ↓
+IP
+   ↓
+Ethernet Frame
+   ↓
+Physical Signal
+   ↓
+Hub
+   ↓
+Other ports
+
+
+21. ETHERNET FRAME
+
+Conceptual frame:
+
+[Destination MAC]
+[Source MAC]
+[Type]
+[Payload]
+[FCS]
+
+Hub does not inspect the frame to make a forwarding decision.
+It repeats the physical signal.
+
+
+22. COLLISION DOMAIN VS BROADCAST DOMAIN
+
+Collision Domain:
+Area where simultaneous transmissions can collide.
+
+Hub:
+All connected hosts = one collision domain.
+
+Broadcast Domain:
+Area in which Layer-2 broadcast frames propagate.
+
+A basic hub does not separate broadcast domains.
+
+Routers separate Layer-2 broadcast domains.
+
+
+23. HUB SECURITY
+
+Hub is less secure than a switch because traffic is physically repeated
+to all other ports.
+
+Example:
+
+PC1 → Hub → PC2
+          ↘
+           PC3
+
+PC3 may potentially observe/capture traffic depending on NIC configuration
+and packet capture setup.
+
+
+24. PROMISCUOUS MODE
+
+NIC can be configured to capture frames not normally addressed to itself.
+
+Example:
+
+sudo tcpdump -i eth0
+
+Hub-based networks historically made passive traffic observation easier
+than switched networks.
+
+
+25. PERFORMANCE
+
+Hub:
+- Shared bandwidth
+- Shared collision domain
+- Half duplex
+- Collision overhead
+- Poor scalability
+
+Switch:
+- Dedicated links
+- Separate collision domains
+- Full duplex
+- Better throughput
+- Better scalability
+
+
+26. HUB BANDWIDTH
+
+If a hub is rated 10 Mbps, do not assume:
+
+Every connected device = dedicated 10 Mbps.
+
+Instead:
+The shared medium's capacity is shared by connected devices.
+
+
+27. HUB VS SWITCH FORWARDING
+
+Hub:
+
+Incoming signal
+      ↓
+Repeat to other ports
+
+Switch:
+
+Incoming frame
+      ↓
+Read destination MAC
+      ↓
+MAC table lookup
+      ↓
+Forward to appropriate port
+
+
+28. MAC LEARNING
+
+Hub:
+No
+
+Switch:
+Yes
+
+Example switch table:
+
+AA-AA-AA → Port 1
+BB-BB-BB → Port 2
+CC-CC-CC → Port 3
+
+
+29. ROUTING
+
+Hub:
+No routing
+
+Router:
+Uses routing table
+
+Linux:
+ip route
+
+
+30. VLAN
+
+Traditional Hub:
+No VLAN intelligence
+
+Switch:
+Supports VLANs
+
+Example:
+
+VLAN 10
+VLAN 20
+VLAN 30
+
+
+31. STP
+
+STP = Spanning Tree Protocol
+
+Used in switched Layer-2 networks to prevent/manage Layer-2 loops.
+
+Hub does not implement STP.
+
+
+32. DUPLEX MISMATCH
+
+Historical Ethernet issue:
+
+Device A:
+Full duplex
+
+Device B:
+Half duplex
+
+Possible symptoms:
+- Poor performance
+- Errors
+- Packet loss
+- Retransmissions
+
+Check Linux:
+
+sudo ethtool eth0
+
+
+33. LINUX TROUBLESHOOTING COMMANDS
+
+Interface:
+
+ip link
+
+IP:
+
+ip addr
+
+Neighbor/ARP:
+
+ip neigh
+
+Connectivity:
+
+ping <IP>
+
+Packet capture:
+
+sudo tcpdump -i eth0
+
+Link information:
+
+sudo ethtool eth0
+
+Interface statistics:
+
+ip -s link show eth0
+
+
+34. HUB AND DEVOPS
+
+Modern production DevOps networks normally do not deploy hubs.
+
+But Hub knowledge helps understand:
+
+- Layer 1
+- Ethernet
+- Signals
+- NIC
+- Collision domains
+- CSMA/CD
+- Half duplex
+- Switching
+- Packet capture
+- Network troubleshooting
+
+
+35. HUB AND LINUX BRIDGE
+
+Hub:
+Layer 1
+No MAC learning
+
+Linux bridge:
+Layer 2
+MAC learning
+Forwarding database
+
+Useful command:
+
+bridge fdb show
+
+
+36. CONTAINER NETWORKING CONNECTION
+
+Container
+   ↓
+veth
+   ↓
+Linux Bridge/CNI
+   ↓
+Host NIC
+   ↓
+Physical Network
+   ↓
+Switch
+   ↓
+Router
+
+Understanding Hub helps distinguish:
+
+Physical signal repetition
+vs
+Layer-2 frame forwarding
+
+
+37. HUB AND KUBERNETES
+
+Kubernetes networking can look like:
+
+Pod
+ ↓
+veth
+ ↓
+CNI
+ ↓
+Node
+ ↓
+Physical NIC
+ ↓
+Switch
+ ↓
+Network
+
+Hub is generally not used in modern Kubernetes/data-center networking.
+
+
+38. WHY HUB BECAME OBSOLETE
+
+Switch provides:
+
+- MAC learning
+- Selective forwarding
+- Better bandwidth utilization
+- Separate collision domains
+- Full duplex
+- Better scalability
+- Better performance
+- Better traffic isolation
+
+
+39. IMPORTANT INTERVIEW QUESTIONS
+
+Q: What is a Hub?
+A:
+A Layer-1 multiport repeater that repeats incoming physical signals to
+other ports.
+
+Q: Which OSI layer does a Hub work at?
+A:
+Layer 1, Physical Layer.
+
+Q: Does a Hub learn MAC addresses?
+A:
+No.
+
+Q: Does a Hub have a MAC address table?
+A:
+No.
+
+Q: Does a Hub route IP packets?
+A:
+No.
+
+Q: How does a Hub forward traffic?
+A:
+It repeats the physical signal to other ports.
+
+Q: If PC1 sends to PC2 through a Hub, does PC3 receive the signal?
+A:
+Yes. The signal is repeated to PC3's port; PC3's NIC normally discards
+the frame if the destination MAC is not PC3's.
+
+Q: How many collision domains does a Hub create?
+A:
+All connected hosts share one collision domain.
+
+Q: What duplex mode is associated with Hub Ethernet?
+A:
+Half-duplex.
+
+Q: What is CSMA/CD?
+A:
+Carrier Sense Multiple Access with Collision Detection.
+
+Q: Why was CSMA/CD required?
+A:
+Because multiple devices shared the same Ethernet medium and could
+transmit simultaneously.
+
+Q: Is CSMA/CD normally used on modern full-duplex switched Ethernet?
+A:
+No.
+
+Q: What is a Hub vs Switch?
+A:
+Hub operates at Layer 1 and repeats signals.
+Switch operates primarily at Layer 2 and selectively forwards frames
+using MAC addresses.
+
+Q: What is a Hub vs Repeater?
+A:
+A Hub is essentially a multiport repeater.
+
+Q: Why are Hubs obsolete?
+A:
+Switches provide better performance, MAC learning, full-duplex operation,
+separate collision domains and better scalability.
+
+
+40. MOST IMPORTANT DATA FLOW
+
+PC1
+ ↓
+NIC
+ ↓
+Ethernet Cable
+ ↓
+Hub
+ ↓
+Signal repeated to all other ports
+ ↓
+PC2/PC3/PC4 NICs
+ ↓
+Destination MAC check
+ ↓
+Correct host accepts
+Other hosts discard
+
+
+41. GOLDEN MENTAL MODEL
+
+HUB:
+
+"Signal mila → Repeat kar do."
+
+SWITCH:
+
+"Frame mila → Destination MAC dekho → Correct port par bhejo."
+
+ROUTER:
+
+"IP packet mila → Routing table dekho → Next hop choose karo."
+
+
+42. ONE-LINE MEMORY
+
+Hub =
+Layer 1 + Multiport Repeater + Shared Collision Domain + Half Duplex +
+No MAC Learning.
+
+
+43. FINAL CONCEPT
+
+Hub ko samajhne ka most important point:
+
+Hub does not intelligently forward frames.
+
+It simply repeats physical signals.
+
+The receiving NIC is responsible for determining whether the Ethernet
+frame is intended for that host.
+
+This distinction between:
+
+Physical signal repetition
+and
+Layer-2 frame forwarding
+
+is the foundation for understanding:
+
+Hub → Bridge → Switch → Router
+
+and later:
+
+Linux Bridge → VLAN → VXLAN → Kubernetes CNI → Cloud Networking.

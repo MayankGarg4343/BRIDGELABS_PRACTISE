@@ -1,0 +1,917 @@
+TOPIC: Network Topology — Full Notes
+
+1. DEFINITION
+
+Network Topology:
+Network mein devices/nodes aur links ka physical ya logical arrangement.
+
+Simple:
+"Kaun kis se connected hai aur network ka structure kya hai?"
+
+Network topology ke two major types:
+
+- Physical Topology
+- Logical Topology
+
+
+2. PHYSICAL TOPOLOGY
+
+Physical topology batati hai ki actual devices/cables/ports physically
+kaise connected hain.
+
+Includes:
+- Ethernet cables
+- Fiber
+- Switches
+- Routers
+- Access Points
+- Physical ports
+- Patch panels
+
+
+3. LOGICAL TOPOLOGY
+
+Logical topology batati hai ki network mein communication logically kaise
+organized/flows hoti hai.
+
+Examples:
+- VLANs
+- IP subnets
+- Routing
+- Overlay networks
+- Virtual networks
+
+Important:
+
+Physical topology != Logical topology
+
+
+4. MAIN TOPOLOGIES
+
+- Bus
+- Star
+- Ring
+- Mesh
+- Tree
+- Hybrid
+- Point-to-Point
+- Hub-and-Spoke
+- Spine-Leaf
+
+
+5. BUS TOPOLOGY
+
+Multiple devices ek common communication medium share karte hain.
+
+Diagram:
+
+PC1 ---- PC2 ---- PC3 ---- PC4
+================================
+           Common Bus
+
+Characteristics:
+- Shared medium
+- Older Ethernet environments mein relevant
+- Collision problems possible
+- Single cable failure can affect many devices
+- Poor scalability
+- Modern switched Ethernet mein generally uncommon
+
+
+6. STAR TOPOLOGY
+
+All devices central device se connect hote hain.
+
+Diagram:
+
+             PC1
+              |
+PC2 ------ Switch ------ PC3
+              |
+             PC4
+
+Advantages:
+- Easy management
+- Easy troubleshooting
+- Good scalability
+- Better fault isolation
+
+Disadvantage:
+- Central switch can be a single point of failure
+
+
+7. RING TOPOLOGY
+
+Devices circular structure mein connected hote hain.
+
+Diagram:
+
+PC1 → PC2 → PC3 → PC4
+ ↑                 ↓
+ +-----------------+
+
+Advantages:
+- Predictable path
+- Some technologies can provide redundancy
+
+Disadvantages:
+- Link/device failure can affect connectivity
+- Modern enterprise LANs mein less common
+
+
+8. MESH TOPOLOGY
+
+Multiple devices ke beech multiple links.
+
+Full Mesh:
+
+A ↔ B
+A ↔ C
+A ↔ D
+B ↔ C
+B ↔ D
+C ↔ D
+
+Full mesh links formula:
+
+n(n-1)/2
+
+Example:
+
+10 devices:
+10 × 9 / 2 = 45 links
+
+Advantages:
+- High redundancy
+- Multiple paths
+- High fault tolerance
+
+Disadvantages:
+- Expensive
+- Complex
+- Poor scalability for large numbers
+
+
+9. PARTIAL MESH
+
+All devices directly connected nahi hote.
+
+Kuch nodes have multiple connections.
+
+Advantages:
+- Redundancy
+- Lower cost than full mesh
+- Better scalability
+
+
+10. TREE TOPOLOGY
+
+Hierarchical topology.
+
+Example:
+
+              Core
+             /    \
+           SW1    SW2
+          /  \    /  \
+        PC1 PC2 PC3 PC4
+
+Common enterprise architecture:
+
+Core
+  ↓
+Distribution
+  ↓
+Access
+  ↓
+Endpoints
+
+
+11. THREE-TIER ARCHITECTURE
+
+Access:
+- Endpoint connectivity
+
+Distribution:
+- Aggregation
+- Routing
+- Policy
+
+Core:
+- High-speed backbone
+
+
+12. HYBRID TOPOLOGY
+
+Multiple topology types combined.
+
+Example:
+
+Internet
+   |
+Firewall
+   |
+Core
+ /  \
+Spine Spine
+ / \  / \
+Leaf switches
+ |
+Servers
+
+
+13. POINT-TO-POINT
+
+Two devices directly connected.
+
+A ---------------- B
+
+Examples:
+- Router-to-router
+- Dedicated WAN link
+- Direct server connection
+
+
+14. HUB-AND-SPOKE
+
+Central hub connects multiple spokes.
+
+             Branch A
+                |
+Branch B ---- HUB ---- Branch C
+                |
+             Cloud
+
+Advantages:
+- Centralized control
+- Easier management
+- Central security
+
+Disadvantage:
+- Hub can become single point of failure/bottleneck
+
+Use:
+- Cloud networking
+- Branch networks
+- Enterprise WAN
+
+
+15. SPINE-LEAF
+
+Modern data-center architecture.
+
+       Spine1      Spine2
+        /  \        /  \
+       /    \      /    \
+    Leaf1  Leaf2 Leaf3  Leaf4
+      |      |     |      |
+   Servers/VMs/Kubernetes
+
+Characteristics:
+- Every leaf connects to multiple/all spines
+- Multiple paths
+- High east-west bandwidth
+- Predictable latency
+- Excellent for data centers
+
+
+16. EAST-WEST TRAFFIC
+
+Server-to-server traffic.
+
+Example:
+
+Pod A
+  ↓
+Pod B
+  ↓
+Pod C
+  ↓
+Database
+
+Common in:
+- Microservices
+- Kubernetes
+- Distributed applications
+
+
+17. NORTH-SOUTH TRAFFIC
+
+Traffic between external users and internal applications.
+
+Example:
+
+Internet
+   ↓
+Load Balancer
+   ↓
+Application
+   ↓
+Database
+
+
+18. TOPOLOGY VS ROUTING
+
+Topology:
+"Kaun kis se connected hai?"
+
+Routing:
+"Destination tak kaunsa path use karna hai?"
+
+Example topology:
+
+A ---- B
+|      |
+|      |
+C ---- D
+
+Possible paths:
+
+A → B → D
+
+or:
+
+A → C → D
+
+Routing protocol/path selection decides the forwarding path.
+
+
+19. TOPOLOGY VS ARCHITECTURE
+
+Topology:
+- Connectivity structure
+
+Architecture:
+- Complete network design
+
+Architecture may include:
+
+Topology
++
+Routing
++
+IP addressing
++
+Security
++
+Firewalls
++
+Load balancers
++
+Redundancy
++
+Monitoring
++
+Applications
+
+
+20. TOPOLOGY AND SWITCHING
+
+LAN:
+
+PC
+ ↓
+Switch
+ ↓
+PC
+
+Switch uses MAC address information to forward Ethernet frames.
+
+Linux commands useful for host-side networking:
+
+ip link
+ip addr
+ip neigh
+
+
+21. TOPOLOGY AND ROUTING
+
+Routing protocols can adapt to topology changes.
+
+Examples:
+- OSPF
+- BGP
+- IS-IS
+- EIGRP
+
+Concept:
+
+Link failure
+    ↓
+Routing detects/learns change
+    ↓
+Routes adjusted
+    ↓
+Traffic uses another path
+
+
+22. TOPOLOGY AND REDUNDANCY
+
+Production networks should avoid unnecessary single points of failure.
+
+Bad:
+
+Internet
+   |
+Firewall
+   |
+Switch
+   |
+Everything
+
+Better:
+
+Internet
+   |
+  / \
+FW1 FW2
+ \   /
+  \ /
+Switch Pair
+ /   \
+Servers
+
+
+23. HIGH AVAILABILITY TOPOLOGY
+
+Example:
+
+             Internet
+              /    \
+            FW1    FW2
+             \      /
+              \    /
+            Switch Pair
+              /  \
+           Server Server
+
+Benefits:
+- Redundancy
+- Failover
+- Reduced downtime
+
+
+24. TOPOLOGY AND SECURITY
+
+Security architecture often follows topology.
+
+Example:
+
+Internet
+   ↓
+Firewall
+   ↓
+DMZ
+   ↓
+Internal Firewall
+   ↓
+Application
+   ↓
+Database
+
+Zones:
+- Internet
+- DMZ
+- Application
+- Database
+
+
+25. DMZ
+
+DMZ = Demilitarized Zone.
+
+Internet-facing services can be placed in a controlled zone.
+
+Example:
+
+Internet
+   |
+Edge Firewall
+   |
+DMZ
+   |
+Web Server
+   |
+Internal Firewall
+   |
+Application
+   |
+Database
+
+
+26. OVERLAY AND UNDERLAY
+
+Underlay:
+- Physical/foundation network
+- Real IP connectivity
+
+Example:
+
+Server
+ ↓
+Switch
+ ↓
+Router
+ ↓
+Switch
+ ↓
+Server
+
+Overlay:
+- Logical/virtual network built over underlay
+
+Example:
+
+Pod A
+  |
+Overlay Tunnel
+  |
+Pod B
+
+Important:
+
+Underlay = physical/foundation connectivity
+
+Overlay = logical/virtual connectivity
+
+
+27. VXLAN/EVPN CONTEXT
+
+Data center:
+
+Physical:
+
+Host
+ |
+Leaf
+ |
+Spine
+ |
+Leaf
+ |
+Host
+
+Logical:
+
+Virtual Layer-2/Layer-3 network
+
+VXLAN can provide overlay connectivity.
+
+EVPN can provide control-plane information for the overlay.
+
+
+28. TOPOLOGY AND KUBERNETES
+
+Typical:
+
+Internet
+   ↓
+Load Balancer
+   ↓
+Ingress
+   ↓
+Service
+   ↓
+Pods
+   ↓
+Nodes
+
+Node-level:
+
+Pod
+ ↓
+veth
+ ↓
+CNI
+ ↓
+Node
+ ↓
+Network
+ ↓
+Other Node
+ ↓
+Pod
+
+
+29. TOPOLOGY AND DEVOPS
+
+DevOps engineer ko topology samajhna important hai for:
+
+- CI/CD
+- Kubernetes
+- Cloud
+- Private networks
+- VPN
+- Monitoring
+- Load balancing
+- Database connectivity
+- Disaster recovery
+- Security
+- Troubleshooting
+
+
+30. COMMON DEVOPS TOPOLOGY
+
+Developer
+   ↓
+VPN
+   ↓
+Bastion
+   ↓
+Private Network
+   ↓
+Kubernetes
+   ↓
+Pods
+
+
+31. LOAD BALANCER TOPOLOGY
+
+Users
+  ↓
+Load Balancer
+  ↓
++------+------+
+|      |      |
+App1  App2   App3
+
+If App1 fails:
+
+Users
+  ↓
+Load Balancer
+  ↓
+App2/App3
+
+
+32. DATABASE TOPOLOGY
+
+Users
+  ↓
+Load Balancer
+  ↓
+Application Servers
+  ↓
+Primary Database
+  ↓
+Replica Database
+
+
+33. MONITORING TOPOLOGY
+
+Servers
+  |
+  +---- Metrics
+  |
+  +---- Logs
+  |
+  +---- Traces
+  |
+Observability Platform
+  |
+Dashboard
+
+
+34. NETWORK TROUBLESHOOTING USING TOPOLOGY
+
+Always ask:
+
+1. Source device kaun hai?
+2. Destination kaun hai?
+3. Source kis switch/router se connected hai?
+4. Default gateway kya hai?
+5. Routing path kya hai?
+6. Firewall/security boundary kaha hai?
+7. Which link/device can be failing?
+8. Return path kya hai?
+9. DNS involved hai?
+10. MTU problem ho sakti hai?
+
+
+35. LINUX COMMANDS
+
+Interface:
+
+ip link
+
+IP:
+
+ip addr
+
+Routes:
+
+ip route
+
+Specific route:
+
+ip route get <destination>
+
+Neighbor:
+
+ip neigh
+
+Connectivity:
+
+ping <destination>
+
+Trace:
+
+traceroute <destination>
+tracepath <destination>
+
+Packet loss:
+
+mtr <destination>
+
+Sockets:
+
+ss -tulnp
+
+Packet capture:
+
+sudo tcpdump -i eth0
+
+
+36. COMMON MISTAKES
+
+Mistake:
+"Topology means only cables."
+
+Correct:
+Physical + logical topology both exist.
+
+Mistake:
+"Topology tells exact route."
+
+Correct:
+Topology describes connectivity; routing chooses paths.
+
+Mistake:
+"Mesh is always better."
+
+Correct:
+Mesh gives redundancy but increases cost and complexity.
+
+Mistake:
+"Star has no failure."
+
+Correct:
+Central switch can be a single point of failure unless redundant.
+
+Mistake:
+"Switch automatically means simple star topology."
+
+Correct:
+Physical LAN may look star-like while logical topology can be complex.
+
+
+37. INTERVIEW Q&A
+
+Q: What is network topology?
+A:
+Physical or logical arrangement of nodes and links.
+
+Q: Physical vs logical topology?
+A:
+Physical = actual connections.
+Logical = logical communication/connectivity.
+
+Q: What is star topology?
+A:
+All nodes connect to a central device.
+
+Q: What is bus topology?
+A:
+Multiple devices share a common communication medium.
+
+Q: What is ring topology?
+A:
+Devices are arranged in a circular structure.
+
+Q: What is mesh topology?
+A:
+Devices have multiple interconnections.
+
+Q: What is tree topology?
+A:
+Hierarchical network structure.
+
+Q: What is hybrid topology?
+A:
+Combination of multiple topology types.
+
+Q: What is spine-leaf?
+A:
+Data-center architecture where leaves connect to multiple/all spine switches.
+
+Q: Why spine-leaf for DevOps?
+A:
+It provides high east-west bandwidth, multiple paths and predictable connectivity
+for modern distributed applications.
+
+Q: What is hub-and-spoke?
+A:
+A central hub connects multiple spoke networks.
+
+Q: What is a single point of failure?
+A:
+A component whose failure can cause a major service/network outage.
+
+Q: Topology vs routing?
+A:
+Topology describes connectivity; routing selects paths through it.
+
+Q: What is an overlay?
+A:
+A logical network built over an underlying physical/IP network.
+
+Q: What is an underlay?
+A:
+The physical/foundation network that carries overlay traffic.
+
+
+38. MASTER DIAGRAM
+
+                  INTERNET
+                      |
+                   Firewall
+                      |
+                 Load Balancer
+                      |
+              +-------+-------+
+              |               |
+             App1            App2
+              |               |
+              +-------+-------+
+                      |
+                   Database
+
+
+Data center version:
+
+                 Spine1       Spine2
+                  /  \         /  \
+                 /    \       /    \
+              Leaf1  Leaf2  Leaf3  Leaf4
+                |      |      |      |
+             Servers / VMs / Kubernetes
+
+
+39. FIVE QUESTIONS TO ANALYZE ANY TOPOLOGY
+
+1. Kaun kis se connected hai?
+2. Physical connection kya hai?
+3. Logical connection kya hai?
+4. Traffic kis path se travel kar sakta hai?
+5. Failure hone par alternate path hai ya nahi?
+
+
+40. FINAL MEMORY
+
+Bus:
+Common shared medium
+
+Star:
+Everything connects to central device
+
+Ring:
+Circular connection
+
+Mesh:
+Multiple interconnections
+
+Tree:
+Hierarchical
+
+Hybrid:
+Combination
+
+Point-to-Point:
+One-to-one
+
+Hub-and-Spoke:
+Central hub + multiple spokes
+
+Spine-Leaf:
+Spines + leaves, common in modern data centers
+
+
+41. GOLDEN CONCEPT
+
+Network Topology =
+"Network ka map/structure"
+
+Routing =
+"Us map par packet ka path"
+
+Architecture =
+"Complete system design"
+
+
+42. FINAL ONE-LINE SUMMARY
+
+Network topology is the physical or logical arrangement of network nodes
+and links, and understanding it allows a Networking/DevOps engineer to
+reason about traffic flow, routing, redundancy, security, failure
+domains, scalability, Kubernetes networking, cloud architecture and
+troubleshooting.
