@@ -1,0 +1,1147 @@
+TOPIC: VPN (Virtual Private Network) — Full Notes
+
+1. DEFINITION
+
+VPN = Virtual Private Network.
+
+VPN ek logical private tunnel hai jo public/untrusted/shared network ke
+upar secure connectivity provide karta hai.
+
+VPN khud ek single protocol nahi hai.
+
+Examples of VPN technologies/protocols:
+- IPsec
+- WireGuard
+- OpenVPN
+- TLS-based VPN solutions
+
+
+2. WHY VPN EXISTS
+
+VPN ka main purpose:
+
+- Secure remote access
+- Site-to-site connectivity
+- Private network connectivity over Internet
+- Confidentiality
+- Integrity
+- Authentication
+- Cloud connectivity
+- Hybrid cloud connectivity
+- Secure administration
+- Branch connectivity
+
+
+3. BASIC VPN MODEL
+
+Without VPN:
+
+Client
+  ↓
+Internet
+  ↓
+Server
+
+With VPN:
+
+Client
+  ↓
+VPN Client
+  ↓
+Encrypted Tunnel
+  ↓
+Internet
+  ↓
+VPN Gateway
+  ↓
+Private Network
+  ↓
+Server
+
+
+4. MAIN VPN TYPES
+
+Remote Access VPN:
+- Individual user/device → corporate network
+
+Site-to-Site VPN:
+- One network/site → another network/site
+
+Host-to-Host VPN:
+- One host → another host
+
+Client-to-Site:
+- Remote client → private site
+
+
+5. VPN TUNNEL
+
+VPN tunnel is a logical tunnel.
+
+It is not a physical tunnel.
+
+Concept:
+
+Original packet:
+
+[IP][TCP/UDP][DATA]
+
+VPN processing:
+
+[Outer IP Header][VPN Header][Encrypted Original Packet]
+
+Destination VPN endpoint:
+
+[Outer Packet]
+      ↓
+VPN Processing
+      ↓
+Decrypt
+      ↓
+Decapsulate
+      ↓
+Original Packet
+
+
+6. COMPLETE VPN DATA FLOW
+
+Application
+    ↓
+TCP/UDP
+    ↓
+Inner IP Packet
+    ↓
+VPN Encryption/Protection
+    ↓
+VPN Encapsulation
+    ↓
+Outer IP Packet
+    ↓
+Internet
+    ↓
+VPN Gateway
+    ↓
+VPN Validation
+    ↓
+Decryption
+    ↓
+Decapsulation
+    ↓
+Original IP Packet
+    ↓
+Private Network
+    ↓
+Destination Server
+
+
+7. EXAMPLE
+
+Remote laptop:
+
+10.10.10.20
+
+Corporate server:
+
+10.20.20.10
+
+Flow:
+
+Laptop
+  ↓
+Home Router
+  ↓
+ISP
+  ↓
+Internet
+  ↓
+VPN Gateway
+  ↓
+Corporate Network
+  ↓
+Server
+
+
+8. INNER VS OUTER PACKET
+
+Inner packet:
+
+Source:
+10.10.10.20
+
+Destination:
+10.20.20.10
+
+Outer packet:
+
+Source:
+VPN Client public IP
+
+Destination:
+VPN Gateway public IP
+
+Concept:
+
+[Outer IP Header]
+[VPN Header]
+[Encrypted Inner IP Packet]
+
+
+9. ENCAPSULATION
+
+Normal:
+
+Application
+  ↓
+TCP/UDP
+  ↓
+IP
+  ↓
+Ethernet
+
+VPN:
+
+Application
+  ↓
+TCP/UDP
+  ↓
+Inner IP
+  ↓
+VPN Protection
+  ↓
+VPN Encapsulation
+  ↓
+Outer IP
+  ↓
+Internet
+
+
+10. VPN SECURITY PROPERTIES
+
+Confidentiality:
+- Unauthorized parties cannot easily read protected traffic.
+
+Integrity:
+- Detects unauthorized modification.
+
+Authentication:
+- Verifies users/devices/endpoints.
+
+Authorization:
+- Determines what authenticated users/devices can access.
+
+
+11. IPSEC
+
+IPsec = Internet Protocol Security.
+
+IPsec is a suite of protocols/mechanisms used to secure IP communication.
+
+Important components:
+- AH
+- ESP
+- IKE
+
+
+12. ESP
+
+ESP = Encapsulating Security Payload.
+
+Provides:
+- Confidentiality
+- Integrity
+- Authentication-related protection
+
+ESP is very important in modern IPsec VPN deployments.
+
+
+13. AH
+
+AH = Authentication Header.
+
+Provides:
+- Integrity
+- Authentication-related protection
+
+Does not provide encryption.
+
+ESP is more commonly relevant for VPN deployments.
+
+
+14. IKE
+
+IKE = Internet Key Exchange.
+
+Purpose:
+- Negotiate security parameters
+- Authenticate peers
+- Establish cryptographic keys
+- Establish security associations for IPsec
+
+
+15. IPSEC MODES
+
+Tunnel Mode:
+
+[New IP Header]
+[IPsec]
+[Encrypted Original IP Packet]
+
+Commonly used for:
+- Site-to-site VPN
+
+Transport Mode:
+
+[Original IP Header]
+[IPsec]
+[Encrypted Upper-Layer Payload]
+
+Commonly associated with:
+- Host-to-host IPsec
+
+
+16. SITE-TO-SITE VPN
+
+Office A
+   |
+VPN Gateway A
+   |
+Internet
+   |
+VPN Gateway B
+   |
+Office B
+
+Data:
+
+PC A
+ ↓
+Switch
+ ↓
+VPN Gateway A
+ ↓
+Encrypt + Encapsulate
+ ↓
+Internet
+ ↓
+VPN Gateway B
+ ↓
+Decrypt + Decapsulate
+ ↓
+Switch
+ ↓
+PC B
+
+
+17. REMOTE ACCESS VPN
+
+Laptop
+  ↓
+VPN Client
+  ↓
+Internet
+  ↓
+VPN Gateway
+  ↓
+Corporate Network
+  ↓
+Server
+
+
+18. FULL TUNNEL
+
+All/most traffic goes through VPN.
+
+Laptop
+  ↓
+VPN
+  ↓
+Corporate Gateway
+  ↓
+Internet
+
+Advantages:
+- Centralized security
+- Centralized monitoring
+- Policy enforcement
+
+Disadvantages:
+- More bandwidth usage
+- Added latency
+- Gateway can become bottleneck
+
+
+19. SPLIT TUNNEL
+
+Only selected traffic goes through VPN.
+
+Example:
+
+10.20.0.0/16
+    ↓
+VPN
+
+Normal Internet
+    ↓
+Direct Internet
+
+Advantages:
+- Lower VPN bandwidth
+- Lower latency for normal Internet traffic
+
+Disadvantages:
+- Security/visibility trade-offs
+- Endpoint has simultaneous Internet/private access
+
+
+20. VPN ROUTING
+
+Routing decides which traffic goes into the VPN.
+
+Example:
+
+10.20.0.0/16
+      ↓
+VPN Tunnel
+
+Linux command:
+
+ip route
+
+Specific route:
+
+ip route get 10.20.10.5
+
+
+21. LINUX VPN INTERFACES
+
+Common examples:
+
+tun0
+wg0
+
+Check:
+
+ip link
+
+Check address:
+
+ip addr
+
+WireGuard:
+
+sudo wg show
+
+
+22. WIREGUARD
+
+WireGuard is a modern VPN protocol.
+
+Common interface:
+
+wg0
+
+Check:
+
+sudo wg show
+
+Example conceptual configuration:
+
+[Interface]
+Address = 10.100.0.2/24
+PrivateKey = <client-private-key>
+
+[Peer]
+PublicKey = <server-public-key>
+Endpoint = vpn.example.com:51820
+AllowedIPs = 10.20.0.0/16
+PersistentKeepalive = 25
+
+Never expose private keys in Git or documentation.
+
+
+23. OPENVPN
+
+OpenVPN is a VPN solution/protocol ecosystem commonly used for remote access.
+
+Common Linux interface:
+
+tun0
+
+Commands:
+
+ip addr show tun0
+ip route
+
+
+24. IPSEC LINUX COMMANDS
+
+Useful Linux commands:
+
+ip xfrm state
+ip xfrm policy
+
+Depending on implementation:
+
+ipsec status
+
+
+25. NAT-T
+
+NAT-T = NAT Traversal.
+
+Used to improve IPsec compatibility through NAT.
+
+Common ports:
+
+UDP 500
+- IKE
+
+UDP 4500
+- NAT-T
+
+ESP:
+IP protocol 50 when ESP is not encapsulated in UDP.
+
+
+26. VPN AND FIREWALL
+
+VPN traffic must be allowed through relevant firewalls.
+
+Examples depend on VPN technology.
+
+WireGuard:
+- Common default UDP 51820
+- Configurable
+
+IPsec:
+- UDP 500
+- UDP 4500
+- ESP protocol 50
+
+OpenVPN:
+- Configurable TCP/UDP port
+
+
+27. VPN AND DNS
+
+VPN may provide internal DNS.
+
+Example:
+
+git.internal.example.com
+
+If VPN is connected but DNS is incorrect:
+
+VPN works
+but
+internal hostname fails.
+
+Linux:
+
+resolvectl status
+
+DNS test:
+
+dig git.internal.example.com
+
+
+28. VPN AND MTU
+
+VPN adds headers/encapsulation overhead.
+
+Original packet
+     +
+VPN overhead
+     =
+Larger packet
+
+If MTU is too large for the path:
+
+- Fragmentation
+- PMTUD problems
+- Large packets fail
+- Some applications work and others fail
+
+Commands:
+
+ip link
+tracepath <destination>
+ping -M do -s <size> <destination>
+
+
+29. VPN TROUBLESHOOTING
+
+Check:
+
+1. Physical connectivity
+2. Interface
+3. VPN endpoint reachability
+4. Authentication
+5. Tunnel status
+6. Routing
+7. DNS
+8. Firewall
+9. MTU
+10. Destination service
+
+
+30. LINUX TROUBLESHOOTING COMMANDS
+
+Interface:
+
+ip link
+
+IP:
+
+ip addr
+
+Routing:
+
+ip route
+
+Specific route:
+
+ip route get <destination>
+
+Neighbor:
+
+ip neigh
+
+Connectivity:
+
+ping <destination>
+
+Path:
+
+tracepath <destination>
+traceroute <destination>
+
+Packet loss:
+
+mtr <destination>
+
+Port:
+
+nc -vz <destination> 443
+
+Sockets:
+
+ss -tulnp
+
+Packet capture:
+
+sudo tcpdump -i eth0
+
+WireGuard:
+
+sudo wg show
+
+IPsec:
+
+ip xfrm state
+ip xfrm policy
+
+
+31. COMMON VPN PROBLEMS
+
+VPN doesn't connect:
+- Endpoint unreachable
+- Firewall
+- Authentication failure
+- Wrong key/certificate
+- Wrong configuration
+
+VPN connects but internal IP doesn't work:
+- Routing problem
+- Firewall
+- ACL
+- Return route
+
+IP works but hostname doesn't:
+- DNS problem
+
+Small packets work but large packets fail:
+- MTU/PMTUD problem
+
+VPN connects but Internet stops:
+- Full tunnel/default route issue
+
+Some internal networks work and others don't:
+- Route/ACL issue
+
+One-way traffic:
+- Return route
+- Firewall
+- NAT
+- Asymmetric routing
+
+VPN is slow:
+- High latency
+- Low bandwidth
+- VPN gateway CPU
+- Encryption overhead
+- Congestion
+- MTU problems
+
+
+32. VPN AND NAT
+
+VPN can operate through NAT depending on protocol.
+
+IPsec commonly uses NAT-T.
+
+Concept:
+
+Client
+  ↓
+NAT
+  ↓
+Internet
+  ↓
+VPN Gateway
+
+NAT-T commonly uses UDP 4500.
+
+
+33. VPN AND DEVOPS
+
+Common DevOps use cases:
+
+- Secure Kubernetes API access
+- Remote server administration
+- Private database access
+- CI/CD to private environments
+- Hybrid cloud connectivity
+- Cloud VPC/VNet access
+- Monitoring
+- Backup
+- Disaster recovery
+
+
+34. VPN + KUBERNETES
+
+Instead of exposing Kubernetes API publicly:
+
+Engineer
+   ↓
+VPN
+   ↓
+Private Network
+   ↓
+Kubernetes API
+
+VPN reduces public exposure but does not replace:
+- Kubernetes RBAC
+- NetworkPolicy
+- Authentication
+- Authorization
+- Endpoint security
+
+
+35. VPN + CLOUD
+
+Typical architecture:
+
+Corporate Office
+      |
+VPN Gateway
+      |
+Internet
+      |
+Cloud VPN Gateway
+      |
+VPC/VNet
+      |
+Private Subnet
+      |
+Application
+
+
+36. HYBRID CLOUD
+
+On-Prem Data Center
+      |
+VPN Gateway
+      |
+Internet
+      |
+Cloud VPN Gateway
+      |
+Cloud VPC/VNet
+      |
+Private Resources
+
+
+37. VPN + MONITORING
+
+Monitor:
+
+- Tunnel up/down
+- Handshake
+- Bytes sent
+- Bytes received
+- Packet loss
+- Latency
+- Authentication failures
+- Rekey failures
+- CPU
+- Memory
+- Connection count
+
+
+38. VPN SECURITY VS OTHER TECHNOLOGIES
+
+VPN:
+- Network-level secure connectivity
+
+TLS:
+- Application/session security
+
+Proxy:
+- Usually application-level intermediary
+
+SSH Tunnel:
+- Specific port/application forwarding
+
+MPLS:
+- Provider networking/forwarding technology
+- Not inherently encryption
+
+SD-WAN:
+- WAN architecture/management
+- Can use VPN tunnels
+
+
+39. VPN VS PROXY
+
+Proxy:
+
+Application
+   ↓
+Proxy
+   ↓
+Internet
+
+VPN:
+
+Applications
+   ↓
+OS Network Stack
+   ↓
+VPN
+   ↓
+Internet
+
+VPN can protect/tunnel traffic from multiple applications depending on
+configuration.
+
+
+40. VPN VS HTTPS
+
+HTTPS:
+- Uses TLS
+- Protects application communication
+
+VPN:
+- Protects/tunnels traffic between VPN endpoints
+
+They can be used together:
+
+Application
+   ↓
+HTTPS
+   ↓
+VPN
+   ↓
+Internet
+
+
+41. VPN VS MPLS
+
+MPLS:
+- Forwarding/provider technology
+
+VPN:
+- Secure/private logical connectivity
+
+MPLS does not automatically mean encryption.
+
+An MPLS-based VPN can provide logical separation, while encryption can
+be added separately if required.
+
+
+42. CRYPTOGRAPHY
+
+Symmetric encryption:
+- Same secret key used for encryption/decryption
+- Examples: AES, ChaCha20
+
+Asymmetric cryptography:
+- Public/private key pair
+- Used for identity/authentication/key exchange
+
+Integrity:
+- Ensures unauthorized modification can be detected
+
+Modern VPN protocols often use authenticated encryption.
+
+
+43. VPN HANDSHAKE
+
+Conceptual:
+
+Client
+  ↓
+Request connection
+  ↓
+Server
+  ↓
+Authentication
+  ↓
+Key Exchange
+  ↓
+Security Parameters
+  ↓
+Secure Tunnel
+  ↓
+Encrypted Traffic
+
+
+44. IMPORTANT VPN TERMS
+
+VPN:
+Virtual Private Network
+
+IPsec:
+Internet Protocol Security
+
+ESP:
+Encapsulating Security Payload
+
+AH:
+Authentication Header
+
+IKE:
+Internet Key Exchange
+
+NAT-T:
+NAT Traversal
+
+MTU:
+Maximum Transmission Unit
+
+TLS:
+Transport Layer Security
+
+MFA:
+Multi-Factor Authentication
+
+
+45. INTERVIEW Q&A
+
+Q: What is VPN?
+A:
+Virtual Private Network. It creates logical private connectivity over an
+untrusted/shared network and commonly provides encryption, integrity and
+authentication.
+
+Q: Is VPN a protocol?
+A:
+No. VPN is an architecture/concept.
+
+Q: Name VPN protocols/technologies.
+A:
+IPsec, WireGuard, OpenVPN and TLS-based VPN technologies.
+
+Q: What is tunneling?
+A:
+Encapsulating traffic inside another transport so it can travel through
+an underlying network.
+
+Q: What is IPsec?
+A:
+A suite of protocols/mechanisms for securing IP communication.
+
+Q: What is ESP?
+A:
+Encapsulating Security Payload. It provides confidentiality and
+integrity/authentication-related protection.
+
+Q: What is AH?
+A:
+Authentication Header. Provides integrity/authentication-related
+protection but no encryption.
+
+Q: What is IKE?
+A:
+Internet Key Exchange. Negotiates security parameters and keys for IPsec.
+
+Q: Tunnel mode vs transport mode?
+A:
+Tunnel mode protects/encapsulates the complete original IP packet.
+Transport mode protects the upper-layer payload while retaining the
+original IP header structure.
+
+Q: What is site-to-site VPN?
+A:
+A secure tunnel connecting two networks through VPN gateways.
+
+Q: What is remote access VPN?
+A:
+A secure tunnel connecting an individual client to a private network.
+
+Q: What is split tunneling?
+A:
+Only selected traffic goes through VPN.
+
+Q: What is full tunneling?
+A:
+Most/all traffic goes through VPN.
+
+Q: Why can VPN cause MTU problems?
+A:
+VPN adds encapsulation overhead, reducing available payload size.
+
+Q: What is NAT-T?
+A:
+NAT Traversal allows IPsec traffic to work more reliably through NAT,
+commonly using UDP 4500.
+
+Q: Is VPN the same as proxy?
+A:
+No. VPN can operate at the network level; proxy is generally
+application-level.
+
+Q: Is MPLS encrypted?
+A:
+Not inherently. MPLS provides provider networking/forwarding and
+logical separation; encryption is separate.
+
+Q: How do you check WireGuard?
+A:
+sudo wg show
+
+Q: How do you troubleshoot VPN routing?
+A:
+ip route
+ip route get <destination>
+
+
+46. GOLDEN VPN DATA FLOW
+
+Original Packet
+      ↓
+Routing Decision
+      ↓
+VPN Processing
+      ↓
+Encryption/Protection
+      ↓
+Encapsulation
+      ↓
+Outer Packet
+      ↓
+Internet
+      ↓
+VPN Gateway
+      ↓
+Validation
+      ↓
+Decryption
+      ↓
+Decapsulation
+      ↓
+Original Packet
+      ↓
+Private Network
+      ↓
+Destination
+
+
+47. MASTER DIAGRAM
+
+Remote Client
+     |
+     ↓
+VPN Client
+     |
+     | Inner Packet
+     ↓
+Encrypt
+     |
+     ↓
+Encapsulate
+     |
+     ↓
+Home Router
+     |
+     ↓
+ISP
+     |
+     ↓
+Internet
+     |
+     ↓
+VPN Gateway
+     |
+     | Decrypt
+     ↓
+Decapsulate
+     |
+     ↓
+Corporate Router
+     |
+     ↓
+Switch
+     |
+     ↓
+Internal Server
+
+
+48. MOST IMPORTANT CONCEPT
+
+VPN is not simply:
+
+"IP hide karne ka tool."
+
+Enterprise networking mein VPN ka real purpose:
+
+- Secure connectivity
+- Private network access
+- Encryption
+- Authentication
+- Integrity
+- Site-to-site connectivity
+- Remote access
+- Cloud connectivity
+- Hybrid networking
+
+
+49. ONE-LINE FINAL SUMMARY
+
+VPN is a logical private tunnel over an untrusted/shared network in which
+traffic is routed into the VPN, protected/encrypted and encapsulated,
+transported across the underlying network, then decrypted and
+decapsulated at the destination VPN endpoint and forwarded to the
+private destination.
+
+
+50. FINAL MEMORY FORMULA
+
+VPN:
+
+ROUTE
+  ↓
+PROTECT/ENCRYPT
+  ↓
+ENCAPSULATE
+  ↓
+TRAVEL
+  ↓
+DECAPSULATE
+  ↓
+DECRYPT/VERIFY
+  ↓
+FORWARD
+  ↓
+DESTINATION
