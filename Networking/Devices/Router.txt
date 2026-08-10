@@ -1,0 +1,1835 @@
+TOPIC: ROUTER — Full Notes
+
+
+1. DEFINITION
+
+Router ek Layer-3 (Network Layer) networking device hai jo different
+IP networks/subnets ke beech packets ko forward karta hai.
+
+Simple definition:
+
+Router destination IP address ko dekhta hai, routing table se best route
+find karta hai, next hop/output interface decide karta hai, aur packet ko
+next network ki taraf forward karta hai.
+
+
+2. BASIC MENTAL MODEL
+
+Switch:
+
+MAC Address → Port
+
+Router:
+
+Destination IP → Next Hop / Interface
+
+Golden rule:
+
+SWITCH = MAC → PORT
+ROUTER = IP → NEXT HOP
+
+
+3. OSI LAYER
+
+Traditional Router:
+- OSI Layer 3
+- Network Layer
+
+Main address:
+- IP Address
+
+Main data unit:
+- Packet
+
+Important concepts:
+- IP addressing
+- Routing
+- Routing table
+- Next hop
+- Default gateway
+- Static routes
+- Dynamic routing
+- Longest Prefix Match
+- ARP/NDP
+- TTL/Hop Limit
+- NAT
+- ACL
+- VPN
+- Routing protocols
+
+
+4. WHY ROUTER EXISTS
+
+Suppose:
+
+Network A:
+192.168.1.0/24
+
+Network B:
+192.168.2.0/24
+
+Network A ke device ko Network B ke device se communicate karna hai.
+
+Simple Layer-2 switching enough nahi hai.
+
+Flow:
+
+Network A
+    |
+  Router
+    |
+Network B
+
+Router different IP networks ke beech Layer-3 communication provide karta hai.
+
+
+5. REAL-WORLD ANALOGY
+
+Router ko ek city ke major traffic junction ki tarah samjho.
+
+Packet = Vehicle
+
+Destination IP = Destination address
+
+Routing Table = Road map
+
+Next Hop = Next junction
+
+Output Interface = Road
+
+Router ka question:
+
+"Destination tak pahunchne ke liye packet ko kis direction mein bhejna hai?"
+
+
+6. ROUTER BASIC DIAGRAM
+
+                 ROUTER
+              +-----------+
+LAN A --------| G0/0      |
+              |           |
+LAN B --------| G0/1      |
+              |           |
+Internet -----| G0/2      |
+              +-----------+
+
+
+7. ROUTER INTERFACES
+
+Router ke multiple network interfaces ho sakte hain.
+
+Example:
+
+G0/0:
+192.168.1.1/24
+
+G0/1:
+192.168.2.1/24
+
+G0/2:
+203.0.113.2/30
+
+Each interface ek Layer-3 network se connected ho sakta hai.
+
+
+8. DEFAULT GATEWAY
+
+Default Gateway host ka local router hota hai jo local subnet ke bahar
+traffic bhejne ke liye use hota hai.
+
+Example:
+
+PC:
+192.168.1.10/24
+
+Gateway:
+192.168.1.1
+
+Agar destination:
+
+192.168.1.20
+
+hai, same subnet hai.
+
+Flow:
+
+PC → Switch → PC
+
+
+Agar destination:
+
+8.8.8.8
+
+hai, remote network hai.
+
+Flow:
+
+PC → Switch → Default Gateway/Router
+
+
+9. SAME NETWORK COMMUNICATION
+
+PC1:
+192.168.1.10/24
+
+PC2:
+192.168.1.20/24
+
+Same subnet:
+
+192.168.1.0/24
+
+Flow:
+
+PC1
+ |
+Switch
+ |
+PC2
+
+Router required nahi.
+
+
+10. DIFFERENT NETWORK COMMUNICATION
+
+PC1:
+192.168.1.10/24
+
+Server:
+192.168.2.20/24
+
+Different networks.
+
+Flow:
+
+PC1
+ ↓
+Switch
+ ↓
+Router
+ ↓
+Switch
+ ↓
+Server
+
+
+11. ROUTING TABLE
+
+Router ka most important component/concept:
+
+Routing Table
+
+Example:
+
+Destination Network     Next Hop       Interface
+
+192.168.1.0/24          Connected      G0/0
+192.168.2.0/24          Connected      G0/1
+10.10.10.0/24           192.168.2.2    G0/1
+0.0.0.0/0               192.168.1.254  G0/0
+
+
+12. ROUTING TABLE KA PURPOSE
+
+Routing table router ko batati hai:
+
+- Kaunsa destination network kahan reachable hai
+- Kaunsa next hop use karna hai
+- Kaunsa outgoing interface use karna hai
+
+Concept:
+
+Destination IP
+     ↓
+Routing Table
+     ↓
+Best Route
+     ↓
+Next Hop / Interface
+     ↓
+Forward
+
+
+13. CONNECTED ROUTE
+
+Agar router ke interface par IP configured hai:
+
+G0/0:
+192.168.1.1/24
+
+Router automatically know karta hai:
+
+192.168.1.0/24
+
+directly connected hai.
+
+Similarly:
+
+G0/1:
+192.168.2.1/24
+
+means:
+
+192.168.2.0/24
+
+directly connected hai.
+
+
+14. STATIC ROUTE
+
+Administrator manually route configure kar sakta hai.
+
+Example:
+
+Destination:
+10.10.10.0/24
+
+Next Hop:
+192.168.2.2
+
+Concept:
+
+10.10.10.0/24
+      ↓
+192.168.2.2
+      ↓
+G0/1
+
+
+15. DYNAMIC ROUTING
+
+Large networks mein manually routes configure karna difficult hota hai.
+
+Dynamic routing protocols routes automatically learn/update kar sakte hain.
+
+Common protocols:
+
+- OSPF
+- BGP
+- IS-IS
+- EIGRP
+- RIP
+
+Important:
+
+Different protocols ka purpose, algorithm aur use case different hota hai.
+
+
+16. DEFAULT ROUTE
+
+IPv4 default route:
+
+0.0.0.0/0
+
+Meaning:
+
+"Agar destination ke liye koi more-specific route available nahi hai,
+to default route use karo."
+
+Example:
+
+0.0.0.0/0
+   ↓
+192.168.1.254
+
+
+17. LONGEST PREFIX MATCH
+
+Extremely important routing concept.
+
+Suppose routing table:
+
+10.0.0.0/8
+10.10.0.0/16
+10.10.20.0/24
+0.0.0.0/0
+
+Destination:
+
+10.10.20.50
+
+Multiple routes match kar rahe hain.
+
+Router most specific route choose karega:
+
+10.10.20.0/24
+
+Because:
+
+/24 > /16 > /8 > /0
+
+This is called:
+
+Longest Prefix Match (LPM)
+
+
+18. WHY LONGEST PREFIX MATCH?
+
+Broad route:
+
+10.0.0.0/8
+
+More specific:
+
+10.10.0.0/16
+
+Even more specific:
+
+10.10.20.0/24
+
+Router sabse specific matching information ko prefer karta hai.
+
+
+19. NEXT HOP
+
+Next hop wo next router/device hota hai jisko packet ko destination ki
+direction mein forward karna hota hai.
+
+Example:
+
+Destination:
+10.10.10.0/24
+
+Next Hop:
+192.168.2.2
+
+Meaning:
+
+"10.10.10.0/24 ke liye packet pehle 192.168.2.2 ko bhejo."
+
+
+20. HOP-BY-HOP ROUTING
+
+Example:
+
+PC → R1 → R2 → R3 → Server
+
+PC:
+Next Hop = R1
+
+R1:
+Next Hop = R2
+
+R2:
+Next Hop = R3
+
+R3:
+Destination directly connected
+
+Important:
+
+Har router independently next-hop decision leta hai.
+
+
+21. ROUTER KO COMPLETE PATH PATA HONA ZAROORI NAHI
+
+PC ko generally complete path:
+
+PC → R1 → R2 → R3 → Server
+
+pata hona zaroori nahi.
+
+PC ko mainly pata hota hai:
+
+- Destination local hai
+OR
+- Destination remote hai, so default gateway/route use karo.
+
+Routers independently forwarding decisions karte hain.
+
+
+22. ARP VS ROUTING
+
+Routing answer karta hai:
+
+"Destination IP ke liye kaunsa next hop/interface use karna hai?"
+
+ARP answer karta hai:
+
+"Local IPv4 next-hop IP ka MAC address kya hai?"
+
+Therefore:
+
+Routing:
+
+Destination IP
+    ↓
+Next Hop / Interface
+
+ARP:
+
+Next-Hop IPv4
+    ↓
+MAC Address
+
+
+23. IPv6 AND NDP
+
+IPv4:
+
+ARP
+
+IPv6:
+
+Neighbor Discovery Protocol (NDP)
+
+NDP ICMPv6 ka use karta hai.
+
+Memory:
+
+IPv4 → ARP
+IPv6 → NDP
+
+
+24. COMPLETE PACKET FLOW
+
+Topology:
+
+PC1
+192.168.1.10
+    |
+  Switch
+    |
+Router
+G0/0 = 192.168.1.1
+G0/1 = 192.168.2.1
+    |
+  Switch
+    |
+Server
+192.168.2.20
+
+
+PC1 wants:
+
+192.168.2.20
+
+
+STEP 1:
+Application data create hota hai.
+
+STEP 2:
+Transport Layer TCP/UDP header add karta hai.
+
+STEP 3:
+IP packet create hota hai:
+
+Source IP:
+192.168.1.10
+
+Destination IP:
+192.168.2.20
+
+STEP 4:
+PC routing decision karta hai.
+
+Destination local subnet mein nahi hai.
+
+Therefore:
+
+Use default gateway:
+192.168.1.1
+
+STEP 5:
+PC ARP se gateway ka MAC find karta hai.
+
+STEP 6:
+PC Ethernet frame create karta hai:
+
+Source MAC = PC MAC
+Destination MAC = Router G0/0 MAC
+
+STEP 7:
+PC → Switch → Router
+
+STEP 8:
+Router frame receive karta hai.
+
+STEP 9:
+Router destination IP dekhta hai:
+
+192.168.2.20
+
+STEP 10:
+Routing table lookup karta hai.
+
+Finds:
+
+192.168.2.0/24 → G0/1
+
+STEP 11:
+Router TTL decrease karta hai.
+
+STEP 12:
+Router next-hop/server MAC resolve karta hai if needed.
+
+STEP 13:
+Router new Ethernet frame create karta hai:
+
+Source MAC = Router G0/1 MAC
+Destination MAC = Server MAC
+
+STEP 14:
+Packet:
+
+Router → Switch → Server
+
+STEP 15:
+Server packet receive karta hai.
+
+
+25. VERY IMPORTANT L2 VS L3 CHANGE
+
+Original frame:
+
+Source MAC:
+PC MAC
+
+Destination MAC:
+Router G0/0 MAC
+
+
+After router:
+
+Source MAC:
+Router G0/1 MAC
+
+Destination MAC:
+Server MAC
+
+
+But IP packet:
+
+Source IP:
+192.168.1.10
+
+Destination IP:
+192.168.2.20
+
+generally remains unchanged across routing hops, except fields affected
+by normal forwarding or features such as NAT.
+
+
+26. MAC ADDRESS CHANGES AT EVERY ROUTER HOP
+
+Example:
+
+Hop 1:
+
+PC MAC → R1 MAC
+
+Hop 2:
+
+R1 MAC → R2 MAC
+
+Hop 3:
+
+R2 MAC → Server MAC
+
+
+Important:
+
+MAC is local to the Layer-2 link.
+
+IP provides the Layer-3 end-to-end addressing.
+
+
+27. TTL
+
+TTL = Time To Live
+
+IPv4 packet header mein TTL field hoti hai.
+
+Each router hop par normally:
+
+TTL = TTL - 1
+
+Example:
+
+Initial TTL = 64
+
+R1 → 63
+
+R2 → 62
+
+R3 → 61
+
+Purpose:
+
+Routing loops mein packet indefinitely circulate na kare.
+
+
+28. IPV6 HOP LIMIT
+
+IPv6 mein TTL equivalent:
+
+Hop Limit
+
+Each router:
+
+Hop Limit - 1
+
+
+Memory:
+
+IPv4 → TTL
+IPv6 → Hop Limit
+
+
+29. ROUTING LOOP
+
+Example:
+
+R1 → R2
+↑     ↓
++-----+
+
+Wrong routing ke wajah se packet loop kar sakta hai.
+
+Example:
+
+Packet
+ ↓
+R1
+ ↓
+R2
+ ↓
+R1
+ ↓
+R2
+ ↓
+...
+
+TTL/Hop Limit eventually expire hota hai.
+
+Packet drop ho jata hai.
+
+
+30. ROUTER AND BROADCAST
+
+Router normally Layer-2 broadcasts ko ek interface se doosre interface
+par forward nahi karta.
+
+Example:
+
+LAN A
+  |
+Router
+  |
+LAN B
+
+LAN A ka Ethernet broadcast LAN B mein normally nahi jayega.
+
+Therefore:
+
+Router broadcast domains separate karta hai.
+
+
+31. ROUTER AND BROADCAST DOMAIN
+
+Switch:
+
+Same VLAN mein broadcast forward/flood kar sakta hai.
+
+Router:
+
+Different interfaces ke beech Layer-2 broadcast boundary create karta hai.
+
+
+32. SWITCH VS ROUTER
+
+Switch:
+
+- Primary Layer: Layer 2
+- Main address: MAC
+- Main data: Ethernet Frame
+- Main table: MAC Address Table
+- Primary job: LAN/Layer-2 forwarding
+
+Router:
+
+- Primary Layer: Layer 3
+- Main address: IP
+- Main data: IP Packet
+- Main table: Routing Table
+- Primary job: Inter-network forwarding
+
+
+33. BRIDGE VS ROUTER
+
+Bridge:
+
+Layer 2
+MAC
+Frame
+Same Layer-2 network/segments
+
+Router:
+
+Layer 3
+IP
+Packet
+Different IP networks
+
+
+34. NAT
+
+NAT = Network Address Translation
+
+NAT translates IP addresses.
+
+Common scenario:
+
+Private network:
+
+192.168.1.0/24
+
+Router
+
+Public Internet
+
+
+35. WHY NAT?
+
+Private IP addresses Internet par directly routable nahi hote.
+
+Suppose:
+
+PC1:
+192.168.1.10
+
+PC2:
+192.168.1.11
+
+PC3:
+192.168.1.12
+
+Router has public IP:
+
+203.0.113.10
+
+NAT/PAT can allow multiple internal devices to access the Internet
+using a shared public IPv4 address.
+
+
+36. PAT
+
+PAT = Port Address Translation
+
+Also commonly called:
+
+NAT Overload
+
+Example:
+
+Internal:
+
+192.168.1.10:50000
+192.168.1.11:50001
+
+Public side:
+
+203.0.113.10:40001
+203.0.113.10:40002
+
+Router translations maintain connection mappings.
+
+
+37. NAT VS ROUTING
+
+Routing:
+
+"Packet ko kahan bhejna hai?"
+
+NAT:
+
+"Packet ke address/port ko translate karna hai ya nahi?"
+
+Important:
+
+Routing aur NAT same cheez nahi hain.
+
+Router NAT ke bina bhi routing kar sakta hai.
+
+
+38. ROUTER AND FIREWALL
+
+Router:
+
+"Packet ko kis direction mein bhejna hai?"
+
+Firewall:
+
+"Traffic allow karna hai ya deny?"
+
+Modern network appliances dono functions provide kar sakte hain.
+
+But conceptually:
+
+Router ≠ Firewall
+
+
+39. ACL
+
+ACL = Access Control List
+
+Router traffic ko rules ke basis par permit/deny kar sakta hai.
+
+Possible matching criteria:
+
+- Source IP
+- Destination IP
+- Protocol
+- Port
+
+Concept:
+
+Traffic
+  ↓
+ACL
+  ↓
+Permit / Deny
+
+
+40. VPN AND ROUTER
+
+Router/VPN gateway VPN tunnel terminate kar sakta hai.
+
+Concept:
+
+Office A
+  |
+VPN Gateway
+  |
+Encrypted Tunnel
+  |
+VPN Gateway
+  |
+Office B
+
+This allows private networks ko securely connect karna over an untrusted
+network such as the Internet.
+
+
+41. CONTROL PLANE
+
+Control plane routing information learn/calculate karta hai.
+
+Examples:
+
+- Static routes
+- OSPF
+- BGP
+- IS-IS
+- EIGRP
+
+Control plane ka question:
+
+"Which route should I use?"
+
+
+42. DATA PLANE
+
+Data plane actual packets forward karta hai.
+
+Flow:
+
+Incoming Packet
+      ↓
+Forwarding Lookup
+      ↓
+Outgoing Interface
+      ↓
+Forward
+
+
+43. MANAGEMENT PLANE
+
+Management plane device ko configure/monitor karne ke liye use hota hai.
+
+Examples:
+
+- SSH
+- Console
+- Web interface
+- SNMP
+- APIs
+
+
+44. RIB
+
+RIB = Routing Information Base
+
+Routing information ko represent karta hai.
+
+Concept:
+
+Routing Protocols
+      ↓
+RIB
+      ↓
+Best Route Selection
+
+
+45. FIB
+
+FIB = Forwarding Information Base
+
+Data-plane packet forwarding ke liye optimized structure.
+
+Concept:
+
+Routing Information
+      ↓
+RIB
+      ↓
+Best Routes
+      ↓
+FIB
+      ↓
+Fast Packet Forwarding
+
+
+46. STATIC VS DYNAMIC ROUTING
+
+Static:
+
+- Manually configured
+- Simple
+- Predictable
+- Small/stable networks mein useful
+- Large networks mein maintenance difficult
+
+Dynamic:
+
+- Routing protocols use karte hain
+- Routes automatically learn/update hote hain
+- Failures/topology changes ke saath adapt kar sakte hain
+- Large networks ke liye useful
+
+
+47. OSPF
+
+OSPF = Open Shortest Path First
+
+Common internal/enterprise routing protocol.
+
+High-level process:
+
+Discover neighbors
+      ↓
+Exchange topology information
+      ↓
+Build Link-State Database
+      ↓
+Run SPF calculation
+      ↓
+Install best routes
+
+
+48. BGP
+
+BGP = Border Gateway Protocol
+
+Internet ka primary inter-domain routing protocol.
+
+Autonomous Systems ke beech reachability aur routing policy exchange
+karne ke liye use hota hai.
+
+Concept:
+
+AS 65001
+   |
+  BGP
+   |
+AS 65002
+
+
+49. OTHER ROUTING PROTOCOLS
+
+Common examples:
+
+- RIP
+- OSPF
+- EIGRP
+- IS-IS
+- BGP
+
+Remember:
+
+RIP:
+Distance-vector/historical small-network use
+
+OSPF:
+Link-state, commonly enterprise/internal
+
+IS-IS:
+Link-state, common in service-provider environments
+
+BGP:
+Inter-domain/policy-based routing
+
+
+50. ROUTER AND SUBNETTING
+
+Router ko subnetting ka strong understanding hona chahiye.
+
+Example:
+
+192.168.1.0/24
+
+Can be divided into:
+
+192.168.1.0/25
+192.168.1.128/25
+
+Router destination IP ko subnet/prefix ke basis par identify karta hai.
+
+
+51. LINUX AS A ROUTER
+
+Linux bhi Layer-3 routing perform kar sakta hai.
+
+Check routing table:
+
+ip route
+
+Example:
+
+default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0
+10.10.10.0/24 via 192.168.1.254 dev eth0
+
+
+52. LINUX ROUTING COMMANDS
+
+Show IP addresses:
+
+ip addr
+
+Show interfaces:
+
+ip link
+
+Show routing table:
+
+ip route
+
+Check route to destination:
+
+ip route get 8.8.8.8
+
+Show neighbor/ARP table:
+
+ip neigh
+
+Interface statistics:
+
+ip -s link show eth0
+
+
+53. ADD STATIC ROUTE IN LINUX
+
+Example:
+
+sudo ip route add 10.10.10.0/24 via 192.168.1.254
+
+Meaning:
+
+10.10.10.0/24
+     ↓
+Next Hop:
+192.168.1.254
+
+
+54. LINUX IP FORWARDING
+
+Linux ko router ki tarah use karne ke liye IPv4 forwarding enable ki ja
+sakti hai.
+
+Temporary:
+
+sudo sysctl -w net.ipv4.ip_forward=1
+
+Check:
+
+sysctl net.ipv4.ip_forward
+
+Persistent configuration commonly:
+
+net.ipv4.ip_forward = 1
+
+in appropriate sysctl configuration.
+
+
+55. LINUX NAT
+
+Linux router/NAT systems mein:
+
+- nftables
+- iptables
+
+use ho sakte hain.
+
+Concept:
+
+Private Network
+      ↓
+Linux Router/NAT
+      ↓
+Internet
+
+
+56. ROUTER AND CLOUD
+
+Cloud mein physical router ke concepts virtual/software-defined form mein
+milte hain.
+
+Examples:
+
+- VPC/VNet route tables
+- Virtual routers
+- Internet gateways
+- NAT gateways
+- Transit gateways
+- Cloud VPN gateways
+
+Fundamental concept same:
+
+Destination
+    ↓
+Route Table
+    ↓
+Next Hop
+    ↓
+Forward
+
+
+57. ROUTER AND DEVOPS
+
+Router knowledge DevOps mein useful hai for:
+
+- Server connectivity
+- Cloud networking
+- Kubernetes networking
+- Container networking
+- VPN
+- Load balancers
+- Firewalls
+- NAT
+- Route tables
+- Monitoring
+- Network automation
+- Production troubleshooting
+
+
+58. SERVER TO INTERNET FLOW
+
+Server
+  ↓
+NIC
+  ↓
+Switch
+  ↓
+Default Gateway
+  ↓
+Router
+  ↓
+Firewall/NAT
+  ↓
+ISP
+  ↓
+Internet
+
+
+59. KUBERNETES CONNECTION
+
+Simplified:
+
+Pod
+ ↓
+CNI
+ ↓
+Node
+ ↓
+NIC
+ ↓
+Switch/Virtual Network
+ ↓
+Router
+ ↓
+External Network
+
+Kubernetes networking implementation CNI ke according change hoti hai.
+
+Possible technologies:
+
+- Routing
+- Linux bridge
+- VXLAN
+- Geneve
+- eBPF
+- Cloud-native networking
+
+
+60. DOCKER / CONTAINER CONNECTION
+
+Conceptual flow:
+
+Container
+   ↓
+veth
+   ↓
+Linux Bridge / CNI
+   ↓
+Host NIC
+   ↓
+Physical/Virtual Switch
+   ↓
+Router
+   ↓
+Network
+
+
+61. ROUTER TROUBLESHOOTING METHODOLOGY
+
+Bottom-up approach:
+
+Layer 1:
+- Cable
+- Interface
+- Link
+- Speed
+- Duplex
+
+Layer 2:
+- VLAN
+- MAC
+- ARP
+- Switch port
+
+Layer 3:
+- IP
+- Subnet
+- Gateway
+- Routing table
+- Next hop
+
+Layer 4:
+- TCP
+- UDP
+- Port
+- Listening service
+
+Application:
+- DNS
+- HTTP
+- TLS
+- Application logs
+
+
+62. IMPORTANT LINUX TROUBLESHOOTING COMMANDS
+
+Check interface:
+
+ip link
+
+Check IP:
+
+ip addr
+
+Check routes:
+
+ip route
+
+Check exact route:
+
+ip route get 8.8.8.8
+
+Check neighbor/ARP:
+
+ip neigh
+
+Check interface statistics:
+
+ip -s link show eth0
+
+Check link:
+
+sudo ethtool eth0
+
+Ping gateway:
+
+ping 192.168.1.1
+
+Ping public IP:
+
+ping 8.8.8.8
+
+Trace path:
+
+tracepath 8.8.8.8
+
+or:
+
+traceroute 8.8.8.8
+
+DNS test:
+
+dig example.com
+
+Packet capture:
+
+sudo tcpdump -i eth0
+
+
+63. TROUBLESHOOTING EXAMPLE
+
+Problem:
+
+Server cannot access Internet.
+
+Step 1:
+
+ip addr
+
+Check:
+- Correct IP?
+- Interface UP?
+
+Step 2:
+
+ip route
+
+Check:
+- Default route present?
+
+Step 3:
+
+ip neigh
+
+Check:
+- Gateway resolved?
+
+Step 4:
+
+ping <gateway>
+
+If fails:
+Check Layer 1/2/local network/VLAN/ARP/gateway.
+
+Step 5:
+
+ping 8.8.8.8
+
+If gateway works but public IP fails:
+Check routing/firewall/NAT/upstream connectivity.
+
+Step 6:
+
+dig example.com
+
+If IP connectivity works but DNS name fails:
+Check DNS.
+
+
+64. ICMP
+
+ICMP networking diagnostics and control signaling ke liye important hai.
+
+Examples:
+
+- Echo Request
+- Echo Reply
+- Time Exceeded
+- Destination Unreachable
+
+Ping:
+
+ICMP Echo Request
+       ↓
+Destination
+       ↓
+ICMP Echo Reply
+
+
+65. TRACEROUTE / TRACEPath
+
+These tools path/hops identify karne mein help karte hain.
+
+Example:
+
+tracepath 8.8.8.8
+
+Concept:
+
+Host
+ ↓
+R1
+ ↓
+R2
+ ↓
+R3
+ ↓
+Destination
+
+Traceroute-style mechanisms TTL/Hop Limit behavior aur ICMP responses
+ka use kar sakte hain.
+
+
+66. COMMON ROUTER MISTAKES
+
+Mistake 1:
+"Router MAC address ke basis par routing karta hai."
+
+Correct:
+Routing decision destination IP ke basis par hota hai.
+
+Mistake 2:
+"Router har packet ka destination IP change karta hai."
+
+Correct:
+Normal routing mein destination IP same rehta hai.
+NAT ek separate function hai.
+
+Mistake 3:
+"Router aur switch same hain."
+
+Correct:
+
+Switch → Layer 2
+Router → Layer 3
+
+Mistake 4:
+"Default gateway Internet hota hai."
+
+Correct:
+Default gateway local next-hop router hota hai.
+
+Mistake 5:
+"Router broadcasts ko forward karta hai."
+
+Correct:
+Layer-2 broadcasts normally router interfaces ke across forward nahi hote.
+
+Mistake 6:
+"ARP routing karta hai."
+
+Correct:
+
+Routing:
+IP → Next Hop/Interface
+
+ARP:
+Next-Hop IPv4 → MAC
+
+
+67. INTERVIEW QUESTIONS
+
+Q1. What is a router?
+
+A:
+A Layer-3 device that forwards IP packets between different networks.
+
+Q2. Which OSI layer does a router operate at?
+
+A:
+Layer 3.
+
+Q3. What is routing?
+
+A:
+Destination IP ke basis par packet ke liye appropriate path/next hop
+select karna.
+
+Q4. What is a routing table?
+
+A:
+Routes ka collection jo packet forwarding decisions mein help karta hai.
+
+Q5. What is a default route?
+
+A:
+IPv4 mein 0.0.0.0/0; jab more-specific route match nahi karta tab use hota hai.
+
+Q6. What is longest prefix match?
+
+A:
+Multiple matching routes mein most specific prefix ko choose karna.
+
+Q7. What is a next hop?
+
+A:
+Destination ki direction mein packet ka next router/device.
+
+Q8. What is a default gateway?
+
+A:
+Host ka local router used to reach destinations outside the local subnet.
+
+Q9. Does a router forward Layer-2 broadcasts?
+
+A:
+Normally no.
+
+Q10. What is TTL?
+
+A:
+IPv4 header field jo each router hop par decrement hoti hai to prevent
+routing loops.
+
+Q11. IPv6 mein TTL ka equivalent?
+
+A:
+Hop Limit.
+
+Q12. What is NAT?
+
+A:
+Network Address Translation; IP addresses ko translate karta hai.
+
+Q13. What is PAT?
+
+A:
+Port Address Translation; multiple private hosts ko shared public IPv4
+address use karne mein help karta hai.
+
+Q14. Static vs dynamic routing?
+
+A:
+Static routes manually configured hote hain; dynamic routes routing
+protocols se learned/updated hote hain.
+
+Q15. What is OSPF?
+
+A:
+A link-state interior routing protocol commonly used for internal
+network routing.
+
+Q16. What is BGP?
+
+A:
+The primary inter-domain routing protocol used between autonomous systems
+and for policy-based Internet routing.
+
+Q17. What is RIB?
+
+A:
+Routing Information Base, routing/control-plane information.
+
+Q18. What is FIB?
+
+A:
+Forwarding Information Base, optimized data-plane forwarding structure.
+
+Q19. Why does MAC change at every router hop?
+
+A:
+Har Layer-3 hop par packet ko new Layer-2 frame mein encapsulate kiya jata
+hai, isliye source/destination MACs local link ke according change hote hain.
+
+Q20. Does the destination IP change at every router?
+
+A:
+Normally no. Destination IP generally remains the final destination IP,
+except when mechanisms such as NAT modify it.
+
+
+68. COMPLETE ROUTER DATA FLOW
+
+Example:
+
+PC1
+192.168.1.10
+     |
+   Switch
+     |
+    R1
+     |
+    R2
+     |
+   Switch
+     |
+Server
+192.168.2.20
+
+
+Flow:
+
+Application
+    ↓
+TCP/UDP
+    ↓
+IP Packet
+    ↓
+Host Routing Decision
+    ↓
+Default Gateway
+    ↓
+ARP
+    ↓
+Ethernet Frame
+    ↓
+Switch
+    ↓
+Router R1
+    ↓
+Routing Table Lookup
+    ↓
+Longest Prefix Match
+    ↓
+Next Hop
+    ↓
+TTL - 1
+    ↓
+New Ethernet Frame
+    ↓
+Router R2
+    ↓
+Routing Table Lookup
+    ↓
+TTL - 1
+    ↓
+New Ethernet Frame
+    ↓
+Switch
+    ↓
+Server
+
+
+69. ROUTER'S GOLDEN LOGIC
+
+Packet arrives
+      ↓
+Read Destination IP
+      ↓
+Check Routing Table/FIB
+      ↓
+Find Matching Routes
+      ↓
+Longest Prefix Match
+      ↓
+Select Best Route
+      ↓
+Determine Next Hop/Output Interface
+      ↓
+Resolve Layer-2 Address if required
+      ↓
+Decrease TTL/Hop Limit
+      ↓
+Create New Layer-2 Frame
+      ↓
+Forward Packet
+
+
+70. LAYER-2 VS LAYER-3
+
+Layer 2:
+
+MAC Address
+Ethernet Frame
+Switch
+Local network
+
+Layer 3:
+
+IP Address
+Packet
+Router
+Different networks
+
+
+71. NETWORK DEVICE PROGRESSION
+
+Repeater:
+
+Layer 1
+Signal
+
+"Signal regenerate/repeat karo."
+
+
+Hub:
+
+Layer 1
+Signal
+
+"Signal multiple ports par repeat karo."
+
+
+Bridge:
+
+Layer 2
+MAC + Frame
+
+"MAC ke basis par frame filter/forward karo."
+
+
+Switch:
+
+Layer 2
+MAC + Frame
+
+"MAC table ke basis par correct port par frame forward karo."
+
+
+Router:
+
+Layer 3
+IP + Packet
+
+"Destination IP ke basis par best route/next hop choose karo."
+
+
+72. GOLDEN MEMORY RULES
+
+Rule 1:
+
+SWITCH = MAC → PORT
+
+Rule 2:
+
+ROUTER = IP → NEXT HOP
+
+Rule 3:
+
+ROUTING = Destination IP → Best Route
+
+Rule 4:
+
+ARP = IPv4 Next-Hop IP → MAC
+
+Rule 5:
+
+IPv6 NDP = Neighbor/Next-Hop Resolution
+
+Rule 6:
+
+TTL = Router Hop par decrease
+
+Rule 7:
+
+MAC = Har Layer-2 hop par change ho sakta hai
+
+Rule 8:
+
+IP = Normal routing mein end destination tak same rehta hai
+
+Rule 9:
+
+Router = Broadcast Domain Boundary
+
+Rule 10:
+
+Default Route = 0.0.0.0/0
+
+
+73. FINAL ONE-LINE SUMMARY
+
+Router ek Layer-3 networking device hai jo destination IP address aur
+routing table ke basis par packets ko different networks ke beech
+forward karta hai, longest-prefix match se best route select karta hai,
+next hop/output interface determine karta hai, har routed hop par packet
+ko new Layer-2 frame mein encapsulate karta hai, TTL/Hop Limit decrease
+karta hai, aur routing, NAT, ACL, VPN aur dynamic routing jaise functions
+ke through modern networks ka core Layer-3 connectivity provide karta hai.
