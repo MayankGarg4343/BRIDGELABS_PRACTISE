@@ -1,0 +1,1593 @@
+Bilkul — neeche **Switch ka complete revision summary** diya hai, exactly `.txt` file mein copy-paste karne layak plain-text format mein.
+
+```text
+TOPIC: SWITCH — Full Notes
+
+
+1. DEFINITION
+
+Switch ek networking device hai jo primarily OSI Layer 2 (Data Link Layer)
+par operate karta hai.
+
+Iska main kaam Ethernet Frames ko destination MAC address ke basis par
+appropriate port/interface par forward karna hai.
+
+Simple definition:
+
+Switch ek intelligent Layer-2 device hai jo multiple devices ko LAN mein
+connect karta hai aur MAC addresses ke basis par traffic ko selectively
+forward karta hai.
+
+
+2. OSI LAYER
+
+Traditional Ethernet Switch:
+- Layer 2
+- Data Link Layer
+
+Important concepts:
+- Ethernet Frame
+- MAC Address
+- MAC Address Table
+- Forwarding
+- Filtering
+- Flooding
+- VLAN
+- STP
+
+Note:
+Layer-3 switches bhi exist karte hain jo Layer-2 switching ke saath
+Layer-3 routing bhi perform kar sakte hain.
+
+
+3. SIMPLE MENTAL MODEL
+
+Switch ko ek smart courier sorting center samjho.
+
+Courier ke paas mapping hai:
+
+Device A → Port 1
+Device B → Port 2
+Device C → Port 3
+
+Agar destination B hai:
+
+Incoming Frame
+      ↓
+Destination B
+      ↓
+MAC Table
+      ↓
+Port 2
+      ↓
+Forward
+
+
+4. BASIC SWITCH DIAGRAM
+
+                    SWITCH
+                /     |     \
+               /      |      \
+             PC1     PC2     PC3
+            Port1   Port2   Port3
+
+
+5. SWITCH KA MAIN PURPOSE
+
+Switch:
+
+- Multiple devices ko LAN mein connect karta hai.
+- Ethernet frames ko forward karta hai.
+- MAC addresses learn karta hai.
+- Unnecessary unicast traffic ko filter karta hai.
+- Collision domains ko separate karta hai.
+- VLAN-based Layer-2 segmentation provide kar sakta hai.
+- Redundant Layer-2 topology mein STP use kar sakta hai.
+
+
+6. SWITCH VS HUB
+
+Hub:
+
+PC1 → Hub → PC2
+          → PC3
+          → PC4
+
+Hub Layer 1 par signal ko repeat karta hai.
+
+Switch:
+
+PC1 → Switch → PC2
+
+Switch destination MAC ke basis par known unicast ko correct port par
+forward kar sakta hai.
+
+Main difference:
+
+Hub:
+- Layer 1
+- Signal repetition
+- No MAC learning
+- Shared medium
+
+Switch:
+- Layer 2
+- Frame forwarding
+- MAC learning
+- Selective forwarding
+
+
+7. SWITCH VS BRIDGE
+
+Bridge:
+- Layer 2
+- MAC-based forwarding
+- Usually fewer ports historically
+
+Switch:
+- Layer 2
+- MAC-based forwarding
+- Many ports
+- High-speed hardware forwarding
+
+Important:
+
+A modern Ethernet switch ko essentially a high-performance
+multiport bridge samjha ja sakta hai.
+
+
+8. SWITCH KE FOUR FUNDAMENTAL OPERATIONS
+
+1. Learning
+2. Forwarding
+3. Filtering
+4. Flooding
+
+
+9. MAC ADDRESS TABLE
+
+Switch MAC address table maintain karta hai.
+
+Example:
+
+MAC Address              Port
+
+AA:AA:AA:AA:AA:01        Port 1
+BB:BB:BB:BB:BB:02        Port 2
+CC:CC:CC:CC:CC:03        Port 3
+
+
+10. MAC LEARNING
+
+Switch incoming Ethernet frame ke Source MAC address ko dekhta hai.
+
+Example:
+
+Source MAC:
+AA:AA:AA:AA:AA:01
+
+Incoming Port:
+Port 1
+
+Switch learns:
+
+AA:AA:AA:AA:AA:01 → Port 1
+
+Golden rule:
+
+Source MAC → Learning
+
+
+11. DESTINATION MAC
+
+Destination MAC forwarding decision ke liye use hota hai.
+
+Golden rule:
+
+Source MAC:
+Learning ke liye.
+
+Destination MAC:
+Forwarding/filtering decision ke liye.
+
+
+12. COMPLETE FRAME PROCESSING
+
+Frame switch par aaya.
+
+Step 1:
+Frame receive karo.
+
+Step 2:
+Source MAC learn/update karo.
+
+Step 3:
+Destination MAC dekho.
+
+Step 4:
+MAC address table mein lookup karo.
+
+Step 5:
+Decision:
+
+- Known destination → Forward
+- Same incoming port → Filter
+- Unknown destination → Flood
+- Broadcast → Flood
+
+
+13. KNOWN UNICAST
+
+Example:
+
+PC1:
+MAC = AAA
+
+PC2:
+MAC = BBB
+
+Switch table:
+
+AAA → Port 1
+BBB → Port 2
+
+PC1 sends:
+
+Source MAC = AAA
+Destination MAC = BBB
+
+Switch:
+
+AAA → Port 1
+BBB → Port 2
+
+Therefore:
+
+PC1
+ ↓
+Switch
+ ↓
+Port 2
+ ↓
+PC2
+
+PC3 ko frame normally forward nahi hoga.
+
+
+14. FILTERING
+
+Filtering means frame ko unnecessary port par forward na karna.
+
+Example:
+
+PC1 and PC2 same switch port/Layer-2 segment context mein hain.
+
+Destination MAC already same incoming interface par located hai.
+
+Switch:
+
+Do not forward frame to another port.
+
+This is filtering.
+
+
+15. FORWARDING
+
+If destination MAC kisi different port par known hai:
+
+Example:
+
+PC1 → PC3
+
+MAC table:
+
+PC3 MAC → Port 3
+
+Switch:
+
+Port 1
+  ↓
+Switch
+  ↓
+Port 3
+  ↓
+PC3
+
+
+16. UNKNOWN UNICAST
+
+Agar destination MAC MAC table mein nahi hai:
+
+Example:
+
+Destination:
+DD:DD:DD:DD:DD:04
+
+MAC table:
+
+AAA → Port 1
+BBB → Port 2
+CCC → Port 3
+
+DD unknown.
+
+Switch generally unknown-unicast flooding karta hai.
+
+Frame:
+
+Port 1
+ ↓
+Switch
+ ↓ ↓
+Port 2 Port 3
+
+
+17. BROADCAST
+
+Broadcast MAC:
+
+FF:FF:FF:FF:FF:FF
+
+Switch broadcast ko same VLAN/broadcast domain ke relevant ports par
+flood karta hai.
+
+Example:
+
+PC1
+ ↓
+Switch
+ ↓ ↓
+PC2 PC3
+
+
+18. ARP AND SWITCH
+
+Suppose:
+
+PC1:
+192.168.1.10
+
+PC2:
+192.168.1.20
+
+PC1 ko PC2 ka MAC nahi pata.
+
+PC1 ARP request send karta hai:
+
+"Who has 192.168.1.20?"
+
+Destination MAC:
+
+FF:FF:FF:FF:FF:FF
+
+Switch broadcast ko flood karta hai.
+
+PC2 ARP reply karta hai:
+
+"192.168.1.20 is at BB:BB:BB:BB:BB:02"
+
+Ab PC1 ke paas PC2 ka MAC hai.
+
+Future traffic:
+
+PC1
+ ↓
+Switch
+ ↓
+PC2
+
+
+19. SWITCH AND ARP
+
+ARP exchange ke time switch MAC learning bhi karta hai.
+
+ARP request:
+
+Source MAC = PC1
+Incoming Port = Port 1
+
+Switch learns:
+
+PC1 MAC → Port 1
+
+ARP reply:
+
+Source MAC = PC2
+Incoming Port = Port 2
+
+Switch learns:
+
+PC2 MAC → Port 2
+
+
+20. MAC TABLE AGING
+
+MAC entries permanently nahi rehti.
+
+Agar device long time tak traffic generate nahi karta,
+entry eventually age out ho sakti hai.
+
+Reason:
+
+- Devices move kar sakte hain.
+- Ports change ho sakte hain.
+- Old information stale ho sakti hai.
+
+
+21. MAC ADDRESS MOVE
+
+Initially:
+
+AAA → Port 1
+
+Later same MAC Port 5 se frame send karta hai.
+
+Switch update kar sakta hai:
+
+AAA → Port 5
+
+Ye normal MAC learning behavior hai.
+
+
+22. MAC FLAPPING
+
+Example:
+
+AAA → Port 1
+AAA → Port 5
+AAA → Port 1
+AAA → Port 5
+
+Same MAC repeatedly different ports par appear kar raha hai.
+
+Isse MAC Flapping kehte hain.
+
+Possible causes:
+
+- Layer-2 loop
+- Redundant link problem
+- Misconfigured bridge
+- Virtualization/networking issue
+- Network topology problem
+
+
+23. COLLISION DOMAIN
+
+Switch ports traditionally separate collision domains.
+
+Example:
+
+Port 1 → Collision Domain 1
+Port 2 → Collision Domain 2
+Port 3 → Collision Domain 3
+
+Modern Ethernet normally full-duplex hota hai, so normal operation mein
+collisions nahi hoti.
+
+
+24. FULL DUPLEX
+
+Modern switched Ethernet:
+
+PC ←→ Switch
+
+Simultaneously:
+
+PC → Switch
+PC ← Switch
+
+possible hai.
+
+Therefore:
+
+Full Duplex
+
+
+25. CSMA/CD
+
+Classic Hub-based Ethernet:
+
+Shared medium
+     ↓
+Half Duplex
+     ↓
+Collision possible
+     ↓
+CSMA/CD
+
+Modern switched full-duplex Ethernet:
+
+Dedicated link
+     ↓
+Full Duplex
+     ↓
+Normal collision nahi
+     ↓
+CSMA/CD normally not used
+
+
+26. BROADCAST DOMAIN
+
+Normal Layer-2 switch automatically broadcast domain separate nahi karta.
+
+Example:
+
+PC1
+PC2
+PC3
+ |
+Switch
+
+Same VLAN mein hone par broadcast sab relevant devices tak ja sakta hai.
+
+VLANs broadcast domains separate kar sakte hain.
+
+
+27. VLAN
+
+VLAN = Virtual Local Area Network
+
+VLAN logical Layer-2 segmentation provide karta hai.
+
+Example:
+
+VLAN 10 → HR
+VLAN 20 → Engineering
+VLAN 30 → Finance
+
+Concept:
+
+VLAN 10 ≠ VLAN 20 ≠ VLAN 30
+
+Har VLAN ek separate Layer-2 broadcast domain represent kar sakta hai.
+
+
+28. ACCESS PORT
+
+Access port typically ek VLAN se associated hota hai.
+
+Example:
+
+PC
+ |
+Access Port
+ |
+Switch
+
+Port 5:
+VLAN 10
+
+
+29. TRUNK PORT
+
+Trunk port multiple VLANs carry kar sakta hai.
+
+Example:
+
+Switch A
+    |
+    | Trunk
+    |
+Switch B
+
+Trunk par:
+
+VLAN 10
+VLAN 20
+VLAN 30
+
+carry ho sakte hain.
+
+
+30. 802.1Q
+
+IEEE 802.1Q VLAN tagging mechanism hai.
+
+Conceptual frame:
+
++---------------------------------------------------------+
+| Dest MAC | Src MAC | 802.1Q Tag | Type | Payload | FCS |
++---------------------------------------------------------+
+
+802.1Q tag VLAN identification aur priority-related information
+carry kar sakta hai.
+
+
+31. ACCESS VS TRUNK
+
+Access:
+- Usually one VLAN
+- End devices ke liye commonly used
+
+Trunk:
+- Multiple VLANs
+- Switch-to-switch links
+- Switch-to-router links
+- Hypervisor/network infrastructure links
+
+
+32. INTER-VLAN ROUTING
+
+Suppose:
+
+VLAN 10:
+192.168.10.0/24
+
+VLAN 20:
+192.168.20.0/24
+
+VLAN 10 se VLAN 20 communication ke liye Layer-3 routing required hoti hai.
+
+Flow:
+
+VLAN 10
+   ↓
+Router / Layer-3 Switch
+   ↓
+VLAN 20
+
+
+33. SWITCH AND ROUTER
+
+Switch:
+
+Layer 2
+MAC
+Ethernet Frame
+
+Router:
+
+Layer 3
+IP
+Packet
+
+Switch normally same Layer-2 domain ke andar forwarding karta hai.
+
+Router different IP networks ke beech forwarding karta hai.
+
+
+34. INTERNET-BOUND TRAFFIC
+
+PC:
+
+IP = 192.168.1.10
+
+Default Gateway:
+
+192.168.1.1
+
+Internet Server:
+
+8.8.8.8
+
+PC wants:
+
+8.8.8.8
+
+Host routing logic determines:
+
+Destination local subnet ke bahar hai.
+
+Therefore:
+
+Next hop = Default Gateway
+
+ARP:
+
+Who has 192.168.1.1?
+
+Gateway returns its MAC.
+
+Ethernet frame:
+
+Source MAC = PC MAC
+Destination MAC = Gateway MAC
+
+IP packet:
+
+Source IP = 192.168.1.10
+Destination IP = 8.8.8.8
+
+Flow:
+
+PC
+ ↓
+Switch
+ ↓
+Default Gateway/Router
+ ↓
+Internet
+
+
+35. VERY IMPORTANT CONCEPT
+
+Internet-bound frame ka Destination MAC remote Internet server ka MAC
+nahi hota.
+
+Destination MAC usually local next-hop router/default gateway ka MAC
+hota hai.
+
+But Destination IP remote server ka IP hota hai.
+
+Example:
+
+Ethernet:
+Destination MAC = Gateway MAC
+
+IP:
+Destination IP = 8.8.8.8
+
+
+36. SWITCH AND STP
+
+Layer-2 loops dangerous hain.
+
+Example:
+
+       SW1
+      /   \
+    SW2---SW3
+
+Possible problems:
+
+- Broadcast storms
+- Duplicate frames
+- MAC flapping
+- Unknown-unicast flooding
+- Network instability
+
+STP:
+Spanning Tree Protocol
+
+Purpose:
+Layer-2 loops ko prevent karna while keeping redundant paths.
+
+
+37. STP VARIANTS
+
+Common technologies:
+
+- STP
+- RSTP
+- MSTP
+
+RSTP:
+Rapid Spanning Tree Protocol
+
+MSTP:
+Multiple Spanning Tree Protocol
+
+
+38. SWITCHING METHODS
+
+Common concepts:
+
+1. Store-and-Forward
+2. Cut-Through
+3. Fragment-Free
+
+Store-and-Forward:
+
+Receive full frame
+      ↓
+Check frame/FCS
+      ↓
+Forward
+
+
+39. FCS
+
+FCS = Frame Check Sequence
+
+Ethernet frame integrity/error detection ke liye use hota hai.
+
+Concept:
+
+Frame
+  ↓
+FCS
+  ↓
+Receiver/Switch error check
+
+
+40. STORE-AND-FORWARD
+
+Switch complete frame receive karta hai.
+
+Then:
+
+- FCS check
+- Destination MAC lookup
+- Forward/filter
+
+Corrupted frame detect hone par switch can discard it.
+
+
+41. CUT-THROUGH
+
+Switch destination information milte hi frame forwarding start kar sakta hai
+without waiting for complete frame.
+
+Benefit:
+Lower latency potential.
+
+Trade-off:
+Incomplete/error checking behavior depends on implementation.
+
+
+42. PORT SPEEDS
+
+Common Ethernet speeds include:
+
+- 10 Mbps
+- 100 Mbps
+- 1 Gbps
+- 10 Gbps
+- 25 Gbps
+- 40 Gbps
+- 100 Gbps
+- 200 Gbps
+- 400 Gbps
+- 800 Gbps
+
+Actual speed depends on hardware, transceiver, cable and standard.
+
+
+43. AUTO-NEGOTIATION
+
+Ethernet interfaces can negotiate parameters such as:
+
+- Speed
+- Duplex
+- Other link capabilities depending on technology
+
+Linux command:
+
+sudo ethtool eth0
+
+
+44. DUPLEX MISMATCH
+
+Example:
+
+Switch:
+Full Duplex
+
+Host:
+Half Duplex
+
+Possible symptoms:
+
+- Poor performance
+- Errors
+- Retransmissions
+- Intermittent connectivity
+- Collision-related issues on half-duplex side
+
+Check:
+
+sudo ethtool eth0
+
+
+45. PORT SECURITY
+
+Managed switches may provide Port Security.
+
+Concept:
+
+Port
+ ↓
+Allowed MAC addresses
+
+Unexpected MAC:
+ ↓
+Security violation
+
+Possible actions depending on configuration:
+
+- Drop
+- Restrict
+- Log
+- Shutdown/err-disable
+
+
+46. VLAN HOPPING
+
+VLAN hopping is a Layer-2 security concern.
+
+Conceptual attack categories:
+
+- Switch spoofing
+- Double tagging
+
+Mitigation:
+
+- Correct access/trunk configuration
+- Avoid unnecessary trunking
+- Proper native VLAN configuration
+- Disable unnecessary trunk negotiation
+- Don't connect end-user devices to trunks unnecessarily
+
+
+47. DHCP SNOOPING
+
+Security feature.
+
+Switch identifies trusted DHCP server ports.
+
+Trusted DHCP Server
+       ↓
+    Switch
+       ↓
+    Clients
+
+Can help block rogue DHCP server responses.
+
+
+48. DYNAMIC ARP INSPECTION
+
+DAI = Dynamic ARP Inspection
+
+ARP spoofing/poisoning mitigate karne ke liye use kiya ja sakta hai.
+
+It can validate ARP information against trusted bindings.
+
+
+49. 802.1X
+
+Port-based network access control.
+
+Concept:
+
+Device
+  ↓
+Switch Port
+  ↓
+Authentication
+  ↓
+Network Access
+
+
+50. STORM CONTROL
+
+Managed switches can limit excessive:
+
+- Broadcast
+- Multicast
+- Unknown-unicast
+
+traffic.
+
+Purpose:
+
+Broadcast/traffic storms ke impact ko reduce karna.
+
+
+51. SWITCH MONITORING
+
+Important metrics:
+
+- Interface utilization
+- Packet drops
+- CRC errors
+- Interface errors
+- Link state
+- Broadcast rate
+- Multicast traffic
+- CPU
+- Memory
+- Temperature
+- MAC table
+- STP state
+
+Common technologies:
+
+- SNMP
+- Syslog
+- Streaming telemetry
+- Vendor APIs
+
+
+52. SWITCH MANAGEMENT
+
+Managed switches can be managed using:
+
+- Console
+- SSH
+- SNMP
+- Web UI
+- NETCONF
+- RESTCONF
+- Vendor APIs
+
+Automation tools can include:
+
+- Ansible
+- Netmiko
+- NAPALM
+- Terraform where supported
+- Vendor APIs
+
+
+53. LINUX BRIDGE CONNECTION
+
+Linux mein software bridge Layer-2 switching jaisa behavior provide kar sakta hai.
+
+Example:
+
+              Linux Bridge
+             /     |      \
+           eth0   veth1   veth2
+                   |       |
+               Container Container
+
+Commands:
+
+ip link
+
+bridge link
+
+bridge fdb show
+
+bridge vlan show
+
+
+54. CREATE LINUX BRIDGE
+
+Command:
+
+sudo ip link add name br0 type bridge
+
+Bring up:
+
+sudo ip link set br0 up
+
+Check:
+
+ip link show type bridge
+
+
+55. ATTACH INTERFACE
+
+Example:
+
+sudo ip link set eth0 master br0
+
+Check:
+
+bridge link
+
+
+56. MAC FORWARDING DATABASE
+
+Linux bridge FDB:
+
+bridge fdb show
+
+FDB = Forwarding Database
+
+It contains learned Layer-2 forwarding information.
+
+
+57. DOCKER CONNECTION
+
+Typical conceptual flow:
+
+Container
+   ↓
+veth
+   ↓
+docker0/Linux Bridge
+   ↓
+Host NIC
+   ↓
+Physical Switch
+   ↓
+Network
+
+
+58. VM NETWORKING
+
+Typical bridged VM networking:
+
+VM
+ ↓
+Virtual NIC
+ ↓
+Linux Bridge
+ ↓
+Physical NIC
+ ↓
+Physical Switch
+ ↓
+Network
+
+
+59. KUBERNETES CONNECTION
+
+Possible simplified path:
+
+Pod
+ ↓
+veth
+ ↓
+CNI
+ ↓
+Node NIC
+ ↓
+Physical Switch
+ ↓
+Router/Underlay
+
+Important:
+
+Not every Kubernetes CNI uses Linux bridges.
+
+Modern networking can use:
+
+- Routing
+- VXLAN
+- Geneve
+- eBPF
+- Native cloud networking
+
+
+60. DEVOPS CONNECTION
+
+Switching knowledge is important for:
+
+- Server networking
+- Data center networking
+- VLANs
+- Containers
+- Kubernetes
+- Virtual machines
+- Cloud networking
+- Monitoring
+- Network automation
+- Security troubleshooting
+
+
+61. SERVER NETWORK FLOW
+
+Application
+   ↓
+TCP/UDP
+   ↓
+IP
+   ↓
+Ethernet
+   ↓
+NIC
+   ↓
+Switch
+   ↓
+Router
+   ↓
+Firewall
+   ↓
+Internet
+
+
+62. DEVOPS TROUBLESHOOTING APPROACH
+
+Troubleshoot from lower layer to higher layer.
+
+Layer 1:
+- Cable
+- Link
+- Speed
+- Duplex
+
+Layer 2:
+- MAC learning
+- VLAN
+- STP
+- ARP
+- Switch port
+
+Layer 3:
+- IP
+- Subnet
+- Gateway
+- Routing
+
+Layer 4:
+- TCP/UDP
+- Ports
+- Listening services
+
+Application:
+- DNS
+- HTTP
+- TLS
+- Application logs
+
+
+63. IMPORTANT LINUX COMMANDS
+
+Interface:
+
+ip link
+
+IP address:
+
+ip addr
+
+Routing:
+
+ip route
+
+Neighbor/ARP:
+
+ip neigh
+
+Link details:
+
+sudo ethtool eth0
+
+Interface statistics:
+
+ip -s link show eth0
+
+Packet capture:
+
+sudo tcpdump -i eth0
+
+All interfaces:
+
+sudo tcpdump -i any
+
+
+64. LINUX BRIDGE COMMANDS
+
+Show bridge links:
+
+bridge link
+
+Show MAC forwarding database:
+
+bridge fdb show
+
+Show VLAN configuration:
+
+bridge vlan show
+
+Create bridge:
+
+sudo ip link add br0 type bridge
+
+Bring bridge up:
+
+sudo ip link set br0 up
+
+
+65. COMMON TROUBLESHOOTING PROBLEMS
+
+1. Link down
+2. Wrong VLAN
+3. Wrong access/trunk configuration
+4. MAC not learned
+5. MAC flapping
+6. STP blocking
+7. Broadcast storm
+8. Duplex mismatch
+9. Speed mismatch
+10. CRC errors
+11. Packet drops
+12. Rogue DHCP
+13. ARP issues
+14. Layer-2 loop
+15. Incorrect gateway
+
+
+66. COMMON MISCONCEPTIONS
+
+Misconception:
+"Switch har frame ko har port par bhejta hai."
+
+Correct:
+Known unicast usually correct port par forward hota hai.
+
+Misconception:
+"Switch broadcasts ko filter karta hai."
+
+Correct:
+Broadcast same VLAN/broadcast domain ke relevant ports par flood hota hai.
+
+Misconception:
+"Switch automatically broadcast domains separate karta hai."
+
+Correct:
+Normal Layer-2 switch does not.
+VLANs create separate Layer-2 broadcast domains.
+
+Misconception:
+"Switch IP addresses ke basis par normal forwarding karta hai."
+
+Correct:
+Traditional Layer-2 switch MAC addresses use karta hai.
+
+Misconception:
+"Switch and router same hain."
+
+Correct:
+Switch primarily Layer 2.
+Router Layer 3.
+
+Misconception:
+"Switch aur bridge completely different hain."
+
+Correct:
+Modern Ethernet switch is essentially a high-performance multiport bridge.
+
+Misconception:
+"Internet server ka MAC switch ko pata hona chahiye."
+
+Correct:
+Remote Internet destination ka MAC local LAN par directly relevant nahi.
+Host normally local gateway ka MAC use karta hai.
+
+
+67. INTERVIEW QUESTIONS
+
+Q: What is a switch?
+
+A:
+A Layer-2 networking device that forwards Ethernet frames based on
+destination MAC addresses.
+
+Q: Which OSI layer does a switch operate at?
+
+A:
+Layer 2 for traditional Ethernet switching.
+
+Q: What is a MAC address table?
+
+A:
+A mapping of learned MAC addresses to switch ports/interfaces.
+
+Q: How does a switch learn MAC addresses?
+
+A:
+By examining source MAC addresses of incoming frames.
+
+Q: What is the role of destination MAC?
+
+A:
+It is used to determine forwarding/filtering behavior.
+
+Q: What happens when destination MAC is known?
+
+A:
+Frame is forwarded to the associated port.
+
+Q: What happens when destination MAC is unknown?
+
+A:
+Unknown-unicast flooding occurs within the relevant VLAN/broadcast domain.
+
+Q: What happens with broadcast?
+
+A:
+Broadcast is flooded within the same VLAN/broadcast domain.
+
+Q: Does a switch separate collision domains?
+
+A:
+Yes, traditional switch ports create separate collision domains.
+
+Q: Does a switch separate broadcast domains?
+
+A:
+Not by itself. VLANs create separate broadcast domains.
+
+Q: What is MAC flapping?
+
+A:
+Same MAC address repeatedly appearing on different switch ports.
+
+Q: What can cause MAC flapping?
+
+A:
+Often Layer-2 loops or topology/configuration issues.
+
+Q: What is STP?
+
+A:
+Spanning Tree Protocol, used to prevent Layer-2 loops while maintaining
+redundant paths.
+
+Q: What is VLAN?
+
+A:
+Virtual Layer-2 segmentation that creates separate broadcast domains.
+
+Q: Access port vs trunk?
+
+A:
+Access port typically carries one VLAN for an end device.
+Trunk carries multiple VLANs.
+
+Q: What is 802.1Q?
+
+A:
+IEEE VLAN tagging mechanism.
+
+Q: What is FCS?
+
+A:
+Frame Check Sequence, used for Ethernet frame integrity/error detection.
+
+Q: What is store-and-forward switching?
+
+A:
+Switch receives the complete frame, checks it, then forwards it.
+
+Q: What is a Layer-3 switch?
+
+A:
+A switch capable of performing Layer-3 routing in addition to Layer-2
+switching.
+
+Q: Why does an Internet-bound host use the gateway's MAC?
+
+A:
+Because the gateway is the local Layer-2 next hop, while the remote
+Internet server is outside the local Layer-2 network.
+
+
+68. COMPLETE DATA FLOW — SAME LAN
+
+PC1:
+IP 192.168.1.10
+MAC AAA
+
+PC2:
+IP 192.168.1.20
+MAC BBB
+
+Flow:
+
+Application
+   ↓
+TCP/UDP
+   ↓
+IP Packet
+Src IP = 192.168.1.10
+Dst IP = 192.168.1.20
+   ↓
+Ethernet Frame
+Src MAC = AAA
+Dst MAC = BBB
+   ↓
+NIC
+   ↓
+Switch
+   ↓
+MAC Table Lookup
+   ↓
+BBB → Port 2
+   ↓
+PC2
+
+
+69. COMPLETE DATA FLOW — INTERNET
+
+PC:
+192.168.1.10
+
+Gateway:
+192.168.1.1
+
+Remote:
+8.8.8.8
+
+Flow:
+
+Application
+   ↓
+TCP/UDP
+   ↓
+IP Destination = 8.8.8.8
+   ↓
+Host routing decision
+   ↓
+Next Hop = 192.168.1.1
+   ↓
+ARP for Gateway MAC
+   ↓
+Ethernet Destination MAC = Gateway MAC
+   ↓
+Switch
+   ↓
+Router
+   ↓
+Internet
+
+
+70. GOLDEN MEMORY RULE
+
+SWITCH:
+
+Frame arrives
+      ↓
+Learn Source MAC
+      ↓
+Read Destination MAC
+      ↓
+Lookup MAC Table
+      ↓
+Known?
+  /       \
+YES       NO
+ |         |
+Forward   Flood
+ |
+If destination is on incoming port:
+Filter
+
+
+71. NETWORK DEVICE EVOLUTION
+
+Repeater:
+Layer 1
+Signal
+"Signal regenerate/repeat karo."
+
+Hub:
+Layer 1
+Signal
+"Signal multiple ports par repeat karo."
+
+Bridge:
+Layer 2
+MAC + Frame
+"MAC ke basis par frame filter/forward karo."
+
+Switch:
+Layer 2
+MAC + Frame
+"Same bridge concept, but multiple ports and high-speed forwarding."
+
+Router:
+Layer 3
+IP + Packet
+"Routing table ke basis par next hop choose karo."
+
+
+72. FINAL CORE CONCEPTS
+
+Switch =
+Layer 2
++
+Ethernet Frame
++
+MAC Address
++
+MAC Learning
++
+MAC Table
++
+Forwarding
++
+Filtering
++
+Flooding
++
+VLAN
++
+STP
++
+Collision Domain Separation
+
+
+73. ONE-LINE FINAL SUMMARY
+
+A switch is primarily a Layer-2 networking device that learns source MAC
+addresses, uses the destination MAC to make forwarding decisions, forwards
+known unicast frames to the correct port, filters unnecessary traffic,
+floods unknown/broadcast traffic within the relevant VLAN, and provides the
+foundation for modern LAN switching, VLAN segmentation, and many
+virtualization/container networking designs.
+```
