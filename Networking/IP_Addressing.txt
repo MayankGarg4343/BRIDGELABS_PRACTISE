@@ -1,0 +1,118 @@
+FILE NAME: ip_address_notes.txt
+
+IP ADDRESS - COMPLETE NOTES
+
+1. WHAT IS IP ADDRESS
+- Unique numerical identifier for a device on a network
+- Used to identify and locate devices for data delivery (packets)
+- Analogy: postal address for devices
+
+2. TYPES OF IP ADDRESS
+- IPv4: 32-bit, 4 octets, format like 192.168.1.1, approx 4.3 billion addresses
+- IPv6: 128-bit, hexadecimal, format like 2001:0db8:85a3::8a2e:0370:7334, created due to IPv4 exhaustion
+
+3. IPv4 CLASSES (legacy, classful addressing)
+- Class A: 1.0.0.0 to 126.255.255.255, default mask /8
+- Class B: 128.0.0.0 to 191.255.255.255, default mask /16
+- Class C: 192.0.0.0 to 223.255.255.255, default mask /24
+- Class D: 224.0.0.0 to 239.255.255.255, multicast
+- Class E: 240.0.0.0 to 255.255.255.255, experimental
+- Modern networks use CIDR (Classless Inter-Domain Routing) instead of classful addressing
+
+4. PRIVATE VS PUBLIC IP
+- Private IP ranges (RFC 1918):
+  10.0.0.0 to 10.255.255.255 (10.0.0.0/8)
+  172.16.0.0 to 172.31.255.255 (172.16.0.0/12)
+  192.168.0.0 to 192.168.255.255 (192.168.0.0/16)
+- Public IP: globally unique, internet-routable, assigned by ISP
+- NAT (Network Address Translation) translates private IP to public IP for internet access
+
+5. STATIC VS DYNAMIC IP
+- Static IP: fixed manually, does not change, used for servers and production systems
+- Dynamic IP: assigned automatically by DHCP, can change over time after lease renewal
+
+6. SPECIAL ADDRESSES
+- Loopback: 127.0.0.1 (localhost) - device talking to itself
+- 0.0.0.0: represents any address or all interfaces (used in server configs)
+- 255.255.255.255: broadcast address, sends to all devices
+- 169.254.x.x: APIPA, means DHCP server was unreachable
+
+7. HOW IP ROUTING WORKS (step by step)
+- Device checks if destination IP is on same network or different network
+- If same network: uses ARP to find MAC address, sends directly
+- If different network: sends packet to default gateway (router)
+- Router checks its routing table, forwards to next hop
+- Process repeats hop by hop until packet reaches destination network
+- TTL (Time To Live) field decreases at each hop, prevents infinite loops, packet dropped when TTL reaches 0
+
+8. IP HEADER KEY FIELDS
+- Source IP: who sent the packet
+- Destination IP: where packet is going
+- TTL: hop limit
+- Protocol: TCP, UDP, or ICMP
+- Header Checksum: for error detection
+
+9. IMPORTANT COMMANDS
+- ip addr show or ip a : show IP address info on interfaces
+- hostname -I : show only IP addresses, clean output
+- ifconfig : older command, still seen in legacy systems
+- curl ifconfig.me : check public IP address
+- ping <ip> : test connectivity using ICMP echo request
+- ping -c 4 <ip> : send only 4 ping packets instead of infinite
+- traceroute <domain> : show path and hops to destination
+- ip route show : display current routing table
+- nslookup <domain> or dig <domain> : DNS resolution check
+- sudo netplan apply : apply static IP configuration on Ubuntu
+
+10. STATIC IP CONFIG EXAMPLE (Ubuntu Netplan YAML)
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses:
+        - 192.168.1.100/24
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [8.8.8.8, 8.8.4.4]
+
+11. DEVOPS REAL WORLD USE CASES
+- AWS VPC uses CIDR blocks for subnetting (example 10.0.0.0/16)
+- Kubernetes pods get internal IPs for cluster communication
+- Load balancers use public facing IP, backend servers use private IPs for security
+- SSH into production servers uses public IP address
+- Docker containers get internal IP from default bridge network (usually 172.17.x.x range)
+
+12. COMMON MISTAKES AND TROUBLESHOOTING
+- Thinking private IP can directly access internet without NAT - it cannot, NAT translation required
+- Assuming ping success means application is also working - ping only checks network layer (ICMP), application needs separate check like curl or telnet
+- Configuring both static IP and DHCP together causes IP conflicts, check with ip addr show
+- Confusing MAC address (Layer 2, hardware) with IP address (Layer 3, logical)
+- If device shows 169.254.x.x, DHCP server is unreachable, check network cable, WiFi, or DHCP server status
+- If ping fails but website works in browser, firewall may be blocking ICMP, this is normal and not always a problem
+
+13. RELATED CONCEPTS (CONNECTIONS)
+- Subnetting: dividing IP ranges into smaller networks
+- DNS: resolves domain names to IP addresses
+- DHCP: automatically assigns IP addresses to devices
+- Routing: determines packet path using IP addresses
+- NAT: translates private IP to public IP
+- iptables and Firewall: filters traffic based on IP addresses
+- Kubernetes and Docker networking: built on top of IP addressing fundamentals
+
+14. INTERVIEW QUESTIONS TO REVIEW
+- Difference between IPv4 and IPv6
+- Difference between Public IP and Private IP
+- What is Default Gateway
+- What does 127.0.0.1 represent
+- What is NAT and how it relates to IP address
+- Role of subnet mask with IP address
+- What is APIPA
+- What is CIDR notation, meaning of /24
+
+15. SCENARIO BASED QUESTIONS TO PRACTICE
+- Private IP server needs internet SSH access - solution: bastion host, elastic IP with public subnet, or VPN
+- Laptop shows 169.254.x.x IP - APIPA issue, check DHCP server and network connection
+- Two EC2 instances in different subnets cannot ping each other - check security groups, network ACLs, route tables between subnets
+- Need multiple network segments from a single IP range - use subnetting to divide into smaller blocks
+- Public IP changes after instance restart, breaking DNS and connections - use Elastic IP for a static public IP
+- Kubernetes pods cannot communicate with each other - check CNI plugin status, network policies, use kubectl exec to test ping or curl, check kube-proxy logs

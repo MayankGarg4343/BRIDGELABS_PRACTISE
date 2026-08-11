@@ -1,0 +1,43 @@
+STAR:
+Central switch/device.
+Data usually goes device → central device → destination.
+Common in LANs.
+
+RING:
+Devices form a circle.
+Data travels node-to-node around the ring.
+Used in some specialized/resilient networks.
+
+BUS:
+All devices share one backbone.
+Simple but poor scalability/reliability.
+Traditional Ethernet; mostly obsolete today.
+
+MESH:
+Multiple interconnections.
+Multiple paths.
+High redundancy but expensive/complex.
+
+TREE:
+Hierarchical structure.
+Core → Distribution → Access → End Devices.
+Scalable and common as an architecture.
+
+HYBRID:
+Combination of multiple topology types.
+Very common in real-world large networks.
+
+KEY IDEA:
+Topology tells us how devices are connected and what paths
+traffic can take.
+
+DEVOPS CONNECTION:
+Topology helps understand:
+- Server connectivity
+- Switch/router placement
+- Redundancy
+- Single points of failure
+- Cloud network architecture
+- Kubernetes networking
+- High availability
+- Network troubleshooting
