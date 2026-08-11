@@ -1,0 +1,90 @@
+FILE NAME: mac_address_notes.txt
+
+MAC ADDRESS - COMPLETE NOTES
+
+WHAT IS MAC ADDRESS
+Media Access Control Address, unique hardware-level identifier for network interface card (NIC)
+Assigned by manufacturer at production time
+Works at Layer 2 (Data Link Layer) of OSI model
+Used to identify physical device on local network
+FORMAT
+48-bit address, written in hexadecimal
+6 groups of 2 hex digits, separated by colon or hyphen
+Example: 00:1A:2B:3C:4D:5E or 00-1A-2B-3C-4D-5E
+STRUCTURE (TWO PARTS)
+OUI (Organizationally Unique Identifier): first 24 bits, identifies manufacturer, assigned by IEEE
+NIC Specific Part: last 24 bits, unique device identifier assigned by manufacturer
+TYPES OF MAC ADDRESS
+Unicast MAC: targets single specific device
+Multicast MAC: targets group of devices, example range starts with 01:00:5E for IPv4 multicast
+Broadcast MAC: FF:FF:FF:FF:FF:FF, sends to all devices on local network
+BIA VS LAA
+BIA (Burned-in Address): original factory MAC address, permanent in hardware ROM
+LAA (Locally Administered Address): manually changed MAC address via software, temporary
+MAC ADDRESS VS IP ADDRESS
+MAC: Layer 2, local network only, assigned by manufacturer, hardware-based, hard to change
+IP: Layer 3, globally routable, assigned by DHCP or admin, software-based, easily changes
+HOW MAC ADDRESS WORKS WITH ARP (step by step)
+Device A wants to talk to Device B, has IP but not MAC address
+Device A sends ARP broadcast asking who has that IP
+Broadcast goes to entire LAN using destination MAC FF:FF:FF:FF:FF:FF
+Device B replies with its own MAC address (unicast reply)
+Device A stores mapping in ARP cache/table
+Actual data communication now happens using MAC address directly
+SWITCH AND MAC ADDRESS TABLE (CAM TABLE)
+Switch learns source MAC address from incoming frames and maps to port number
+Stores mapping in MAC address table (CAM table)
+If destination MAC known, switch forwards frame only to that specific port (efficient)
+If destination MAC unknown, switch floods frame to all ports except source (unknown unicast flooding)
+ETHERNET FRAME STRUCTURE
+Destination MAC (6 bytes)
+Source MAC (6 bytes)
+EtherType (2 bytes) - indicates protocol type like IPv4 or ARP
+Payload/Data (variable length)
+FCS - Frame Check Sequence (4 bytes) - error checking
+IMPORTANT COMMANDS
+ip link show : shows network interfaces with MAC address (link/ether)
+ip addr show eth0 : shows both IP and MAC for specific interface
+ifconfig -a : older command, shows all interfaces including down ones
+arp -a : shows ARP cache, IP to MAC mappings
+ip neigh show : modern replacement for arp -a
+sudo ip link set dev eth0 down : disable interface before changing MAC
+sudo ip link set dev eth0 address 00:11:22:33:44:55 : change MAC address temporarily
+sudo ip link set dev eth0 up : re-enable interface
+show mac address-table : Cisco switch command to view CAM table
+DEVOPS REAL WORLD USE CASES
+DHCP reservation: bind specific IP to specific MAC address permanently
+MAC filtering/whitelisting: allow only specific devices on network (security layer, but spoofable)
+Docker/Kubernetes: containers and pods get virtual MAC addresses on virtual interfaces
+VM migration: virtual NICs have their own virtual MAC addresses
+Network troubleshooting: identify physical device during IP conflicts using MAC
+Wake-on-LAN: uses MAC address in magic packet to remotely power on servers
+COMMON MISTAKES AND TROUBLESHOOTING
+Thinking MAC address is used for internet routing - wrong, MAC only works within local network, IP handles internet routing
+Believing MAC address can never be changed - burned-in address is fixed but can be spoofed via software
+Forgetting to clear stale ARP cache entries during troubleshooting, causing connectivity issues
+For IP conflicts, use arp -a to find which MAC is associated with conflicting IP
+For switch forwarding issues, check show mac address-table to verify correct port learning
+VLAN and MAC address are different concepts - VLAN is logical segmentation, MAC is device identity, switch uses both together
+RELATED CONCEPTS (CONNECTIONS)
+IP Address: works together with MAC through ARP resolution
+ARP: protocol that resolves IP address to MAC address
+Switching: uses MAC address table for traffic forwarding
+VLAN: logical segmentation on switch ports, MAC learning happens per VLAN
+DHCP: can reserve static IP based on MAC address
+Network Security: MAC filtering and port security features
+Kubernetes/Docker Networking: virtual interfaces use virtual MAC addresses
+INTERVIEW QUESTIONS TO REVIEW
+Difference between MAC address and IP address
+Role of ARP protocol
+Can MAC address be changed
+What is broadcast MAC address
+How switch builds MAC address table
+What is OUI
+Can two devices have same MAC address
+SCENARIO BASED QUESTIONS TO PRACTICE
+IP conflict on network - use arp -a or ip neigh show to identify actual device by MAC
+MAC whitelisting bypassed by unauthorized device - MAC spoofing limitation of MAC-based security
+Kubernetes pod migration causes MAC address change while IP stays same - new virtual interface created on new node, ARP cache update causes temporary lag
+Switch CAM table overflow attack - switch fails open and floods traffic to all ports like a hub, security and performance risk
+VM migration breaks MAC-based licensing - virtual MAC differs from physical MAC, need to re-register license or use IP/hostname based licensing instead

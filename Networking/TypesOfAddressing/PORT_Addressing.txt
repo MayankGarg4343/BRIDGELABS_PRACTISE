@@ -1,0 +1,93 @@
+PORT ADDRESSING - COMPLETE NOTES
+
+WHAT IS A PORT
+16-bit logical number (0 to 65535) that identifies a specific application or service on a device
+IP address identifies the device, port identifies the application within that device
+Allows multiple applications to run simultaneously on same IP
+PORT NUMBER CATEGORIES
+Well-Known Ports: 0 to 1023, reserved for standard services
+Registered Ports: 1024 to 49151, registered with IANA by vendors/applications
+Dynamic/Private Ports (Ephemeral): 49152 to 65535, temporary client-side connections
+COMMON WELL-KNOWN PORTS
+20/21 FTP (data/control)
+22 SSH
+23 Telnet
+25 SMTP (email sending)
+53 DNS
+67/68 DHCP
+80 HTTP
+110 POP3
+143 IMAP
+443 HTTPS
+3306 MySQL
+5432 PostgreSQL
+6379 Redis
+8080 HTTP alternate, common Tomcat port
+9200 Elasticsearch
+27017 MongoDB
+Kubernetes specific: 6443 API server, 2379 etcd, 10250 Kubelet
+TCP PORTS VS UDP PORTS
+TCP and UDP have separate port namespaces, same number can be used independently in both
+TCP: connection-oriented, reliable, ordered (HTTP, SSH, FTP)
+UDP: connectionless, faster, no delivery guarantee (DNS queries, streaming, VoIP)
+SOCKET
+Socket = IP Address + Port Number combination, creates unique communication endpoint
+Example: 192.168.1.10:443
+TCP connection identified by 4-tuple: source IP, source port, destination IP, destination port
+EPHEMERAL PORTS
+Temporary client-side ports randomly assigned by OS, usually from 49152-65535 range
+Released after connection closes
+Example: client connects from 192.168.1.10:52341 to server 142.250.1.1:443
+HOW PORTS WORK IN CLIENT-SERVER COMMUNICATION (step by step)
+Server listens on a specific port (example: web server on port 80/443)
+Client sends connection request from its own IP and random ephemeral port
+TCP 3-way handshake happens (SYN, SYN-ACK, ACK)
+After connection established, data flows through that specific socket pair
+OS kernel maintains connection table to route incoming packets to correct application
+PORT BINDING AND LISTENING
+Application requests OS to bind and listen on a specific port
+OS reserves that port for the requesting process
+If another process tries to bind same port, error occurs: address already in use
+IMPORTANT COMMANDS
+netstat -tulnp : show TCP/UDP listening ports with process info (t=tcp, u=udp, l=listening, n=numeric, p=process)
+ss -tulnp : modern faster replacement for netstat, same flag meaning
+sudo lsof -i :80 : show processes using port 80
+sudo ss -tulnp | grep 443 : filter listening info for port 443
+telnet <ip> <port> : test if specific port is reachable
+nc -zv <ip> <port> : netcat port scan, -z zero IO mode, -v verbose
+nmap -p 1-1000 <ip> : scan port range 1 to 1000
+nmap -p 22,80,443 <ip> : scan specific ports
+sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT : allow TCP traffic on port 8080
+sudo ufw allow 8080/tcp : allow port using UFW firewall
+docker run -d -p 8080:80 nginx : map host port 8080 to container port 80
+docker port <container_name> : show port mappings of running container
+DEVOPS REAL WORLD USE CASES
+Nginx/Apache reverse proxy listens on 80/443 externally, forwards to internal backend ports
+Docker port mapping connects container ports to host ports
+Kubernetes Service defines port and targetPort to route traffic to Pods
+Firewall rules and AWS security groups allow/deny traffic based on specific ports
+Load balancer health checks target specific ports on backend servers
+Microservices run on different ports locally during development
+COMMON MISTAKES AND TROUBLESHOOTING
+Thinking port is part of IP address - wrong, port is Layer 4 concept, IP is Layer 3
+Thinking one port number can only be used by one protocol - wrong, TCP and UDP have separate namespaces
+Forgetting to open port in firewall after deploying new service, causing external access failure
+For address already in use error, use lsof -i :<port> or ss -tulnp to find and stop conflicting process
+For remote service not accessible, check in order: application listening locally, firewall rules, then network reachability
+Port being open does not always mean service is running correctly, only means something is actively listening
+RELATED CONCEPTS (CONNECTIONS)
+IP Address: combines with port to form socket
+TCP/UDP: transport layer protocols that use port numbers
+Firewall/iptables: filters traffic based on ports
+NAT/Port Forwarding: routes external port to internal service
+Load Balancing: routes and health-checks backend services on specific ports
+Docker/Kubernetes Networking: container and pod port mapping and service exposure
+DNS: operates on port 53 for name resolution
+INTERVIEW QUESTIONS TO REVIEW
+What is a port and why is it needed
+Difference between well-known ports and ephemeral ports
+What is a socket
+Difference between TCP and UDP ports, can same number be used
+When does address already in use error occur
+Default ports for HTTP and HTTPS
+What is port forwarding
