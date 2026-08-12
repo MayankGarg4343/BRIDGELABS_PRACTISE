@@ -1,0 +1,4219 @@
+SUBNET AND SUBNETTING - COMPLETE IN-DEPTH NOTES
+================================================
+
+Authoring goal:
+These notes are designed for direct use in VS Code. They cover IPv4 subnetting from fundamentals through practical networking, Linux, cloud, DevOps, and troubleshooting perspectives.
+
+================================================
+1. WHAT IS A SUBNET?
+================================================
+
+A subnet (subnetwork) is a logical subdivision of an IP network.
+
+An IPv4 network is identified by:
+    Network Address + Prefix Length
+
+Example:
+    192.168.1.0/24
+
+The /24 tells us how many bits belong to the network portion of the address.
+
+For IPv4:
+    Total bits = 32
+
+Therefore:
+    /24 = 24 network bits + 8 host bits
+
+A /24 contains:
+    2^8 = 256 total IPv4 addresses
+
+For a traditional subnet with a network address and broadcast address:
+    Usable host addresses = 256 - 2 = 254
+
+The two normally unusable addresses are:
+    Network address = first address
+    Broadcast address = last address
+
+Example:
+    Network:   192.168.1.0/24
+    Hosts:     192.168.1.1 - 192.168.1.254
+    Broadcast: 192.168.1.255
+
+
+================================================
+2. WHY DO WE NEED SUBNETTING?
+================================================
+
+Suppose an organization has:
+
+    192.168.0.0/16
+
+A /16 contains:
+
+    2^(32 - 16) = 65,536 total addresses
+
+If all hosts are placed into one giant Layer-3 network, several problems appear:
+
+    - Large broadcast domain
+    - Poor traffic isolation
+    - Harder security policy design
+    - Harder troubleshooting
+    - Less efficient address allocation
+    - Poor organizational separation
+    - More difficult routing and access control
+
+Subnetting allows us to divide one larger network into smaller networks.
+
+Example:
+
+    192.168.0.0/16
+          |
+          +---- 192.168.1.0/24
+          +---- 192.168.2.0/24
+          +---- 192.168.3.0/24
+          +---- 192.168.4.0/24
+          +---- ...
+
+Each subnet becomes a separate IP network.
+
+
+================================================
+3. NETWORK ADDRESS VS HOST ADDRESS
+================================================
+
+An IPv4 address contains two logical parts:
+
+    Network portion
+    Host portion
+
+Example:
+
+    192.168.10.25/24
+
+Binary:
+
+    192       168       10        25
+    11000000  10101000  00001010  00011001
+
+/24 means:
+
+    11111111 11111111 11111111 00000000
+    <------ network -------> <---host--->
+
+Therefore:
+
+    Network bits = 24
+    Host bits    = 8
+
+The network address is obtained by keeping the network bits and setting host bits to 0:
+
+    192.168.10.0
+
+The broadcast address is obtained by setting host bits to 1:
+
+    192.168.10.255
+
+
+================================================
+4. WHAT IS A SUBNET MASK?
+================================================
+
+A subnet mask tells the system which IPv4 bits represent the network and which represent the host.
+
+Example:
+
+    /24
+
+Dotted-decimal subnet mask:
+
+    255.255.255.0
+
+Binary:
+
+    11111111.11111111.11111111.00000000
+
+Another example:
+
+    /26
+
+Mask:
+
+    255.255.255.192
+
+Binary:
+
+    11111111.11111111.11111111.11000000
+
+The 1s identify network bits.
+The 0s identify host bits.
+
+
+================================================
+5. CIDR PREFIX LENGTH
+================================================
+
+CIDR = Classless Inter-Domain Routing.
+
+Instead of writing only a dotted-decimal mask, modern networking commonly uses:
+
+    IP/prefix
+
+Examples:
+
+    10.0.0.0/8
+    172.16.0.0/16
+    192.168.1.0/24
+    10.10.20.0/27
+
+The number after / is the prefix length.
+
+For IPv4:
+
+    /0  = 0 network bits
+    /8  = 8 network bits
+    /16 = 16 network bits
+    /24 = 24 network bits
+    /32 = 32 network bits
+
+As the prefix length increases:
+    Network portion increases
+    Host portion decreases
+    Number of addresses in each subnet decreases
+
+
+================================================
+6. IPv4 BASICS REQUIRED FOR SUBNETTING
+================================================
+
+IPv4 address size:
+
+    32 bits
+
+IPv4 is normally written as four decimal octets:
+
+    192.168.10.25
+
+Each octet is 8 bits.
+
+Therefore:
+
+    4 x 8 = 32 bits
+
+Each octet can represent:
+
+    0 through 255
+
+because:
+
+    2^8 = 256 values
+
+Binary place values in one octet:
+
+    128 64 32 16 8 4 2 1
+
+
+================================================
+7. BINARY CONVERSION
+================================================
+
+Subnetting becomes much easier when you can quickly convert between decimal and binary.
+
+Example:
+
+    192
+
+128 fits:
+    192 - 128 = 64
+
+64 fits:
+    64 - 64 = 0
+
+Therefore:
+
+    192 = 11000000
+
+Example:
+
+    168
+
+128 fits:
+    168 - 128 = 40
+
+32 fits:
+    40 - 32 = 8
+
+8 fits:
+    8 - 8 = 0
+
+Therefore:
+
+    168 = 10101000
+
+Example:
+
+    10
+
+8 + 2 = 10
+
+Therefore:
+
+    10 = 00001010
+
+Example:
+
+    25
+
+16 + 8 + 1 = 25
+
+Therefore:
+
+    25 = 00011001
+
+
+================================================
+8. THE MOST IMPORTANT SUBNETTING FORMULAS
+================================================
+
+For IPv4:
+
+    Total bits = 32
+
+If prefix length is /n:
+
+    Host bits = 32 - n
+
+Total addresses:
+
+    2^(host bits)
+
+Traditional usable host addresses:
+
+    2^(host bits) - 2
+
+The "-2" accounts for:
+    Network address
+    Broadcast address
+
+Examples:
+
+    /24:
+        host bits = 8
+        total = 2^8 = 256
+        usable = 254
+
+    /25:
+        host bits = 7
+        total = 128
+        usable = 126
+
+    /26:
+        host bits = 6
+        total = 64
+        usable = 62
+
+    /27:
+        host bits = 5
+        total = 32
+        usable = 30
+
+    /28:
+        host bits = 4
+        total = 16
+        usable = 14
+
+    /29:
+        host bits = 3
+        total = 8
+        usable = 6
+
+    /30:
+        host bits = 2
+        total = 4
+        usable = 2
+
+    /31:
+        host bits = 1
+        traditional formula gives 0 usable hosts.
+        However, /31 is specifically useful for point-to-point links under RFC 3021.
+
+    /32:
+        one address.
+        Commonly represents a single host/route.
+
+
+================================================
+9. PREFIX LENGTH TO SUBNET MASK TABLE
+================================================
+
+    /0  = 0.0.0.0
+    /1  = 128.0.0.0
+    /2  = 192.0.0.0
+    /3  = 224.0.0.0
+    /4  = 240.0.0.0
+    /5  = 248.0.0.0
+    /6  = 252.0.0.0
+    /7  = 254.0.0.0
+    /8  = 255.0.0.0
+
+    /9  = 255.128.0.0
+    /10 = 255.192.0.0
+    /11 = 255.224.0.0
+    /12 = 255.240.0.0
+    /13 = 255.248.0.0
+    /14 = 255.252.0.0
+    /15 = 255.254.0.0
+    /16 = 255.255.0.0
+
+    /17 = 255.255.128.0
+    /18 = 255.255.192.0
+    /19 = 255.255.224.0
+    /20 = 255.255.240.0
+    /21 = 255.255.248.0
+    /22 = 255.255.252.0
+    /23 = 255.255.254.0
+    /24 = 255.255.255.0
+
+    /25 = 255.255.255.128
+    /26 = 255.255.255.192
+    /27 = 255.255.255.224
+    /28 = 255.255.255.240
+    /29 = 255.255.255.248
+    /30 = 255.255.255.252
+    /31 = 255.255.255.254
+    /32 = 255.255.255.255
+
+
+================================================
+10. THE MAGIC OCTET
+================================================
+
+When subnetting, one of the fastest techniques is finding the octet where the subnet mask is neither 255 nor 0.
+
+Example:
+
+    /26
+    255.255.255.192
+
+The interesting octet is the fourth octet:
+
+    192
+
+Block size:
+
+    256 - 192 = 64
+
+Therefore the subnet boundaries occur every 64:
+
+    0
+    64
+    128
+    192
+
+So the /26 subnets in a /24 are:
+
+    192.168.1.0/26
+    192.168.1.64/26
+    192.168.1.128/26
+    192.168.1.192/26
+
+
+================================================
+11. SUBNET BLOCK SIZE
+================================================
+
+For the interesting octet:
+
+    Block size = 256 - subnet-mask value
+
+Examples:
+
+    Mask 255.255.255.192
+    Block size = 256 - 192 = 64
+
+    Mask 255.255.255.224
+    Block size = 256 - 224 = 32
+
+    Mask 255.255.255.240
+    Block size = 256 - 240 = 16
+
+    Mask 255.255.255.248
+    Block size = 256 - 248 = 8
+
+    Mask 255.255.255.252
+    Block size = 256 - 252 = 4
+
+
+================================================
+12. EXAMPLE: FIND THE SUBNET OF 192.168.1.70/26
+================================================
+
+Given:
+
+    IP = 192.168.1.70
+    Prefix = /26
+
+Mask:
+
+    255.255.255.192
+
+Block size:
+
+    256 - 192 = 64
+
+Subnet boundaries:
+
+    0
+    64
+    128
+    192
+
+70 falls between:
+
+    64 and 127
+
+Therefore:
+
+    Network address = 192.168.1.64
+    Broadcast = 192.168.1.127
+
+Usable hosts:
+
+    192.168.1.65
+    through
+    192.168.1.126
+
+Answer:
+
+    Network:   192.168.1.64/26
+    First host: 192.168.1.65
+    Last host:  192.168.1.126
+    Broadcast:  192.168.1.127
+    Total:     64 addresses
+    Usable:    62 hosts
+
+
+================================================
+13. EXAMPLE: 10.20.30.200/27
+================================================
+
+/27 mask:
+
+    255.255.255.224
+
+Block size:
+
+    256 - 224 = 32
+
+Subnet boundaries:
+
+    0
+    32
+    64
+    96
+    128
+    160
+    192
+    224
+
+200 falls inside:
+
+    192 - 223
+
+Therefore:
+
+    Network = 10.20.30.192
+    Broadcast = 10.20.30.223
+    First host = 10.20.30.193
+    Last host = 10.20.30.222
+
+
+================================================
+14. EXAMPLE: 172.16.45.100/20
+================================================
+
+/20 mask:
+
+    255.255.240.0
+
+The interesting octet is the third octet:
+
+    240
+
+Block size:
+
+    256 - 240 = 16
+
+Third-octet boundaries:
+
+    0
+    16
+    32
+    48
+    64
+    ...
+
+The value 45 falls inside:
+
+    32 - 47
+
+Therefore:
+
+    Network = 172.16.32.0/20
+    Broadcast = 172.16.47.255
+    First host = 172.16.32.1
+    Last host = 172.16.47.254
+
+Host bits:
+
+    32 - 20 = 12
+
+Total addresses:
+
+    2^12 = 4096
+
+Usable:
+
+    4094
+
+
+================================================
+15. EXAMPLE: 192.168.100.200/23
+================================================
+
+/23:
+
+    Mask = 255.255.254.0
+
+Interesting octet:
+
+    Third octet = 254
+
+Block size:
+
+    256 - 254 = 2
+
+Third-octet boundaries:
+
+    0
+    2
+    4
+    ...
+    198
+    200
+    202
+    ...
+
+200 belongs exactly to:
+
+    200 - 201
+
+Therefore:
+
+    Network = 192.168.200.0/23
+    Broadcast = 192.168.201.255
+
+First host:
+
+    192.168.200.1
+
+Last host:
+
+    192.168.201.254
+
+
+================================================
+16. WHAT IS SUBNETTING?
+================================================
+
+Subnetting is the process of dividing a larger IP network into smaller logical networks by extending the network prefix.
+
+Example:
+
+Original:
+
+    192.168.1.0/24
+
+Change to:
+
+    /26
+
+We borrowed:
+
+    26 - 24 = 2 bits
+
+Number of subnets:
+
+    2^2 = 4
+
+Each subnet has:
+
+    2^(32 - 26) = 64 addresses
+
+The four subnets:
+
+    192.168.1.0/26
+    192.168.1.64/26
+    192.168.1.128/26
+    192.168.1.192/26
+
+
+================================================
+17. BORROWING HOST BITS
+================================================
+
+Suppose:
+
+    192.168.1.0/24
+
+Binary host octet:
+
+    00000000
+
+A /24 has:
+
+    8 host bits
+
+If we move to /26:
+
+    2 bits are borrowed for subnetting
+
+Original:
+
+    NNNNNNNN.NNNNNNNN.NNNNNNNN.HHHHHHHH
+
+/26:
+
+    NNNNNNNN.NNNNNNNN.NNNNNNNN.NNHHHHHH
+
+N = network
+H = host
+
+Borrowed bits:
+
+    2
+
+Number of subnets:
+
+    2^2 = 4
+
+Remaining host bits:
+
+    6
+
+Hosts per subnet:
+
+    2^6 = 64 total
+    62 traditionally usable
+
+
+================================================
+18. SUBNETTING /24 INTO /25
+================================================
+
+Original:
+
+    192.168.1.0/24
+
+Borrow 1 bit:
+
+    /24 -> /25
+
+Number of subnets:
+
+    2^1 = 2
+
+Host bits:
+
+    32 - 25 = 7
+
+Addresses per subnet:
+
+    2^7 = 128
+
+Subnets:
+
+    192.168.1.0/25
+    192.168.1.128/25
+
+First subnet:
+
+    Network: 192.168.1.0
+    Hosts: 192.168.1.1 - 192.168.1.126
+    Broadcast: 192.168.1.127
+
+Second subnet:
+
+    Network: 192.168.1.128
+    Hosts: 192.168.1.129 - 192.168.1.254
+    Broadcast: 192.168.1.255
+
+
+================================================
+19. SUBNETTING /24 INTO /26
+================================================
+
+Borrow:
+
+    26 - 24 = 2 bits
+
+Number of subnets:
+
+    2^2 = 4
+
+Host bits:
+
+    6
+
+Addresses per subnet:
+
+    2^6 = 64
+
+Result:
+
+    192.168.1.0/26
+    192.168.1.64/26
+    192.168.1.128/26
+    192.168.1.192/26
+
+
+================================================
+20. SUBNETTING /24 INTO /27
+================================================
+
+Borrow:
+
+    27 - 24 = 3 bits
+
+Number of subnets:
+
+    2^3 = 8
+
+Host bits:
+
+    5
+
+Addresses per subnet:
+
+    2^5 = 32
+
+Subnets:
+
+    192.168.1.0/27
+    192.168.1.32/27
+    192.168.1.64/27
+    192.168.1.96/27
+    192.168.1.128/27
+    192.168.1.160/27
+    192.168.1.192/27
+    192.168.1.224/27
+
+
+================================================
+21. SUBNETTING /24 INTO /28
+================================================
+
+Borrow:
+
+    28 - 24 = 4 bits
+
+Number of subnets:
+
+    2^4 = 16
+
+Host bits:
+
+    4
+
+Addresses per subnet:
+
+    2^4 = 16
+
+Usable hosts:
+
+    14
+
+Block size:
+
+    16
+
+Subnets:
+
+    .0
+    .16
+    .32
+    .48
+    .64
+    .80
+    .96
+    .112
+    .128
+    .144
+    .160
+    .176
+    .192
+    .208
+    .224
+    .240
+
+
+================================================
+22. SUBNETTING /24 INTO /30
+================================================
+
+/30:
+
+    Mask = 255.255.255.252
+
+Host bits:
+
+    2
+
+Addresses:
+
+    4
+
+Traditionally usable:
+
+    2
+
+This is commonly useful for point-to-point IPv4 links.
+
+Example:
+
+    Network = 10.0.0.0/30
+    Host 1  = 10.0.0.1
+    Host 2  = 10.0.0.2
+    Broadcast = 10.0.0.3
+
+
+================================================
+23. SUBNETTING TABLE
+================================================
+
+Prefix | Mask              | Host bits | Total | Traditional usable
+-------+-------------------+-----------+-------+--------------------
+/24    | 255.255.255.0     | 8         | 256   | 254
+/25    | 255.255.255.128   | 7         | 128   | 126
+/26    | 255.255.255.192   | 6         | 64    | 62
+/27    | 255.255.255.224   | 5         | 32    | 30
+/28    | 255.255.255.240   | 4         | 16    | 14
+/29    | 255.255.255.248   | 3         | 8     | 6
+/30    | 255.255.255.252   | 2         | 4     | 2
+/31    | 255.255.255.254   | 1         | 2     | special case
+/32    | 255.255.255.255   | 0         | 1     | single address
+
+
+================================================
+24. HOW TO CALCULATE THE NUMBER OF SUBNETS
+================================================
+
+If a network is changed from /old to /new:
+
+    Borrowed bits = new prefix - old prefix
+
+Number of subnets:
+
+    2^(borrowed bits)
+
+Example:
+
+    /24 -> /27
+
+Borrowed:
+
+    27 - 24 = 3
+
+Subnets:
+
+    2^3 = 8
+
+
+================================================
+25. HOW TO CALCULATE HOSTS PER SUBNET
+================================================
+
+Formula:
+
+    Host bits = 32 - prefix
+
+Total addresses:
+
+    2^host_bits
+
+Traditional usable:
+
+    2^host_bits - 2
+
+Example:
+
+    /27
+
+Host bits:
+
+    32 - 27 = 5
+
+Total:
+
+    2^5 = 32
+
+Usable:
+
+    32 - 2 = 30
+
+
+================================================
+26. VLSM - VARIABLE LENGTH SUBNET MASKING
+================================================
+
+VLSM allows different subnets to use different prefix lengths.
+
+This avoids wasting addresses.
+
+Example requirement:
+
+    Network A needs 100 hosts
+    Network B needs 50 hosts
+    Network C needs 20 hosts
+    Network D needs 10 hosts
+
+Instead of assigning /24 to every network, use different sizes.
+
+For 100 hosts:
+
+    /25
+    126 usable
+
+For 50 hosts:
+
+    /26
+    62 usable
+
+For 20 hosts:
+
+    /27
+    30 usable
+
+For 10 hosts:
+
+    /28
+    14 usable
+
+This is VLSM.
+
+
+================================================
+27. VLSM DESIGN EXAMPLE
+================================================
+
+Given:
+
+    192.168.10.0/24
+
+Requirements:
+
+    Engineering: 100 hosts
+    Finance:      50 hosts
+    HR:           20 hosts
+    Management:   10 hosts
+
+Always allocate the largest requirement first.
+
+Engineering:
+    /25
+    192.168.10.0/25
+    Range: 192.168.10.1 - 192.168.10.126
+    Broadcast: 192.168.10.127
+
+Finance:
+    /26
+    192.168.10.128/26
+    Range: 192.168.10.129 - 192.168.10.190
+    Broadcast: 192.168.10.191
+
+HR:
+    /27
+    192.168.10.192/27
+    Range: 192.168.10.193 - 192.168.10.222
+    Broadcast: 192.168.10.223
+
+Management:
+    /28
+    192.168.10.224/28
+    Range: 192.168.10.225 - 192.168.10.238
+    Broadcast: 192.168.10.239
+
+Remaining:
+    192.168.10.240 - 192.168.10.255
+
+This remaining space can be reserved for future use, subject to the overall addressing design.
+
+
+================================================
+28. FLSM VS VLSM
+================================================
+
+FLSM = Fixed Length Subnet Masking
+
+All subnets use the same prefix.
+
+Example:
+
+    /24 divided into four /26 subnets
+
+Every subnet:
+    64 addresses
+
+VLSM = Variable Length Subnet Masking
+
+Different subnets use different prefixes.
+
+Example:
+
+    /25
+    /26
+    /27
+    /28
+
+FLSM is simpler.
+VLSM is more address-efficient.
+
+
+================================================
+29. NETWORK ADDRESS
+================================================
+
+The network address identifies the subnet itself.
+
+Example:
+
+    192.168.1.64/26
+
+Network:
+
+    192.168.1.64
+
+Host bits are all zero.
+
+Binary concept:
+
+    Network bits = original value
+    Host bits   = 000000
+
+
+================================================
+30. BROADCAST ADDRESS
+================================================
+
+In a traditional IPv4 subnet, the broadcast address has all host bits set to 1.
+
+Example:
+
+    192.168.1.64/26
+
+Host bits:
+
+    6
+
+All host bits = 1:
+
+    111111
+
+Therefore:
+
+    Broadcast = 192.168.1.127
+
+
+================================================
+31. FIRST AND LAST USABLE HOST
+================================================
+
+For a traditional subnet:
+
+    First usable = Network + 1
+    Last usable  = Broadcast - 1
+
+Example:
+
+    Network = 10.10.10.64/26
+    Broadcast = 10.10.10.127
+
+Therefore:
+
+    First = 10.10.10.65
+    Last  = 10.10.10.126
+
+
+================================================
+32. HOW A HOST DECIDES WHETHER DESTINATION IS LOCAL
+================================================
+
+This is an extremely important operational concept.
+
+Suppose:
+
+    Host IP:
+        192.168.1.10/24
+
+Destination:
+
+    192.168.1.50
+
+The host applies the subnet mask to both addresses.
+
+Conceptually:
+
+    Source IP AND Mask = Source Network
+    Destination IP AND Mask = Destination Network
+
+Source:
+
+    192.168.1.10
+    AND
+    255.255.255.0
+    =
+    192.168.1.0
+
+Destination:
+
+    192.168.1.50
+    AND
+    255.255.255.0
+    =
+    192.168.1.0
+
+Networks match.
+
+Therefore the destination is considered on-link/local for that interface, subject to the host's routing configuration.
+
+The host can use neighbor resolution (ARP for IPv4) to discover the destination's Layer-2 address.
+
+Now consider:
+
+    Destination = 192.168.2.50
+
+Destination network:
+
+    192.168.2.0
+
+Source network:
+
+    192.168.1.0
+
+They do not match.
+
+Therefore the host sends traffic toward an appropriate router/default gateway according to its routing table.
+
+
+================================================
+33. ROUTING TABLE AND SUBNETS
+================================================
+
+A Linux host can inspect routes with:
+
+    ip route
+
+Example:
+
+    192.168.1.0/24 dev eth0 proto kernel scope link src 192.168.1.10
+    default via 192.168.1.1 dev eth0
+
+Interpretation:
+
+    192.168.1.0/24
+        is directly connected to eth0
+
+    default via 192.168.1.1
+        is the default route for destinations without a more specific match.
+
+Subnetting and routing are tightly connected because the prefix tells routers how much of the destination address identifies the network.
+
+
+================================================
+34. LONGEST PREFIX MATCH
+================================================
+
+Routers can have multiple routes that match a destination.
+
+Example:
+
+    10.0.0.0/8
+    10.10.0.0/16
+    10.10.20.0/24
+
+Destination:
+
+    10.10.20.50
+
+All three prefixes match.
+
+The router chooses the most specific matching route:
+
+    10.10.20.0/24
+
+This is called:
+
+    Longest Prefix Match (LPM)
+
+Important rule:
+
+    More specific prefix wins over less specific prefix,
+    assuming equal administrative/routing-selection conditions.
+
+Example:
+
+    /24 is more specific than /16
+    /16 is more specific than /8
+
+
+================================================
+35. DEFAULT ROUTE
+================================================
+
+The default IPv4 route is:
+
+    0.0.0.0/0
+
+It matches any IPv4 destination not matched by a more specific route.
+
+Example:
+
+    default via 192.168.1.1
+
+Mental model:
+
+    Specific route
+        ↓
+    Use it if matched
+
+    Otherwise
+        ↓
+    Default route
+
+
+================================================
+36. PRIVATE IPv4 ADDRESS SPACE
+================================================
+
+RFC 1918 private IPv4 ranges:
+
+    10.0.0.0/8
+
+    172.16.0.0/12
+
+    192.168.0.0/16
+
+These are intended for private networks and are not globally routable on the public Internet.
+
+Examples:
+
+    10.0.0.10
+    172.16.5.20
+    192.168.1.100
+
+
+================================================
+37. PUBLIC VS PRIVATE IP
+================================================
+
+Private IP:
+    Used inside private networks.
+
+Public IP:
+    Globally routable address space.
+
+A common home architecture:
+
+    Laptop
+    192.168.1.10
+        |
+        v
+    Home Router
+    192.168.1.1
+        |
+        | NAT
+        v
+    Public Internet
+        |
+        v
+    Public IP
+
+
+================================================
+38. SPECIAL IPv4 PREFIXES TO KNOW
+================================================
+
+Loopback:
+
+    127.0.0.0/8
+
+Common host address:
+
+    127.0.0.1
+
+Link-local/APIPA:
+
+    169.254.0.0/16
+
+Private:
+
+    10.0.0.0/8
+    172.16.0.0/12
+    192.168.0.0/16
+
+Unspecified:
+
+    0.0.0.0/0 is the default-route prefix.
+    0.0.0.0 can also mean an unspecified IPv4 address
+    depending on context.
+
+Limited broadcast:
+
+    255.255.255.255
+
+
+================================================
+39. CLASSFUL NETWORKING - HISTORICAL CONTEXT
+================================================
+
+Older IPv4 networking used classes:
+
+    Class A
+    Class B
+    Class C
+    Class D
+    Class E
+
+Approximate traditional ranges:
+
+    Class A: 1.0.0.0 - 126.255.255.255
+    Class B: 128.0.0.0 - 191.255.255.255
+    Class C: 192.0.0.0 - 223.255.255.255
+    Class D: 224.0.0.0 - 239.255.255.255
+    Class E: 240.0.0.0 - 255.255.255.255
+
+Classful addressing is largely historical.
+
+Modern IP networking uses CIDR and prefix lengths.
+
+Do not think:
+
+    192.x.x.x always means /24
+
+That is incorrect in modern networking.
+
+For example:
+
+    192.168.0.0/16
+    192.168.0.0/20
+    192.168.0.0/24
+    192.168.0.0/26
+
+are all possible prefix-based network descriptions.
+
+
+================================================
+40. SUPERNETTING / ROUTE AGGREGATION
+================================================
+
+Subnetting divides a network into smaller networks.
+
+The opposite direction can be aggregation.
+
+Example:
+
+    10.0.0.0/24
+    10.0.1.0/24
+    10.0.2.0/24
+    10.0.3.0/24
+
+These can be represented by:
+
+    10.0.0.0/22
+
+provided the addresses are aligned correctly and the aggregate represents the intended routes.
+
+Benefits:
+
+    - Smaller routing tables
+    - Reduced routing information
+    - Better scalability
+
+
+================================================
+41. SUBNETTING VS SUPERNETTING
+================================================
+
+Subnetting:
+
+    Larger prefix scope
+        ↓
+    Multiple smaller networks
+
+Example:
+
+    /24 -> /26
+
+Supernetting/aggregation:
+
+    Multiple contiguous networks
+        ↓
+    One larger summarized route
+
+Example:
+
+    four /24 networks -> /22
+
+
+================================================
+42. AND OPERATION AND SUBNET CALCULATION
+================================================
+
+A mathematically precise way to calculate the network address:
+
+    Network Address = IP Address AND Subnet Mask
+
+Example:
+
+    IP:
+        192.168.1.70
+
+    Mask:
+        255.255.255.192
+
+Binary for last octet:
+
+    IP:
+        70 = 01000110
+
+    Mask:
+        192 = 11000000
+
+AND:
+
+    01000110
+    11000000
+    --------
+    01000000
+
+01000000 = 64
+
+Therefore:
+
+    Network = 192.168.1.64
+
+
+================================================
+43. WHY AND WORKS
+================================================
+
+Subnet mask:
+
+    1 = preserve this bit
+    0 = clear this bit
+
+Example:
+
+    IP:
+        01000110
+
+    Mask:
+        11000000
+
+AND:
+        01000000
+
+The network bits remain.
+The host bits become zero.
+
+This produces the network address.
+
+
+================================================
+44. HOW TO FIND THE BROADCAST MATHEMATICALLY
+================================================
+
+Take the network address and set every host bit to 1.
+
+Example:
+
+    192.168.1.64/26
+
+/26 means:
+
+    6 host bits
+
+Last octet:
+
+    64 = 01000000
+
+Host portion = six bits:
+
+    00 0000
+
+Set host bits to 1:
+
+    01 111111
+
+For the complete octet:
+
+    01111111 = 127
+
+Therefore:
+
+    Broadcast = 192.168.1.127
+
+
+================================================
+45. SUBNETTING EXAM METHOD
+================================================
+
+For almost any subnetting question:
+
+STEP 1:
+    Identify the prefix.
+
+STEP 2:
+    Convert prefix to subnet mask.
+
+STEP 3:
+    Find the interesting octet.
+
+STEP 4:
+    Calculate block size:
+
+        256 - mask value
+
+STEP 5:
+    List subnet boundaries.
+
+STEP 6:
+    Find which boundary contains the IP.
+
+STEP 7:
+    That boundary is the network address.
+
+STEP 8:
+    The next boundary minus one is broadcast.
+
+STEP 9:
+    First host = network + 1.
+
+STEP 10:
+    Last host = broadcast - 1.
+
+Example:
+
+    192.168.50.173/28
+
+Mask:
+
+    255.255.255.240
+
+Block:
+
+    16
+
+Boundaries:
+
+    0,16,32,48,64,80,96,112,128,144,160,176,192...
+
+173 falls in:
+
+    160 - 175
+
+Therefore:
+
+    Network = 192.168.50.160
+    First = 192.168.50.161
+    Last = 192.168.50.174
+    Broadcast = 192.168.50.175
+
+
+================================================
+46. SUBNETTING USING POWERS OF TWO
+================================================
+
+Memorize:
+
+    2^0 = 1
+    2^1 = 2
+    2^2 = 4
+    2^3 = 8
+    2^4 = 16
+    2^5 = 32
+    2^6 = 64
+    2^7 = 128
+    2^8 = 256
+    2^9 = 512
+    2^10 = 1024
+    2^11 = 2048
+    2^12 = 4096
+    2^13 = 8192
+    2^14 = 16384
+    2^15 = 32768
+    2^16 = 65536
+
+
+================================================
+47. SUBNETTING BASED ON REQUIRED HOSTS
+================================================
+
+Suppose you need 50 usable hosts.
+
+Find the smallest h such that:
+
+    2^h - 2 >= 50
+
+Try h = 5:
+
+    32 - 2 = 30
+    Not enough.
+
+Try h = 6:
+
+    64 - 2 = 62
+    Enough.
+
+Therefore:
+
+    Host bits = 6
+
+Prefix:
+
+    32 - 6 = /26
+
+So you need a /26.
+
+Important:
+    Choose the smallest subnet that satisfies the requirement,
+    unless there are additional design constraints.
+
+
+================================================
+48. REQUIRED HOSTS EXAMPLES
+================================================
+
+Requirement: 2 hosts
+
+    /30 traditionally gives 2 usable IPv4 addresses.
+
+Requirement: 10 hosts
+
+    /28 gives 14 usable.
+
+Requirement: 20 hosts
+
+    /27 gives 30 usable.
+
+Requirement: 50 hosts
+
+    /26 gives 62 usable.
+
+Requirement: 100 hosts
+
+    /25 gives 126 usable.
+
+Requirement: 200 hosts
+
+    /24 gives 254 usable.
+
+Requirement: 500 hosts
+
+    /23 gives 510 usable.
+
+
+================================================
+49. SUBNETTING BASED ON REQUIRED NUMBER OF SUBNETS
+================================================
+
+Suppose:
+
+    192.168.1.0/24
+
+Need:
+
+    8 subnets
+
+Find borrowed bits:
+
+    2^n >= 8
+
+n = 3
+
+New prefix:
+
+    24 + 3 = /27
+
+Therefore:
+
+    /24 -> /27
+
+creates:
+
+    8 equal-sized subnets.
+
+
+================================================
+50. FLSM SUBNETTING EXAMPLE
+================================================
+
+Requirement:
+
+    Divide 10.0.0.0/24 into 4 equal subnets.
+
+Need:
+
+    4 = 2^2
+
+Borrow 2 bits.
+
+New prefix:
+
+    /26
+
+Result:
+
+    10.0.0.0/26
+    10.0.0.64/26
+    10.0.0.128/26
+    10.0.0.192/26
+
+
+================================================
+51. VLSM DESIGN RULE
+================================================
+
+When doing VLSM:
+
+    1. Sort requirements from largest to smallest.
+    2. Choose the smallest subnet that can satisfy each requirement.
+    3. Allocate from the available address space.
+    4. Respect subnet boundaries.
+    5. Avoid overlap.
+    6. Reserve space for growth when appropriate.
+
+Example:
+
+    100 hosts -> /25
+    50 hosts  -> /26
+    20 hosts  -> /27
+    10 hosts  -> /28
+
+
+================================================
+52. SUBNET OVERLAP
+================================================
+
+Two subnets must not overlap if they are intended to be distinct routed networks.
+
+Bad example:
+
+    10.0.0.0/24
+
+and:
+
+    10.0.0.128/25
+
+These overlap because:
+
+    10.0.0.128/25
+is inside
+    10.0.0.0/24
+
+Another bad design:
+
+    192.168.1.0/25
+    192.168.1.64/26
+
+The second subnet is inside the first.
+
+Correct VLSM allocation must use non-overlapping ranges.
+
+
+================================================
+53. SUBNET BOUNDARY ALIGNMENT
+================================================
+
+A subnet must begin at a valid boundary for its prefix.
+
+For /26:
+
+    Block size = 64
+
+Valid fourth-octet network addresses:
+
+    0
+    64
+    128
+    192
+
+Invalid examples as /26 network addresses:
+
+    10
+    50
+    100
+    150
+
+For /28:
+
+    Block size = 16
+
+Valid boundaries:
+
+    0
+    16
+    32
+    48
+    64
+    ...
+    240
+
+
+================================================
+54. WHY 256 - MASK VALUE WORKS
+================================================
+
+An octet has 256 possible values:
+
+    0 through 255
+
+Suppose mask octet is:
+
+    192
+
+Its binary form:
+
+    11000000
+
+There are 6 host bits.
+
+Number of possible combinations:
+
+    2^6 = 64
+
+Therefore:
+
+    Block size = 64
+
+And:
+
+    256 - 192 = 64
+
+This is why the shortcut works.
+
+
+================================================
+55. NETWORK BOUNDARY WITH /18
+================================================
+
+Example:
+
+    172.20.70.10/18
+
+Mask:
+
+    255.255.192.0
+
+Interesting octet:
+
+    3rd = 192
+
+Block size:
+
+    256 - 192 = 64
+
+Boundaries:
+
+    0
+    64
+    128
+    192
+
+70 is inside:
+
+    64 - 127
+
+Therefore:
+
+    Network = 172.20.64.0/18
+    Broadcast = 172.20.127.255
+    First = 172.20.64.1
+    Last = 172.20.127.254
+
+
+================================================
+56. NETWORK BOUNDARY WITH /19
+================================================
+
+Example:
+
+    172.20.70.10/19
+
+Mask:
+
+    255.255.224.0
+
+Block size:
+
+    256 - 224 = 32
+
+Boundaries:
+
+    0
+    32
+    64
+    96
+    ...
+
+70 falls inside:
+
+    64 - 95
+
+Therefore:
+
+    Network = 172.20.64.0/19
+    Broadcast = 172.20.95.255
+
+
+================================================
+57. NETWORK BOUNDARY WITH /21
+================================================
+
+Example:
+
+    172.20.70.10/21
+
+Mask:
+
+    255.255.248.0
+
+Block:
+
+    256 - 248 = 8
+
+Third-octet boundaries:
+
+    0
+    8
+    16
+    24
+    ...
+    64
+    72
+    ...
+
+70 lies inside:
+
+    64 - 71
+
+Therefore:
+
+    Network = 172.20.64.0/21
+    Broadcast = 172.20.71.255
+
+
+================================================
+58. SUBNETTING AND BROADCAST DOMAINS
+================================================
+
+In a conventional IPv4 Ethernet network, a subnet commonly corresponds to a Layer-3 broadcast domain.
+
+Example:
+
+    192.168.1.0/24
+
+All hosts in that subnet can be part of the same broadcast domain, depending on the Layer-2 topology.
+
+When you create:
+
+    192.168.1.0/25
+    192.168.1.128/25
+
+you have created two Layer-3 networks.
+
+A router is normally required to move traffic between them.
+
+Conceptually:
+
+    Subnet A
+       |
+       v
+     Router
+       |
+       v
+    Subnet B
+
+
+================================================
+59. SUBNETTING DOES NOT AUTOMATICALLY MEAN VLAN
+================================================
+
+Subnet and VLAN are related but not identical.
+
+Subnet:
+
+    Layer-3 concept
+
+VLAN:
+
+    Layer-2 segmentation concept
+
+A common enterprise design maps:
+
+    VLAN 10 -> 10.10.10.0/24
+    VLAN 20 -> 10.10.20.0/24
+
+But the concepts are not inherently the same.
+
+A VLAN is a Layer-2 broadcast-domain construct.
+An IP subnet is a Layer-3 addressing construct.
+
+Routing is required between separate IP subnets.
+
+
+================================================
+60. SUBNETTING AND VLANs
+================================================
+
+Common architecture:
+
+    VLAN 10
+    10.10.10.0/24
+        |
+        +--- PCs
+
+    VLAN 20
+    10.10.20.0/24
+        |
+        +--- Servers
+
+Inter-VLAN routing:
+
+    VLAN 10
+       |
+       v
+    L3 Switch/Router
+       |
+       v
+    VLAN 20
+
+This lets security policies control traffic between logical network segments.
+
+
+================================================
+61. SUBNETTING IN CLOUD
+================================================
+
+Cloud networking heavily uses CIDR.
+
+Example VPC:
+
+    10.0.0.0/16
+
+Subnets:
+
+    Public subnet:
+        10.0.1.0/24
+
+    Public subnet:
+        10.0.2.0/24
+
+    Private subnet:
+        10.0.11.0/24
+
+    Private subnet:
+        10.0.12.0/24
+
+Possible architecture:
+
+    Internet
+       |
+       v
+    Internet Gateway
+       |
+       v
+    Public subnet
+       |
+       v
+    Load Balancer
+       |
+       v
+    Private subnet
+       |
+       v
+    Application
+       |
+       v
+    Database subnet
+
+
+================================================
+62. WHY CLOUD ENGINEERS CARE ABOUT CIDR
+================================================
+
+CIDR affects:
+
+    - Subnet sizes
+    - Routing
+    - VPC/VNet design
+    - Peering
+    - VPNs
+    - Transit gateways
+    - Kubernetes networks
+    - Service networks
+    - IP address capacity
+    - Route summarization
+    - Overlap avoidance
+
+A poorly designed CIDR plan can cause major infrastructure problems later.
+
+For example:
+
+    VPC A = 10.0.0.0/16
+    VPC B = 10.0.0.0/16
+
+If you later need direct routing between them, overlapping ranges become a problem.
+
+
+================================================
+63. CIDR PLANNING FOR PRODUCTION
+================================================
+
+Good production CIDR planning should consider:
+
+    Current hosts
+    Future growth
+    Multiple environments
+    Multiple regions
+    Multiple availability zones
+    VPN connections
+    On-premises networks
+    Kubernetes pod CIDRs
+    Kubernetes service CIDRs
+    Database networks
+    Management networks
+    Monitoring networks
+
+Example high-level allocation:
+
+    10.0.0.0/8
+        |
+        +-- Production
+        |     +-- Region A
+        |     +-- Region B
+        |
+        +-- Staging
+        |
+        +-- Development
+        |
+        +-- Shared services
+
+
+================================================
+64. SUBNETTING AND KUBERNETES
+================================================
+
+Kubernetes introduces multiple logical IP spaces.
+
+Depending on the networking implementation, you may encounter:
+
+    Node CIDR
+    Pod CIDR
+    Service CIDR
+    Cluster network
+    Container network
+
+Example conceptual layout:
+
+    VPC:
+        10.0.0.0/16
+
+    Nodes:
+        10.0.0.0/20
+
+    Pods:
+        10.1.0.0/16
+
+    Services:
+        10.2.0.0/16
+
+The exact design depends on the Kubernetes networking solution and cloud environment.
+
+Important:
+    These ranges must be planned to avoid unintended overlap with
+    connected networks.
+
+
+================================================
+65. LINUX COMMANDS FOR SUBNET INFORMATION
+================================================
+
+Show interfaces and addresses:
+
+    ip addr
+
+Short form:
+
+    ip a
+
+Show interfaces:
+
+    ip link
+
+Show routing table:
+
+    ip route
+
+Show IPv4 routes:
+
+    ip -4 route
+
+Show IPv6 routes:
+
+    ip -6 route
+
+Show neighbor/ARP-like information:
+
+    ip neigh
+
+Example:
+
+    ip addr show eth0
+
+Possible output:
+
+    inet 192.168.1.10/24
+
+This tells you:
+
+    Address = 192.168.1.10
+    Prefix  = /24
+    Mask    = 255.255.255.0
+
+
+================================================
+66. LINUX: UNDERSTANDING "ip addr"
+================================================
+
+Example:
+
+    2: eth0:
+        inet 192.168.10.20/24
+
+Interpretation:
+
+    Interface:
+        eth0
+
+    IPv4:
+        192.168.10.20
+
+    Prefix:
+        /24
+
+Therefore the directly connected subnet is:
+
+    192.168.10.0/24
+
+assuming normal configuration.
+
+
+================================================
+67. LINUX: UNDERSTANDING "ip route"
+================================================
+
+Example:
+
+    192.168.10.0/24 dev eth0 proto kernel scope link src 192.168.10.20
+
+This means:
+
+    Destination:
+        192.168.10.0/24
+
+    Device:
+        eth0
+
+    Source address:
+        192.168.10.20
+
+A default route might look like:
+
+    default via 192.168.10.1 dev eth0
+
+Meaning:
+
+    Use 192.168.10.1 as the next-hop gateway for destinations
+    that do not match a more specific route.
+
+
+================================================
+68. LINUX ROUTE LOOKUP
+================================================
+
+A very useful command:
+
+    ip route get 8.8.8.8
+
+This asks Linux:
+
+    "How would you route traffic to 8.8.8.8?"
+
+It can show:
+
+    - selected route
+    - interface
+    - source address
+    - next hop
+
+This is extremely useful for troubleshooting.
+
+
+================================================
+69. TESTING SUBNET CONNECTIVITY
+================================================
+
+Ping:
+
+    ping 192.168.1.1
+
+Trace route:
+
+    traceroute 8.8.8.8
+
+or:
+
+    tracepath 8.8.8.8
+
+Inspect routes:
+
+    ip route
+
+Inspect neighbors:
+
+    ip neigh
+
+Inspect sockets:
+
+    ss -tulpen
+
+Capture packets:
+
+    tcpdump -ni eth0
+
+
+================================================
+70. SUBNETTING AND TCP/IP PACKETS
+================================================
+
+Suppose:
+
+    Client:
+        10.0.1.10/24
+
+    Server:
+        10.0.2.20/24
+
+The client determines:
+
+    10.0.1.10 AND 255.255.255.0
+        = 10.0.1.0
+
+Server:
+
+    10.0.2.20 AND 255.255.255.0
+        = 10.0.2.0
+
+Networks differ.
+
+Therefore the client cannot treat the server as directly connected based on this subnet configuration.
+
+It needs a route toward a router.
+
+This is the connection between:
+
+    Subnetting
+        +
+    Routing
+        +
+    Default gateway
+
+
+================================================
+71. GATEWAY AND SUBNET
+================================================
+
+A default gateway is typically an IP address on the local subnet.
+
+Example:
+
+    Host:
+        192.168.1.10/24
+
+    Gateway:
+        192.168.1.1
+
+Both are in:
+
+    192.168.1.0/24
+
+The host can directly reach the gateway at Layer 2.
+
+Then the gateway can route traffic toward another network.
+
+
+================================================
+72. COMMON SUBNETTING MISTAKES
+================================================
+
+Mistake 1:
+    Thinking /24 always means 254 hosts.
+
+Correction:
+    /24 means 256 total IPv4 addresses.
+    Traditional usable host count is 254.
+
+Mistake 2:
+    Thinking a higher prefix means more hosts.
+
+Correction:
+    Higher prefix = more network bits = fewer host bits = smaller subnet.
+
+Mistake 3:
+    Treating IP address as the subnet.
+
+Correction:
+    IP + prefix/mask determines the network.
+
+Mistake 4:
+    Forgetting the broadcast address.
+
+Mistake 5:
+    Using an invalid subnet boundary.
+
+Mistake 6:
+    Creating overlapping VLSM subnets.
+
+Mistake 7:
+    Assuming VLAN and subnet are exactly the same thing.
+
+Mistake 8:
+    Assuming private IP addresses are routable on the public Internet.
+
+Mistake 9:
+    Assuming routers only look at the first octet.
+
+Modern routing uses prefix-based matching.
+
+Mistake 10:
+    Assuming every /31 has two traditional host addresses.
+
+Actually, /31 is a special point-to-point case.
+
+
+================================================
+73. /31 SPECIAL CASE
+================================================
+
+Traditional subnet calculations reserve:
+
+    network address
+    broadcast address
+
+Therefore /31 appears to have:
+
+    2 addresses
+    0 traditionally usable hosts
+
+However, RFC 3021 defines use of /31 prefixes for point-to-point IPv4 links.
+
+Example:
+
+    Router A = 192.0.2.0/31
+    Router B = 192.0.2.1/31
+
+There is no need for a traditional broadcast address on a point-to-point link.
+
+This is why you should not blindly apply the "-2" formula to every possible IPv4 prefix.
+
+
+================================================
+74. /32
+================================================
+
+/32 contains exactly one IPv4 address.
+
+Example:
+
+    192.168.1.10/32
+
+Common uses:
+
+    - Host routes
+    - Loopback addresses
+    - Routing policies
+    - Service identities
+    - Firewall rules
+    - Monitoring targets
+
+A /32 is not a normal multi-host subnet.
+
+
+================================================
+75. SUBNETTING AND FIREWALLS
+================================================
+
+Subnetting helps create security boundaries.
+
+Example:
+
+    Web:
+        10.0.1.0/24
+
+    Application:
+        10.0.2.0/24
+
+    Database:
+        10.0.3.0/24
+
+Security policy:
+
+    Internet -> Web: allowed
+    Web -> Application: allowed
+    Application -> Database: allowed
+    Internet -> Database: denied
+    Web -> Database: denied
+
+The subnets provide logical address boundaries.
+Firewall/security controls enforce the actual access policy.
+
+
+================================================
+76. SUBNETTING AND NETWORK SEGMENTATION
+================================================
+
+Segmentation is useful for:
+
+    Security
+    Performance
+    Administration
+    Troubleshooting
+    Routing control
+    Blast-radius reduction
+
+Example:
+
+    Users
+       |
+       +---- User subnet
+
+    Servers
+       |
+       +---- Server subnet
+
+    Databases
+       |
+       +---- Database subnet
+
+    Management
+       |
+       +---- Management subnet
+
+
+================================================
+77. SUBNETTING AND BROADCAST TRAFFIC
+================================================
+
+A larger Layer-2 broadcast domain can generate more broadcast traffic.
+
+Subnetting, often combined with Layer-2 segmentation, can reduce the scope of broadcasts.
+
+Examples of broadcast-related traffic can include:
+
+    ARP requests
+    DHCP broadcasts (depending on stage/configuration)
+
+Routers generally do not forward ordinary Layer-2 broadcasts between IP networks.
+
+This is one reason segmentation can improve operational behavior.
+
+
+================================================
+78. NETWORK ADDRESS CALCULATION CHEAT SHEET
+================================================
+
+Given:
+
+    IP = A.B.C.D
+    Prefix = /N
+
+1. Convert /N to mask.
+
+2. Find interesting octet.
+
+3. Calculate:
+
+       Block = 256 - mask_octet
+
+4. Find largest multiple of Block
+   less than or equal to the IP value
+   in the interesting octet.
+
+5. That is the subnet boundary.
+
+6. Broadcast is the next boundary minus 1.
+
+7. First host = network + 1.
+
+8. Last host = broadcast - 1.
+
+
+================================================
+79. FAST SUBNETTING EXAMPLE
+================================================
+
+Question:
+
+    Find network, first host, last host, and broadcast for:
+
+        192.168.10.77/27
+
+Answer:
+
+    /27 = 255.255.255.224
+
+    Block = 256 - 224
+          = 32
+
+    Boundaries:
+        0, 32, 64, 96, ...
+
+    77 lies between:
+        64 and 95
+
+Therefore:
+
+    Network:
+        192.168.10.64
+
+    First:
+        192.168.10.65
+
+    Last:
+        192.168.10.94
+
+    Broadcast:
+        192.168.10.95
+
+
+================================================
+80. ANOTHER FAST EXAMPLE
+================================================
+
+Question:
+
+    172.31.150.200/20
+
+Mask:
+
+    255.255.240.0
+
+Block:
+
+    16
+
+Third-octet boundaries:
+
+    0, 16, 32, 48, 64, 80, 96,
+    112, 128, 144, 160...
+
+150 belongs to:
+
+    144 - 159
+
+Therefore:
+
+    Network:
+        172.31.144.0
+
+    Broadcast:
+        172.31.159.255
+
+    First:
+        172.31.144.1
+
+    Last:
+        172.31.159.254
+
+
+================================================
+81. ANOTHER EXAMPLE: /18
+================================================
+
+Question:
+
+    10.100.200.50/18
+
+Mask:
+
+    255.255.192.0
+
+Block:
+
+    64
+
+Third-octet boundaries:
+
+    0, 64, 128, 192
+
+200 is in:
+
+    192 - 255
+
+Therefore:
+
+    Network:
+        10.100.192.0
+
+    Broadcast:
+        10.100.255.255
+
+    First:
+        10.100.192.1
+
+    Last:
+        10.100.255.254
+
+
+================================================
+82. SUBNETTING IN HEX / BINARY MENTAL MODEL
+================================================
+
+A prefix is simply a count of leading 1 bits in the mask.
+
+Example /26:
+
+    11111111.11111111.11111111.11000000
+
+Network bits:
+
+    26
+
+Host bits:
+
+    6
+
+This gives:
+
+    2^6 = 64 possible host-bit combinations.
+
+
+================================================
+83. WHY PREFIX LENGTH CHANGES CAPACITY
+================================================
+
+Compare:
+
+    /16
+
+Host bits:
+
+    16
+
+Addresses:
+
+    2^16 = 65,536
+
+Now:
+
+    /24
+
+Host bits:
+
+    8
+
+Addresses:
+
+    2^8 = 256
+
+Now:
+
+    /28
+
+Host bits:
+
+    4
+
+Addresses:
+
+    2^4 = 16
+
+Therefore:
+
+    Larger prefix -> smaller address space
+    Smaller prefix -> larger address space
+
+
+================================================
+84. CIDR AGGREGATION EXAMPLE
+================================================
+
+Suppose a router has:
+
+    10.20.0.0/24
+    10.20.1.0/24
+    10.20.2.0/24
+    10.20.3.0/24
+
+These four aligned /24 networks can be summarized as:
+
+    10.20.0.0/22
+
+Why?
+
+A /22 leaves:
+
+    32 - 22 = 10 host bits
+
+Addresses:
+
+    2^10 = 1024
+
+Four /24 networks each contain:
+
+    256 addresses
+
+Therefore:
+
+    4 x 256 = 1024
+
+
+================================================
+85. ROUTING TABLE SCALE
+================================================
+
+Subnetting affects routing-table size.
+
+Without aggregation:
+
+    Many individual prefixes
+
+With proper aggregation:
+
+    Fewer summarized prefixes
+
+Example:
+
+    10.0.0.0/24
+    10.0.1.0/24
+    10.0.2.0/24
+    10.0.3.0/24
+
+Can potentially be summarized as:
+
+    10.0.0.0/22
+
+Fewer routes can improve scalability and reduce routing-information overhead.
+
+
+================================================
+86. SUBNETTING AND MTU
+================================================
+
+Do not confuse subnetting with MTU.
+
+Subnetting answers:
+
+    "Which IP addresses belong to this network?"
+
+MTU answers:
+
+    "How large can a packet/frame payload be on this link/interface?"
+
+They are separate concepts.
+
+However, both are important in network troubleshooting.
+
+
+================================================
+87. SUBNETTING AND ARP
+================================================
+
+ARP maps an IPv4 address to a Layer-2 MAC address on a local Ethernet network.
+
+Example:
+
+    Host:
+        192.168.1.10/24
+
+Destination:
+        192.168.1.20
+
+Both are in:
+
+    192.168.1.0/24
+
+The host can consider the destination on-link and resolve:
+
+    192.168.1.20 -> MAC address
+
+If destination is remote:
+
+    10.0.0.20
+
+the host normally resolves the MAC address of the next-hop gateway instead.
+
+This is a very important connection:
+
+    Subnet decision
+        ↓
+    Local or remote?
+        ↓
+    ARP target
+        ↓
+    Destination host OR gateway
+
+
+================================================
+88. SUBNETTING AND DHCP
+================================================
+
+DHCP commonly provides:
+
+    IP address
+    Subnet mask/prefix
+    Default gateway
+    DNS servers
+    Lease information
+
+Example:
+
+    IP:
+        192.168.1.100
+
+    Mask:
+        255.255.255.0
+
+    Gateway:
+        192.168.1.1
+
+    DNS:
+        192.168.1.1
+
+The subnet mask tells the host what it considers locally connected.
+
+
+================================================
+89. DHCP AND SUBNET DESIGN
+================================================
+
+A DHCP scope is commonly associated with a subnet.
+
+Example:
+
+    Subnet:
+        10.10.10.0/24
+
+Possible DHCP pool:
+
+    10.10.10.50 - 10.10.10.200
+
+Reserved addresses may include:
+
+    10.10.10.1     gateway
+    10.10.10.2     infrastructure
+    10.10.10.10    DNS
+    ...
+
+The exact allocation is a network-design choice.
+
+
+================================================
+90. SUBNETTING AND NAT
+================================================
+
+NAT translates addresses between network domains.
+
+A common example:
+
+    Private subnet
+        192.168.1.0/24
+
+    Router/NAT
+
+        Public Internet
+
+Subnetting determines the internal address space.
+NAT determines how addresses are translated between contexts.
+
+They solve different problems.
+
+
+================================================
+91. SUBNETTING AND VPNs
+================================================
+
+VPNs frequently connect private CIDR ranges.
+
+Example:
+
+    Office:
+        10.10.0.0/16
+
+    Cloud:
+        10.20.0.0/16
+
+VPN:
+
+    Office <==== encrypted tunnel ====> Cloud
+
+Routing determines which traffic enters the tunnel.
+
+If the CIDRs overlap:
+
+    Office: 10.10.0.0/16
+    Cloud:  10.10.0.0/16
+
+routing becomes problematic because the same addresses exist on both sides.
+
+
+================================================
+92. SUBNETTING AND NETWORK OVERLAP
+================================================
+
+Overlapping CIDRs are one of the most important real-world design problems.
+
+Bad:
+
+    Network A = 10.0.0.0/16
+    Network B = 10.0.0.0/16
+
+Also problematic:
+
+    A = 10.0.0.0/16
+    B = 10.0.10.0/24
+
+because B is inside A.
+
+Before connecting networks, check:
+
+    CIDR overlap
+    Routing
+    NAT requirements
+    VPN requirements
+    Cloud peering constraints
+    Kubernetes ranges
+    On-prem ranges
+
+
+================================================
+93. SUBNET CALCULATOR CONCEPT
+================================================
+
+A subnet calculator usually performs:
+
+    1. Parse IP.
+    2. Parse prefix.
+    3. Create subnet mask.
+    4. Perform bitwise AND.
+    5. Calculate network.
+    6. Calculate broadcast.
+    7. Calculate address count.
+    8. Calculate usable range.
+    9. Possibly calculate wildcard mask.
+    10. Possibly list child subnets.
+
+You should understand the math before relying on tools.
+
+
+================================================
+94. WILDCARD MASK
+================================================
+
+A wildcard mask is often used in routing/firewall/access-control systems.
+
+It is the inverse of a subnet mask.
+
+Formula:
+
+    Wildcard = 255.255.255.255 - Subnet Mask
+
+Example:
+
+    Subnet mask:
+        255.255.255.0
+
+Wildcard:
+
+    0.0.0.255
+
+For /26:
+
+    Mask:
+        255.255.255.192
+
+Wildcard:
+
+        0.0.0.63
+
+Do not confuse wildcard masks with subnet masks.
+
+
+================================================
+95. SUBNET MASK VS WILDCARD MASK
+================================================
+
+Subnet mask:
+
+    1 bits = network bits
+    0 bits = host bits
+
+Wildcard mask:
+
+    0 bits = must match
+    1 bits = wildcard/don't care
+
+They are used for different purposes.
+
+
+================================================
+96. ROUTABLE VS NON-ROUTABLE IS NOT SIMPLY "SUBNET OR NOT"
+================================================
+
+A subnet is not inherently "routable" or "non-routable."
+
+Whether traffic can move between networks depends on:
+
+    Routing tables
+    Policy
+    Firewall rules
+    Address type
+    NAT
+    Connectivity
+    Network topology
+
+For example, private RFC 1918 addresses are not globally routed across the public Internet, but they are routinely routed inside private enterprise/cloud networks.
+
+
+================================================
+97. SUBNETTING AND SECURITY
+================================================
+
+Subnetting is not a firewall.
+
+Creating:
+
+    Web subnet
+    App subnet
+    DB subnet
+
+does not automatically secure anything.
+
+You still need:
+
+    Firewall rules
+    Security groups
+    Network ACLs
+    Routing controls
+    Authentication
+    Encryption
+
+Subnetting provides structure and boundaries.
+Security controls enforce policy.
+
+
+================================================
+98. SUBNETTING AND HIGH AVAILABILITY
+================================================
+
+Cloud architectures often use multiple subnets across failure domains.
+
+Example:
+
+    Region
+      |
+      +-- AZ-A
+      |    |
+      |    +-- subnet-a
+      |
+      +-- AZ-B
+           |
+           +-- subnet-b
+
+The exact implementation varies by cloud provider.
+
+The CIDR plan must provide enough address capacity in each segment.
+
+
+================================================
+99. SUBNETTING AND CAPACITY PLANNING
+================================================
+
+Do not size a subnet only for today's hosts.
+
+Example:
+
+    Current hosts = 40
+    Growth expected = 100
+
+A /26 gives:
+
+    62 traditional usable addresses
+
+That may be too small.
+
+A /25 gives:
+
+    126 traditional usable addresses
+
+Production planning should consider:
+
+    Current demand
+    Growth
+    Autoscaling
+    Reserved addresses
+    Infrastructure addresses
+    Failure recovery
+    Future services
+
+
+================================================
+100. SUBNETTING AND IP EXHAUSTION
+================================================
+
+IP exhaustion occurs when a subnet no longer has enough available addresses.
+
+Symptoms may include:
+
+    DHCP allocation failures
+    New workloads failing to start
+    Kubernetes pods unable to obtain IPs
+    Cloud ENI/IP allocation failures
+    Containers failing to attach network interfaces
+
+Monitoring address utilization is therefore important.
+
+
+================================================
+101. SUBNETTING IN CONTAINERS
+================================================
+
+Containers commonly use private address ranges.
+
+Example conceptual Docker network:
+
+    172.18.0.0/16
+
+Containers:
+
+    172.18.0.2
+    172.18.0.3
+    172.18.0.4
+
+Docker may create a Linux bridge and attach virtual Ethernet interfaces to it.
+
+The subnet determines which container addresses are considered local to that virtual network.
+
+
+================================================
+102. NETWORK NAMESPACE CONNECTION
+================================================
+
+Linux network namespaces provide isolated networking stacks.
+
+Conceptually:
+
+    Host namespace
+        |
+        | veth pair
+        |
+    Container namespace
+
+Each namespace can have:
+
+    Interfaces
+    IP addresses
+    Routes
+    Neighbor table
+    Ports/sockets
+
+Subnetting therefore appears inside Linux virtual networking as well as physical networks.
+
+
+================================================
+103. SUBNETTING AND NETWORK NAMESPACES
+================================================
+
+Example:
+
+    Container A:
+        172.18.0.2/16
+
+    Container B:
+        172.18.0.3/16
+
+Both may be on the same container network.
+
+If a container is moved into a different network namespace/network, its interface and routing context may differ.
+
+This is one reason subnetting knowledge is useful for Docker and Kubernetes troubleshooting.
+
+
+================================================
+104. PRACTICAL TROUBLESHOOTING SCENARIO
+================================================
+
+Problem:
+
+    Server A:
+        10.10.1.10/24
+
+    Server B:
+        10.10.2.20/24
+
+They cannot communicate.
+
+First ask:
+
+    Are they actually supposed to be in different subnets?
+
+If yes:
+
+    Is there a route between 10.10.1.0/24 and 10.10.2.0/24?
+
+On Linux:
+
+    ip route
+
+Check:
+
+    ip route get 10.10.2.20
+
+Then:
+
+    ping 10.10.2.20
+
+Then:
+
+    traceroute 10.10.2.20
+
+Then:
+
+    tcpdump -ni any host 10.10.2.20
+
+Also inspect:
+
+    ip addr
+    ip neigh
+
+
+================================================
+105. TROUBLESHOOTING WRONG PREFIX
+================================================
+
+Suppose:
+
+    Host A:
+        192.168.1.10/24
+
+    Host B:
+        192.168.1.130/25
+
+Host A considers:
+
+    192.168.1.130
+
+to be in:
+
+    192.168.1.0/24
+
+Host B considers itself in:
+
+    192.168.1.128/25
+
+This mismatch can produce unexpected routing/ARP behavior.
+
+A subnetting problem is not always a routing-device problem.
+
+Check the prefix configured on every relevant interface.
+
+
+================================================
+106. SUBNETTING TROUBLESHOOTING CHECKLIST
+================================================
+
+When diagnosing an IP connectivity problem, check:
+
+    1. IP address
+    2. Prefix length
+    3. Subnet mask
+    4. Network address
+    5. Default gateway
+    6. Routing table
+    7. Neighbor/ARP table
+    8. Firewall
+    9. VLAN
+    10. Interface state
+    11. DNS if hostname is involved
+    12. MTU if packet behavior is suspicious
+    13. NAT if crossing address domains
+    14. VPN routes if crossing a tunnel
+    15. Overlapping CIDRs
+
+
+================================================
+107. USEFUL LINUX COMMAND SET
+================================================
+
+Interfaces:
+
+    ip link
+
+Addresses:
+
+    ip addr
+
+IPv4 addresses:
+
+    ip -4 addr
+
+Routes:
+
+    ip route
+
+IPv4 routes:
+
+    ip -4 route
+
+Route decision:
+
+    ip route get <destination>
+
+Neighbors:
+
+    ip neigh
+
+Sockets:
+
+    ss -tulpen
+
+Connectivity:
+
+    ping <destination>
+
+Path:
+
+    traceroute <destination>
+
+Packet capture:
+
+    tcpdump -ni <interface>
+
+Example:
+
+    tcpdump -ni eth0 host 10.10.2.20
+
+
+================================================
+108. IMPORTANT INTERVIEW QUESTIONS
+================================================
+
+Q1:
+    What is a subnet?
+
+Answer:
+    A logical subdivision of an IP network identified by a network
+    prefix/prefix length.
+
+Q2:
+    What is subnetting?
+
+Answer:
+    Dividing a larger IP network into smaller networks by extending
+    the network prefix.
+
+Q3:
+    What is CIDR?
+
+Answer:
+    Classless Inter-Domain Routing, using prefix lengths such as /24
+    instead of relying on historical address classes.
+
+Q4:
+    How many addresses are in a /24?
+
+Answer:
+    2^(32-24) = 256.
+
+Q5:
+    How many traditional usable hosts are in a /24?
+
+Answer:
+    254.
+
+Q6:
+    How many usable hosts are in /26?
+
+Answer:
+    2^(32-26) - 2 = 62.
+
+Q7:
+    What is the subnet mask for /27?
+
+Answer:
+    255.255.255.224.
+
+Q8:
+    What is the block size for /27?
+
+Answer:
+    256 - 224 = 32.
+
+Q9:
+    What is the network of 192.168.1.70/26?
+
+Answer:
+    192.168.1.64/26.
+
+Q10:
+    What is longest prefix match?
+
+Answer:
+    The routing decision that selects the most specific matching
+    route among candidates.
+
+
+================================================
+109. ADVANCED INTERVIEW QUESTIONS
+================================================
+
+Q:
+    Why does a host need a subnet mask?
+
+A:
+    To determine which destinations are on-link and which require
+    forwarding through a router, and to identify the local IP network.
+
+Q:
+    What happens if two connected hosts have incompatible subnet masks?
+
+A:
+    Their assumptions about local versus remote destinations can differ,
+    causing ARP/routing failures or asymmetric behavior.
+
+Q:
+    Why is CIDR better than classful addressing?
+
+A:
+    CIDR allows arbitrary prefix lengths, enabling more efficient
+    allocation and route aggregation.
+
+Q:
+    Why should VLSM allocate the largest subnet first?
+
+A:
+    It reduces the risk of fragmenting the remaining address space and
+    makes it easier to fit large requirements into the available ranges.
+
+Q:
+    What is route summarization?
+
+A:
+    Representing multiple contiguous routes with a larger aggregate prefix
+    when the aggregation is valid and aligned.
+
+Q:
+    Why are overlapping CIDRs problematic?
+
+A:
+    Routing becomes ambiguous or cannot represent the intended separation,
+    especially across VPNs, peering, transit networks, and hybrid-cloud links.
+
+
+================================================
+110. SUBNETTING MENTAL MODEL
+================================================
+
+Remember this:
+
+    IPv4 = 32 bits
+
+    Prefix /N
+        |
+        +-- N network bits
+        |
+        +-- 32-N host bits
+
+    Host bits determine:
+        Number of addresses
+
+    Network bits determine:
+        Which subnet
+
+    Network address:
+        Host bits = 0
+
+    Broadcast:
+        Host bits = 1
+        (traditional IPv4 broadcast subnet behavior)
+
+    Usable host range:
+        Network + 1
+        through
+        Broadcast - 1
+
+    Routing:
+        Uses prefixes
+
+    Local/remote decision:
+        Depends on routing/on-link determination
+
+    VLSM:
+        Different subnet sizes
+
+    Aggregation:
+        Combine routes when valid
+
+
+================================================
+111. MASTER FORMULA SHEET
+================================================
+
+IPv4 total bits:
+
+    32
+
+Host bits:
+
+    32 - prefix
+
+Total addresses:
+
+    2^(32 - prefix)
+
+Traditional usable hosts:
+
+    2^(32 - prefix) - 2
+
+Borrowed bits:
+
+    New prefix - Old prefix
+
+Number of equal-size subnets:
+
+    2^(borrowed bits)
+
+Block size:
+
+    256 - mask value in the interesting octet
+
+Network:
+
+    IP AND subnet mask
+
+Broadcast:
+
+    Network with all host bits set to 1
+
+First host:
+
+    Network + 1
+
+Last host:
+
+    Broadcast - 1
+
+Wildcard:
+
+    255.255.255.255 - subnet mask
+
+
+================================================
+112. PREFIX QUICK REFERENCE
+================================================
+
+/8:
+    16,777,216 addresses
+
+/9:
+    8,388,608
+
+/10:
+    4,194,304
+
+/11:
+    2,097,152
+
+/12:
+    1,048,576
+
+/13:
+    524,288
+
+/14:
+    262,144
+
+/15:
+    131,072
+
+/16:
+    65,536
+
+/17:
+    32,768
+
+/18:
+    16,384
+
+/19:
+    8,192
+
+/20:
+    4,096
+
+/21:
+    2,048
+
+/22:
+    1,024
+
+/23:
+    512
+
+/24:
+    256
+
+/25:
+    128
+
+/26:
+    64
+
+/27:
+    32
+
+/28:
+    16
+
+/29:
+    8
+
+/30:
+    4
+
+/31:
+    2
+
+/32:
+    1
+
+
+================================================
+113. THE MOST IMPORTANT TABLE TO MEMORIZE
+================================================
+
+Prefix  Mask suffix  Block size  Total addresses  Traditional usable
+/24     0            256         256               254
+/25     128          128         128               126
+/26     192          64          64                62
+/27     224          32          32                30
+/28     240          16          16                14
+/29     248          8           8                 6
+/30     252          4           4                 2
+
+This table is enough to solve a large percentage of practical
+IPv4 subnetting problems quickly.
+
+
+================================================
+114. COMPLETE PRACTICAL EXAMPLE
+================================================
+
+Requirement:
+
+    A company receives:
+
+        10.50.0.0/20
+
+Requirements:
+
+    Application:
+        500 hosts
+
+    Database:
+        200 hosts
+
+    Monitoring:
+        50 hosts
+
+    Management:
+        20 hosts
+
+Step 1:
+    Sort largest to smallest.
+
+    500
+    200
+    50
+    20
+
+Step 2:
+    Choose subnet sizes.
+
+    500 hosts:
+        /23
+        510 traditional usable
+
+    200 hosts:
+        /24
+        254 usable
+
+    50 hosts:
+        /26
+        62 usable
+
+    20 hosts:
+        /27
+        30 usable
+
+Step 3:
+    Allocate sequentially.
+
+Application:
+
+    10.50.0.0/23
+
+Range:
+
+    10.50.0.0 - 10.50.1.255
+
+Database:
+
+    10.50.2.0/24
+
+Range:
+
+    10.50.2.0 - 10.50.2.255
+
+Monitoring:
+
+    10.50.3.0/26
+
+Range:
+
+    10.50.3.0 - 10.50.3.63
+
+Management:
+
+    10.50.3.64/27
+
+Range:
+
+    10.50.3.64 - 10.50.3.95
+
+Remaining:
+
+    10.50.3.96 onward
+    through the original /20 address space,
+    subject to the exact allocation plan.
+
+This demonstrates how VLSM lets us use the address space efficiently.
+
+
+================================================
+115. WHAT HAPPENS INTERNALLY WHEN A HOST SENDS TO A REMOTE SUBNET?
+================================================
+
+Suppose:
+
+    Host:
+        192.168.1.10/24
+
+    Gateway:
+        192.168.1.1
+
+    Remote:
+        10.0.0.20
+
+Application wants to send data.
+
+Step 1:
+    Application writes data to a socket.
+
+Step 2:
+    Transport layer processes the data.
+
+Step 3:
+    IP layer receives a destination:
+        10.0.0.20
+
+Step 4:
+    Linux performs route lookup.
+
+Step 5:
+    Linux determines that:
+        10.0.0.20
+    is not reachable through the directly connected
+        192.168.1.0/24
+    route.
+
+Step 6:
+    Linux selects a route such as:
+        default via 192.168.1.1
+
+Step 7:
+    Linux needs the Layer-2 address of the next hop:
+        192.168.1.1
+
+Step 8:
+    ARP may be used to resolve:
+
+        192.168.1.1 -> MAC address
+
+Step 9:
+    Ethernet frame is constructed.
+
+Important:
+
+    Destination IP remains:
+        10.0.0.20
+
+    Destination MAC is initially:
+        MAC of the gateway
+
+Step 10:
+    The router receives the frame.
+
+Step 11:
+    Router removes the Layer-2 frame information and processes
+    the IP packet.
+
+Step 12:
+    Router performs another route lookup.
+
+Step 13:
+    Router forwards toward the next hop.
+
+This is why subnetting, ARP, routing, and Ethernet cannot be understood
+as completely isolated topics.
+
+
+================================================
+116. IMPORTANT DISTINCTION: IP ADDRESS VS NETWORK ADDRESS
+================================================
+
+Example:
+
+    192.168.10.25/24
+
+IP address:
+
+    192.168.10.25
+
+Network:
+
+    192.168.10.0/24
+
+They are not the same thing.
+
+Another example:
+
+    10.20.30.45/27
+
+IP:
+
+    10.20.30.45
+
+Network:
+
+    10.20.30.32/27
+
+The prefix determines the network boundary.
+
+
+================================================
+117. IMPORTANT DISTINCTION: PREFIX VS MASK
+================================================
+
+These describe the same boundary in different forms.
+
+Example:
+
+    /24
+
+equals:
+
+    255.255.255.0
+
+Example:
+
+    /26
+
+equals:
+
+    255.255.255.192
+
+Example:
+
+    /20
+
+equals:
+
+    255.255.240.0
+
+
+================================================
+118. IMPORTANT DISTINCTION: SUBNET SIZE VS HOST COUNT
+================================================
+
+A subnet's address count includes addresses that may not be assignable
+to normal hosts under traditional IPv4 subnet semantics.
+
+Example:
+
+    /26
+
+Total:
+
+    64
+
+Traditional usable:
+
+    62
+
+Therefore don't say:
+
+    "/26 has 64 hosts"
+
+A more precise statement is:
+
+    "/26 contains 64 IPv4 addresses and traditionally provides
+     62 usable host addresses."
+
+
+================================================
+119. IMPORTANT DISTINCTION: ROUTING VS SUBNETTING
+================================================
+
+Subnetting defines logical IP networks.
+
+Routing determines how packets move between networks.
+
+Example:
+
+    Subnet A:
+        10.0.1.0/24
+
+    Subnet B:
+        10.0.2.0/24
+
+Subnetting tells us that these are different networks.
+
+Routing tells us how to get from:
+
+    10.0.1.0/24
+        to
+    10.0.2.0/24
+
+
+================================================
+120. FINAL SUMMARY
+================================================
+
+The most important ideas are:
+
+    1. IPv4 addresses contain 32 bits.
+
+    2. A prefix such as /24 tells how many bits are network bits.
+
+    3. Host bits = 32 - prefix.
+
+    4. Total addresses = 2^(host bits).
+
+    5. Traditional usable hosts = total - 2.
+
+    6. Subnetting means dividing a larger network into smaller networks.
+
+    7. Borrowing host bits creates more subnets but fewer hosts per subnet.
+
+    8. VLSM allows different subnet sizes.
+
+    9. CIDR is the modern prefix-based addressing model.
+
+    10. Network address has host bits set to zero.
+
+    11. Traditional IPv4 broadcast address has host bits set to one.
+
+    12. First and last usable addresses are normally network+1 and
+        broadcast-1.
+
+    13. Block size = 256 - mask value in the interesting octet.
+
+    14. Network address can be calculated using:
+
+            IP AND subnet mask
+
+    15. Routers use prefixes and routing tables to forward traffic.
+
+    16. Longest prefix match selects the most specific matching route.
+
+    17. Private IPv4 ranges are:
+            10.0.0.0/8
+            172.16.0.0/12
+            192.168.0.0/16
+
+    18. Subnetting is a Layer-3 concept; VLANs are primarily Layer-2
+        segmentation constructs.
+
+    19. Subnetting is heavily used in:
+            Enterprise networking
+            Cloud
+            Kubernetes
+            Docker
+            VPNs
+            Firewalls
+            Routing
+            Network security
+
+    20. Good CIDR planning prevents:
+            Address exhaustion
+            Overlap
+            Routing problems
+            Cloud/VPN integration problems
+
+    21. For Linux troubleshooting, become comfortable with:
+            ip addr
+            ip route
+            ip route get
+            ip neigh
+            ping
+            traceroute/tracepath
+            ss
+            tcpdump
+
+The core mental model:
+
+    IPv4 address
+        +
+    Prefix
+        |
+        v
+    Network + Host portions
+        |
+        +---- Network address
+        +---- Host range
+        +---- Broadcast
+        |
+        v
+    Local vs remote decision
+        |
+        v
+    Routing
+        |
+        v
+    Packet forwarding
+
+
+================================================
+END OF NOTES
+================================================
