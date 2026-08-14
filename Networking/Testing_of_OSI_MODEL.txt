@@ -1,0 +1,665 @@
+OSI MODEL THROUGH LINUX COMMANDS
+OBJECTIVE
+
+To understand and demonstrate the seven layers of the OSI model using Linux networking commands.
+
+IMPORTANT NOTE
+
+Linux uses the TCP/IP networking stack rather than implementing the OSI model as seven completely separate layers. Some Linux commands demonstrate concepts that overlap multiple OSI layers.
+
+REQUIREMENTS
+Linux/Ubuntu system
+Terminal
+Network connection
+Basic knowledge of Linux commands
+
+Commands used:
+
+ip
+ping
+ip neigh
+ip route
+ss
+nc
+dig
+curl
+openssl
+base64
+ethtool
+============================================================
+LAYER 1 - PHYSICAL LAYER
+
+Purpose:
+The Physical Layer is responsible for transmitting raw bits over the physical medium.
+
+Examples:
+
+Ethernet cable
+Fiber optic cable
+Wi-Fi radio
+Electrical signals
+Optical signals
+Link speed
+Duplex
+Physical link status
+COMMAND 1:
+
+ip link
+
+Purpose:
+Displays network interfaces and their link status.
+
+Example output:
+
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP>
+
+Meaning:
+
+UP = interface is administratively enabled
+LOWER_UP = underlying network link is detected
+COMMAND 2:
+
+sudo ethtool eth0
+
+Example output:
+
+Speed: 1000Mb/s
+Duplex: Full
+Link detected: yes
+
+Explanation:
+
+Speed shows the link speed.
+Duplex shows whether communication can occur in both directions.
+Link detected: yes indicates that a physical/link connection is detected.
+
+Conclusion:
+ethtool and ip link can be used to demonstrate concepts associated with OSI Layer 1.
+
+============================================================
+LAYER 2 - DATA LINK LAYER
+
+Purpose:
+The Data Link Layer is responsible for local network communication, Ethernet frames, MAC addresses, and neighbor resolution.
+
+COMMAND 1:
+
+ip link
+
+Look for:
+
+link/ether 00:11:22:33:44:55
+
+The value 00:11:22:33:44:55 is the MAC address of the interface.
+
+MAC addresses are associated with Layer 2.
+
+COMMAND 2:
+
+ip neigh
+
+Example output:
+
+192.168.1.1 dev eth0 lladdr aa:bb:cc:dd:ee:ff REACHABLE
+
+This shows:
+
+IP address MAC address
+192.168.1.1 -> aa:bb:cc:dd:ee:ff
+
+The neighbor table shows the relationship between an IP address and the Layer-2 address of a local neighbor.
+
+Conclusion:
+ip link and ip neigh help demonstrate Layer 2 concepts such as:
+
+MAC addresses
+Ethernet interfaces
+Local neighbors
+ARP/neighbor resolution
+============================================================
+LAYER 3 - NETWORK LAYER
+
+Purpose:
+The Network Layer is responsible for:
+
+IP addressing
+Routing
+Packets
+Communication between different networks
+COMMAND 1:
+
+ip addr
+
+Example:
+
+inet 192.168.1.10/24
+
+This shows:
+
+IP address = 192.168.1.10
+Prefix = /24
+
+IP addresses are Layer 3 addresses.
+
+COMMAND 2:
+
+ip route
+
+Example:
+
+default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0
+
+The line:
+
+default via 192.168.1.1
+
+shows that 192.168.1.1 is the default gateway.
+
+The routing table tells Linux where packets should be sent.
+
+COMMAND 3:
+
+ping 8.8.8.8
+
+Example:
+
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=20.5 ms
+
+Ping uses ICMP and demonstrates IP-level connectivity.
+
+Conclusion:
+The commands ip addr, ip route, and ping demonstrate Layer 3 concepts.
+
+============================================================
+LAYER 4 - TRANSPORT LAYER
+
+Purpose:
+The Transport Layer is responsible for:
+
+TCP
+UDP
+Port numbers
+Transport connections
+Reliable delivery using TCP
+COMMAND 1:
+
+ss -tuln
+
+Example:
+
+Netid State Local Address:Port
+tcp LISTEN 0.0.0.0:22
+udp UNCONN 0.0.0.0:53
+
+Explanation:
+
+tcp = TCP protocol
+udp = UDP protocol
+22 = SSH port
+53 = DNS port
+
+Port numbers are an important Layer 4 concept.
+
+COMMAND 2:
+
+nc -vz example.com 443
+
+This attempts to establish a TCP connection to port 443.
+
+If successful, you may see:
+
+Connection to example.com 443 port [tcp/https] succeeded!
+
+This demonstrates:
+TCP + Port Number = Transport Layer
+
+Conclusion:
+ss and nc can be used to demonstrate Layer 4 concepts such as TCP, UDP, ports, and connections.
+
+============================================================
+LAYER 5 - SESSION LAYER
+
+Purpose:
+The Session Layer is responsible for:
+
+Establishing sessions
+Maintaining sessions
+Managing sessions
+Terminating sessions
+
+In modern TCP/IP networking, Session Layer functionality is often combined with other layers.
+
+COMMAND:
+
+ssh username@192.168.1.10
+
+SSH creates an interactive communication session with a remote computer.
+
+To observe the underlying connection:
+
+ss -tn
+
+Example:
+
+ESTAB 0 0 192.168.1.10:54321 192.168.1.20:22
+
+Explanation:
+
+ESTAB = established connection
+54321 = client-side port
+22 = SSH server port
+
+Important:
+SSH itself is generally considered an application-layer protocol in the TCP/IP model. It can be used to demonstrate session-management behavior, but it should not be described as a purely Layer-5 protocol.
+
+Conclusion:
+SSH and ss can be used to illustrate the concept of communication sessions.
+
+============================================================
+LAYER 6 - PRESENTATION LAYER
+
+Purpose:
+The Presentation Layer deals with:
+
+Data representation
+Data encoding
+Encryption
+Compression
+Translation between data formats
+COMMAND 1:
+
+echo "Hello World" | base64
+
+Example output:
+
+SGVsbG8gV29ybGQ=
+
+To decode:
+
+echo "SGVsbG8gV29ybGQ=" | base64 -d
+
+Output:
+
+Hello World
+
+This demonstrates encoding and decoding.
+
+COMMAND 2:
+
+openssl s_client -connect example.com:443
+
+This can display TLS information for a connection to an HTTPS server.
+
+It may show information such as:
+
+Protocol: TLSv1.3
+Cipher: ...
+
+This demonstrates encryption functionality traditionally associated with the Presentation Layer.
+
+Important:
+TLS is commonly considered an application-layer security protocol in modern networking rather than a strict OSI Layer-6 protocol.
+
+Conclusion:
+base64 and openssl can be used to demonstrate concepts associated with Layer 6, particularly encoding and encryption.
+
+============================================================
+LAYER 7 - APPLICATION LAYER
+
+Purpose:
+The Application Layer provides network services directly to applications.
+
+Examples:
+
+DNS
+HTTP
+SSH
+SMTP
+FTP
+COMMAND 1:
+
+dig example.com
+
+This performs a DNS query.
+
+Example:
+
+QUESTION SECTION:
+example.com. IN A
+
+ANSWER SECTION:
+example.com. 128 IN A 172.66.147.243
+example.com. 128 IN A 104.20.23.154
+
+Explanation:
+
+example.com = domain name
+IN = Internet class
+A = IPv4 address record
+172.66.147.243 and 104.20.23.154 = IPv4 addresses returned by DNS
+128 = TTL in seconds
+
+The DNS query demonstrates an Application Layer protocol.
+
+COMMAND 2:
+
+curl -I https://example.com
+
+This sends an HTTP/HTTPS request and displays response headers.
+
+Example:
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+
+This demonstrates HTTP at the Application Layer.
+
+Conclusion:
+dig and curl are useful Linux commands for demonstrating Layer 7.
+
+============================================================
+COMPLETE OSI MODEL COMMAND TABLE
+
+Layer 7 - Application
+Commands:
+dig example.com
+curl -I https://example.com
+
+Demonstrates:
+DNS, HTTP, application-level communication
+
+Layer 6 - Presentation
+Commands:
+echo "Hello World" | base64
+openssl s_client -connect example.com:443
+
+Demonstrates:
+Encoding and encryption
+
+Layer 5 - Session
+Commands:
+ssh username@remote_ip
+ss -tn
+
+Demonstrates:
+Communication sessions and session management
+
+Layer 4 - Transport
+Commands:
+ss -tuln
+nc -vz example.com 443
+
+Demonstrates:
+TCP, UDP, ports, and connections
+
+Layer 3 - Network
+Commands:
+ip addr
+ip route
+ping 8.8.8.8
+
+Demonstrates:
+IP addressing, routing, and ICMP
+
+Layer 2 - Data Link
+Commands:
+ip link
+ip neigh
+
+Demonstrates:
+MAC addresses and local network neighbors
+
+Layer 1 - Physical
+Commands:
+ip link
+sudo ethtool eth0
+
+Demonstrates:
+Link status, speed, duplex, and physical/link characteristics
+
+============================================================
+COMPLETE PRACTICAL PROCEDURE
+STEP 1:
+
+Open the Linux terminal.
+
+STEP 2:
+
+Check the network interfaces:
+
+ip link
+
+Identify your active interface, such as:
+
+eth0
+enp0s3
+wlan0
+wlp2s0
+STEP 3:
+
+Check physical/link information:
+
+sudo ethtool <interface>
+
+Example:
+
+sudo ethtool eth0
+
+Record:
+
+Speed
+Duplex
+Link detected
+STEP 4:
+
+Check the MAC address:
+
+ip link
+
+Find:
+
+link/ether XX:XX:XX:XX:XX:XX
+
+STEP 5:
+
+Check the neighbor table:
+
+ip neigh
+
+Record the IP-to-MAC relationship.
+
+STEP 6:
+
+Check your IP address:
+
+ip addr
+
+Record:
+
+IPv4 address
+Subnet prefix
+Interface
+STEP 7:
+
+Check the routing table:
+
+ip route
+
+Record:
+
+Connected network
+Default gateway
+Interface
+STEP 8:
+
+Test Layer 3 connectivity:
+
+ping 8.8.8.8
+
+Record:
+
+Packet replies
+TTL
+Response time
+STEP 9:
+
+Check TCP and UDP ports:
+
+ss -tuln
+
+Record:
+
+TCP ports
+UDP ports
+Listening services
+STEP 10:
+
+Test a TCP connection:
+
+nc -vz example.com 443
+
+Record whether the connection succeeds.
+
+STEP 11:
+
+Demonstrate a session:
+
+ssh username@remote_ip
+
+After establishing the SSH session, run:
+
+ss -tn
+
+Observe the established TCP connection.
+
+STEP 12:
+
+Demonstrate encoding:
+
+echo "Hello World" | base64
+
+Then decode:
+
+echo "SGVsbG8gV29ybGQ=" | base64 -d
+
+STEP 13:
+
+Demonstrate TLS:
+
+openssl s_client -connect example.com:443
+
+Observe:
+
+TLS version
+Certificate information
+Cipher information
+STEP 14:
+
+Demonstrate DNS:
+
+dig example.com
+
+Observe:
+
+QUESTION SECTION
+ANSWER SECTION
+DNS server
+Query time
+UDP port 53
+STEP 15:
+
+Demonstrate HTTP:
+
+curl -I https://example.com
+
+Observe:
+
+HTTP response status
+Content type
+HTTP headers
+============================================================
+HOW DATA MOVES THROUGH THE OSI MODEL
+
+When you run:
+
+curl https://example.com
+
+the communication can be understood conceptually as:
+
+Layer 7:
+HTTP/HTTPS application communication
+
+Layer 6:
+Encryption/data representation such as TLS
+
+Layer 5:
+Session-related communication
+
+Layer 4:
+TCP connection and port 443
+
+Layer 3:
+IP addressing and routing
+
+Layer 2:
+MAC addresses and Ethernet/Wi-Fi frames
+
+Layer 1:
+Physical transmission of bits through cable, fiber, or radio
+
+============================================================
+IMPORTANT OBSERVATION
+
+The OSI model is a conceptual reference model.
+
+Linux normally uses the TCP/IP networking architecture.
+
+Therefore, there is not always a one-to-one relationship between:
+
+OSI Layer <-> Linux command
+
+Some protocols and functions span multiple OSI layers.
+
+Examples:
+
+SSH is generally considered an application-layer protocol but also involves session management.
+TLS is generally treated as an application-layer security protocol but performs functions traditionally associated with the Presentation Layer.
+TCP belongs to the Transport Layer.
+IP belongs to the Network Layer.
+Ethernet/MAC belongs to the Data Link Layer.
+Physical Ethernet/Wi-Fi signaling belongs to the Physical Layer.
+============================================================
+FINAL RESULT
+
+The practical demonstrates that Linux commands can be used to observe networking concepts corresponding to all seven OSI layers.
+
+Layer 1:
+Physical/link characteristics
+Command: ethtool
+
+Layer 2:
+MAC addresses and neighbors
+Commands: ip link, ip neigh
+
+Layer 3:
+IP addressing and routing
+Commands: ip addr, ip route, ping
+
+Layer 4:
+TCP, UDP, and ports
+Commands: ss, nc
+
+Layer 5:
+Communication sessions
+Commands: ssh, ss
+
+Layer 6:
+Encoding and encryption
+Commands: base64, openssl
+
+Layer 7:
+DNS and HTTP
+Commands: dig, curl
+
+Thus, Linux provides practical tools for observing how data moves from the application level down toward the physical network and back again.
