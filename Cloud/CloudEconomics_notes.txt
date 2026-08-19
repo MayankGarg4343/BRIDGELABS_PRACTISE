@@ -1,0 +1,1396 @@
+============================================================
+                 CLOUD ECONOMICS - STRUCTURED NOTES
+============================================================
+
+FILE NAME: cloud_economics_notes.txt
+
+
+============================================================
+1. WHAT IS CLOUD ECONOMICS?
+============================================================
+
+Cloud Economics studies how cloud infrastructure is:
+
+- Consumed
+- Priced
+- Managed
+- Optimized
+
+from a COST perspective.
+
+Main question:
+
+"How can we get the required performance and reliability
+while controlling cloud costs?"
+
+IMPORTANT:
+
+Cloud = Easy to provision
+
+But:
+
+Easy to provision != Automatically cheap
+
+
+Poorly managed cloud resources can generate very high costs.
+
+
+============================================================
+2. TRADITIONAL INFRASTRUCTURE COST MODEL
+============================================================
+
+Traditional infrastructure usually requires a company to buy
+infrastructure BEFORE using it.
+
+Examples:
+
+- Physical Servers
+- Storage Arrays
+- Routers
+- Switches
+- Data Center Equipment
+- Power Infrastructure
+- Cooling Systems
+
+Traditional flow:
+
+Need Capacity
+      |
+      v
+Forecast Future Demand
+      |
+      v
+Get Budget Approval
+      |
+      v
+Buy Hardware
+      |
+      v
+Install Hardware
+      |
+      v
+Configure Infrastructure
+      |
+      v
+Start Using It
+
+
+============================================================
+3. WHAT IS CAPEX?
+============================================================
+
+CapEx = Capital Expenditure
+
+CapEx means a large upfront investment made to acquire
+long-term assets.
+
+Example:
+
+Company buys a physical server for:
+
+$10,000 upfront
+
+Even before the server is fully used, the company has already
+spent the money.
+
+Traditional CapEx examples:
+
+- Physical Servers
+- Storage Arrays
+- Routers
+- Switches
+- Data Center Equipment
+
+
+MEMORY:
+
+CAPEX = BUY FIRST
+
+
+Example:
+
+Company
+   |
+   v
+Buys Server
+   |
+   v
+Pays Upfront
+   |
+   v
+Uses Server
+
+
+============================================================
+4. WHAT IS OPEX?
+============================================================
+
+OpEx = Operational Expenditure
+
+OpEx means ongoing spending required to operate or consume
+services.
+
+Cloud commonly shifts many infrastructure costs from:
+
+Large Upfront Purchases
+
+towards:
+
+Service Consumption + Ongoing Expenditure
+
+
+Example:
+
+Instead of:
+
+BUY SERVER -> Pay $10,000 upfront
+
+You may:
+
+CONSUME CLOUD COMPUTE -> Pay according to the applicable
+service pricing model.
+
+
+MEMORY:
+
+OPEX = PAY WHILE OPERATING/CONSUMING
+
+
+============================================================
+5. CAPEX vs OPEX
+============================================================
+
+CAPEX:
+
+- Large upfront investment
+- Buy long-term assets
+- Company owns/manages physical infrastructure
+
+Example:
+
+Buy Physical Server
+
+
+OPEX:
+
+- Ongoing expenditure
+- Pay for service consumption/operation
+- Costs occur over time
+
+Example:
+
+Consume Cloud Compute
+
+
+COMPARISON:
+
+Traditional Model:
+CAPEX
+   |
+   v
+Buy Infrastructure
+   |
+   v
+Operate It
+
+
+Cloud Model:
+OPEX-oriented Consumption
+   |
+   v
+Consume Service
+   |
+   v
+Pay according to applicable pricing
+
+
+============================================================
+6. PROBLEMS WITH TRADITIONAL INFRASTRUCTURE
+============================================================
+
+Traditional infrastructure can create:
+
+1. High upfront cost
+
+2. Capacity forecasting risk
+
+3. Slow procurement
+
+4. Hardware maintenance
+
+5. Electricity costs
+
+6. Cooling costs
+
+7. Physical infrastructure management
+
+
+EXAMPLE:
+
+You predict you will need 100 servers.
+
+You buy infrastructure for 100 servers.
+
+But actual requirement is only 40 servers.
+
+Result:
+
+60-server capacity may remain underutilized.
+
+
+OTHER PROBLEM:
+
+Actual demand becomes 200 servers.
+
+Now you need to:
+
+- Buy more hardware
+- Wait for delivery
+- Install and configure it
+
+This is slow.
+
+
+============================================================
+7. HOW CLOUD CHANGES THE MODEL
+============================================================
+
+Cloud provides:
+
+- Faster provisioning
+- Elasticity
+- Reduced upfront infrastructure ownership requirements
+- Capacity closer to actual demand
+- Automation
+- Self-service
+
+
+Traditional:
+
+Forecast -> Buy -> Install -> Use
+
+
+Cloud:
+
+Need Resource
+      |
+      v
+Portal / CLI / API / IaC
+      |
+      v
+Provision
+      |
+      v
+Use
+
+
+IMPORTANT:
+
+Cloud does NOT automatically mean cheaper.
+
+Cloud can become expensive if resources are:
+
+- Oversized
+- Unused
+- Forgotten
+- Running unnecessarily
+- Poorly architected
+
+
+============================================================
+8. PAY-AS-YOU-GO (PAYG)
+============================================================
+
+PAYG = Pay-As-You-Go
+
+PAYG is a flexible pricing/consumption model.
+
+Usually:
+
+No long-term usage commitment is required upfront.
+
+
+USE CASES:
+
+PAYG is useful for:
+
+- Unpredictable workloads
+- Short-term workloads
+- Temporary workloads
+- Experimental environments
+
+
+EXAMPLE:
+
+You need a VM for testing for a short period.
+
+PAYG can be suitable because you do not know whether
+you will need the resource long-term.
+
+
+IMPORTANT:
+
+Do NOT assume every cloud service is billed per hour.
+
+
+============================================================
+9. CLOUD BILLING DIMENSIONS
+============================================================
+
+Different cloud services can use different billing meters.
+
+Possible billing dimensions include:
+
+- Compute / Runtime
+- Storage Capacity
+- Operations
+- Requests
+- Retrieval
+- Data Transfer
+
+The exact billing model depends on:
+
+- Service
+- Configuration
+- Provider
+- Region
+- Pricing model
+
+
+IMPORTANT RULE:
+
+Always check the pricing model of the specific service.
+
+
+============================================================
+10. COMPUTE COST FACTORS
+============================================================
+
+VM/Compute cost can depend on:
+
+- VM SKU
+- Region
+- Operating System
+- Resource Configuration
+- Pricing Model
+- Usage Duration
+
+Example:
+
+A larger VM generally provides more resources but can cost
+more than a smaller VM under the applicable pricing model.
+
+
+============================================================
+11. RIGHT-SIZING
+============================================================
+
+Right-sizing means selecting infrastructure capacity based on
+ACTUAL workload requirements.
+
+Three possibilities:
+
+A) OVERSIZED
+
+Resources are larger than needed.
+
+Result:
+
+Higher cost
+Wasted resources
+
+
+B) RIGHT-SIZED
+
+Resources match workload requirements.
+
+Result:
+
+Balanced performance and cost
+
+
+C) UNDER-SIZED
+
+Resources are too small.
+
+Result:
+
+Performance problems
+
+
+VISUAL:
+
+                TOO BIG
+                   |
+                   v
+              $$$ WASTE $$$
+
+
+ACTUAL NEED -> RIGHT-SIZED -> GOOD PERFORMANCE + COST
+
+
+                   ^
+                   |
+                TOO SMALL
+                   |
+                   v
+           PERFORMANCE PROBLEMS
+
+
+IMPORTANT:
+
+Never right-size based only on guesswork.
+
+Use monitoring data.
+
+
+Check:
+
+- CPU utilization
+- Memory utilization
+- Disk utilization
+- Network usage
+- Application performance
+
+
+============================================================
+12. STOPPING A VM DOES NOT ALWAYS MEAN ZERO COST
+============================================================
+
+IMPORTANT CONCEPT:
+
+Stopping a compute resource does NOT automatically mean every
+associated infrastructure cost becomes zero.
+
+
+You should also check:
+
+- Disks
+- Snapshots
+- Backups
+- IP-related resources
+- Storage
+- Other dependent services
+
+
+EXAMPLE:
+
+VM = Stopped
+
+But:
+
+Disk = Still Exists
+Backup = Still Stored
+Snapshot = Still Stored
+
+Therefore:
+
+Costs may still exist.
+
+
+TROUBLESHOOTING RULE:
+
+"Don't check only the VM. Check all dependent resources."
+
+
+============================================================
+13. STORAGE COSTS
+============================================================
+
+Storage costs can depend on:
+
+- Stored capacity
+- Storage tier
+- Redundancy
+- Operations
+- Retrieval
+- Data transfer
+
+
+IMPORTANT:
+
+Do not choose a storage tier only because its storage-at-rest
+price appears cheapest.
+
+
+You must consider DATA ACCESS PATTERNS.
+
+
+Example:
+
+Frequently accessed data
+        |
+        v
+May need a faster/higher-access storage tier
+
+
+Rarely accessed data
+        |
+        v
+May be suitable for a lower-cost tier,
+depending on retrieval requirements.
+
+
+DECISION:
+
+Data Access Pattern
+        |
+        v
+Choose Appropriate Storage Tier
+
+
+============================================================
+14. DATA TRANSFER COSTS
+============================================================
+
+Data transfer costs can depend on:
+
+- Traffic direction
+- Source
+- Destination
+- Region
+- Services involved
+- Provider pricing rules
+
+
+KEY TERMS:
+
+INGRESS = Data coming INTO a cloud environment
+
+
+EGRESS = Data leaving a cloud environment
+
+
+VISUAL:
+
+Internet
+   |
+   | Data coming IN
+   v
+Cloud Environment
+
+= INGRESS
+
+
+Cloud Environment
+   |
+   | Data going OUT
+   v
+Internet
+
+= EGRESS
+
+
+IMPORTANT:
+
+Do NOT blindly assume:
+
+"All ingress is free"
+or
+"All egress is charged"
+
+Always verify service-specific pricing.
+
+
+============================================================
+15. CROSS-REGION DATA MOVEMENT
+============================================================
+
+Unnecessary cross-region traffic can increase cost and may
+also increase latency.
+
+Example:
+
+Application
+Region A
+    |
+    | Data transfer
+    v
+Database
+Region B
+
+
+QUESTION:
+
+Is this data movement necessary?
+
+If NO:
+
+Consider placing related workloads closer together.
+
+
+WAYS TO REDUCE UNNECESSARY DATA MOVEMENT:
+
+- Appropriate workload placement
+- Caching
+- CDN usage
+- Avoid unnecessary cross-region communication
+
+
+============================================================
+16. RESERVED CAPACITY / COMMITMENT PRICING
+============================================================
+
+Reserved Capacity is a commitment concept for predictable
+resource usage or capacity.
+
+It can provide better economics for:
+
+- Stable workloads
+- Predictable workloads
+- Long-running workloads
+
+
+IMPORTANT:
+
+Reservation behavior depends on:
+
+- Cloud provider
+- Specific service
+- Capacity/reservation mechanism
+
+
+DO NOT ASSUME:
+
+"A reserved resource always means a physical server is waiting
+permanently for one customer."
+
+
+Reservation and capacity behavior are service-specific.
+
+
+============================================================
+17. RESERVED INSTANCES
+============================================================
+
+Reserved Instances are commitment-based options for eligible
+predictable compute workloads.
+
+
+GOOD CANDIDATES:
+
+- Stable workloads
+- Long-running workloads
+- Predictable baseline usage
+
+
+EXAMPLE:
+
+A production workload runs continuously and historical data
+shows that similar capacity will be required for a long period.
+
+This workload can be evaluated for commitment/reservation
+options.
+
+
+BEFORE BUYING:
+
+Analyze:
+
+1. Historical usage
+2. Future requirements
+3. Expected workload duration
+4. Matching resource requirements
+
+
+IMPORTANT:
+
+Buying a reservation without sufficient matching usage can
+reduce or eliminate expected savings.
+
+
+============================================================
+18. PAYG vs RESERVED
+============================================================
+
+PAYG:
+
+High Flexibility
+Lower Commitment
+
+
+Reserved/Commitment:
+
+More Commitment
+Potential Pricing Benefits
+
+
+COMPARISON:
+
+UNPREDICTABLE
+      |
+      v
+PAYG
+
+
+PREDICTABLE + LONG-RUNNING
+      |
+      v
+Evaluate Reservation / Commitment
+
+
+============================================================
+19. SPOT INSTANCES
+============================================================
+
+Spot Instances use eligible spare cloud capacity at discounted
+pricing.
+
+IMPORTANT:
+
+Spot workloads can be:
+
+- Interrupted
+- Evicted
+
+according to provider capacity and service rules.
+
+
+MOST IMPORTANT SPOT RULE:
+
+THE WORKLOAD MUST TOLERATE INTERRUPTION.
+
+
+============================================================
+20. GOOD SPOT USE CASES
+============================================================
+
+Spot is useful for workloads such as:
+
+- Batch Processing
+- Rendering
+- Retryable CI/CD Jobs
+- Distributed Processing
+- Some Fault-Tolerant ML Workloads
+
+
+Example:
+
+Batch Job
+   |
+   v
+Process Data
+   |
+   v
+Interrupted?
+   |
+   v
+Retry / Resume
+   |
+   v
+Continue
+
+
+============================================================
+21. BAD SPOT USE CASES
+============================================================
+
+Bad candidates include:
+
+- Critical standalone production database
+- Single production server
+- Workload that cannot tolerate interruption
+
+
+Example:
+
+Critical Database
+      |
+      v
+Cannot Stop
+      |
+      v
+SPOT IS A POOR MATCH
+
+
+============================================================
+22. HOW TO DESIGN FOR SPOT
+============================================================
+
+Spot works better when the application is:
+
+- Retryable
+- Fault tolerant
+- Distributed
+- Stateless where appropriate
+
+
+Useful design patterns:
+
+- Queues
+- Retry mechanisms
+- Checkpointing
+- Idempotency
+- Stateless design
+- Distributed architecture
+
+
+QUESTION:
+
+What is the most important design requirement for Spot?
+
+ANSWER:
+
+The workload must be able to tolerate interruption.
+
+
+============================================================
+23. PRICING MODEL DECISION MATRIX
+============================================================
+
+WORKLOAD BEHAVIOR:
+
+Unpredictable / Temporary
+        |
+        v
+Consider PAYG
+
+
+Stable / Predictable / Long-Running
+        |
+        v
+Evaluate Reservation or Commitment Options
+
+
+Interruptible / Retryable / Fault Tolerant
+        |
+        v
+Evaluate Spot
+
+
+IMPORTANT:
+
+Never select a pricing model only because it appears cheapest.
+
+Match the pricing model to:
+
+- Workload behavior
+- Predictability
+- Duration
+- Risk tolerance
+
+
+============================================================
+24. DEVOPS + CLOUD COST OPTIMIZATION
+============================================================
+
+Cloud cost optimization is not only a Finance responsibility.
+
+It is also a DevOps and Engineering responsibility.
+
+
+DEVOPS COST OPTIMIZATION INCLUDES:
+
+- Right-sizing
+- Auto-scaling
+- Scheduled shutdown
+- Cleanup automation
+- Infrastructure as Code
+- Tagging
+- Monitoring
+- Budgets
+- Appropriate pricing models
+
+
+============================================================
+25. AUTO-SCALING
+============================================================
+
+Instead of running maximum capacity all the time:
+
+High Demand
+    |
+    v
+Scale Out
+
+
+Low Demand
+    |
+    v
+Scale In
+
+
+VISUAL:
+
+Demand ↑
+   |
+   v
+More Resources
+
+
+Demand ↓
+   |
+   v
+Fewer Resources
+
+
+Goal:
+
+Align resource capacity more closely with actual demand.
+
+
+============================================================
+26. TEMPORARY ENVIRONMENTS
+============================================================
+
+CI/CD environments may be temporary.
+
+Example:
+
+Developer creates temporary test infrastructure.
+
+Correct lifecycle:
+
+Provision
+    |
+    v
+Build / Test
+    |
+    v
+Validate
+    |
+    v
+Destroy Temporary Resources
+
+
+MEMORY:
+
+PROVISION -> BUILD/TEST -> VALIDATE -> DESTROY
+
+
+IMPORTANT:
+
+Unused temporary infrastructure should not be forgotten.
+
+
+============================================================
+27. INFRASTRUCTURE AS CODE AND COST CONTROL
+============================================================
+
+Infrastructure as Code (IaC) helps create infrastructure
+consistently.
+
+It can also help remove temporary infrastructure consistently.
+
+
+Example:
+
+Infrastructure Code
+       |
+       v
+Create Test Environment
+       |
+       v
+Run Tests
+       |
+       v
+Destroy Test Environment
+
+
+BENEFIT:
+
+Less chance of manually forgetting temporary resources.
+
+
+============================================================
+28. TAGGING FOR COST MANAGEMENT
+============================================================
+
+Tagging helps identify:
+
+- Owner
+- Project
+- Environment
+- Department
+- Application
+
+
+Example:
+
+Environment = Dev
+Project = Website
+Owner = Engineering
+
+
+QUESTION:
+
+Why is tagging useful?
+
+ANSWER:
+
+It helps identify who owns resources and analyze where costs
+are coming from.
+
+
+============================================================
+29. AZURE CLI - BASIC VM CREATION
+============================================================
+
+COMMAND:
+
+az vm create
+
+
+GENERAL SYNTAX:
+
+az vm create \
+  --resource-group <resource-group-name> \
+  --name <vm-name> \
+  --image <image-name> \
+  --size <vm-size> \
+  --admin-username <username>
+
+
+COMMAND BREAKDOWN:
+
+
+az
+
+Azure CLI command
+
+
+vm
+
+Azure Virtual Machines command group
+
+
+create
+
+Creates a Virtual Machine
+
+
+--resource-group
+
+Specifies the Azure Resource Group
+
+
+--name
+
+Specifies the VM name
+
+
+--image
+
+Specifies the Operating System image
+
+
+--size
+
+Specifies the VM SKU.
+
+This affects:
+
+- Compute capacity
+- Resource configuration
+- Applicable pricing
+
+
+--admin-username
+
+Specifies the administrator username
+
+
+============================================================
+30. AZURE COST MANAGEMENT
+============================================================
+
+Azure Cost Management is used for:
+
+- Cloud cost analysis
+- Cost monitoring
+- Cost management
+
+
+IMPORTANT:
+
+Use budgeting and monitoring to identify unexpected spending.
+
+
+============================================================
+31. HOW TO TROUBLESHOOT UNEXPECTED CLOUD COSTS
+============================================================
+
+STEP 1:
+
+Identify:
+
+Which service caused the increase?
+
+
+STEP 2:
+
+Identify:
+
+Which resource caused the increase?
+
+
+STEP 3:
+
+Identify:
+
+WHEN did the cost increase begin?
+
+
+STEP 4:
+
+Investigate possible changes.
+
+
+CHECK:
+
+- New resources
+- SKU changes
+- Storage growth
+- Backups
+- Snapshots
+- Logging
+- Monitoring
+- Data transfer
+- Forgotten resources
+
+
+TROUBLESHOOTING FLOW:
+
+Cost Increased
+      |
+      v
+Which Service?
+      |
+      v
+Which Resource?
+      |
+      v
+When Did It Start?
+      |
+      v
+What Changed?
+      |
+      v
+Investigate Resource Usage
+
+
+============================================================
+32. AZURE AND AWS CONCEPT COMPARISON
+============================================================
+
+AZURE PAYG
+        |
+        v
+Conceptually similar to
+AWS ON-DEMAND
+
+
+AZURE RESERVED VM INSTANCES / RESERVATIONS
+        |
+        v
+Conceptually similar to
+AWS RESERVED INSTANCES
+
+
+AZURE SPOT VIRTUAL MACHINES
+        |
+        v
+Conceptually similar to
+AWS EC2 SPOT INSTANCES
+
+
+IMPORTANT:
+
+The concepts are similar, but provider-specific behavior,
+terms, and rules can differ.
+
+
+============================================================
+33. CLOUD ECONOMICS CONNECTION WITH OTHER TOPICS
+============================================================
+
+Cloud Economics connects directly with:
+
+
+AUTO-SCALING
+      |
+      v
+Match capacity with demand
+
+
+LINUX MONITORING
+      |
+      v
+Measure actual resource usage
+
+
+NETWORKING
+      |
+      v
+Understand data transfer and placement
+
+
+KUBERNETES
+      |
+      v
+Manage and optimize container resources
+
+
+CI/CD
+      |
+      v
+Create and destroy temporary environments
+
+
+INFRASTRUCTURE AS CODE
+      |
+      v
+Automate infrastructure lifecycle
+
+
+SYSTEM ARCHITECTURE
+      |
+      v
+Design systems considering performance,
+reliability AND cost
+
+
+============================================================
+34. FINAL DECISION RULES
+============================================================
+
+RULE 1:
+
+Unpredictable Workload
+        |
+        v
+Consider PAYG
+
+
+RULE 2:
+
+Predictable + Long-Running Workload
+        |
+        v
+Evaluate Reservation / Commitment Options
+
+
+RULE 3:
+
+Interruptible + Retryable + Fault Tolerant Workload
+        |
+        v
+Evaluate Spot
+
+
+============================================================
+35. THE MOST IMPORTANT CLOUD ECONOMICS RULE
+============================================================
+
+DO NOT ASK:
+
+"Which pricing model is cheapest?"
+
+
+ASK:
+
+"Which pricing model best matches my workload behavior?"
+
+
+Consider:
+
+- Predictability
+- Duration
+- Usage pattern
+- Performance requirements
+- Availability requirements
+- Interruption tolerance
+- Risk tolerance
+
+
+============================================================
+36. QUICK REVISION TABLE
+============================================================
+
+CapEx
+= Large upfront investment
+
+
+OpEx
+= Ongoing operational/service consumption expenditure
+
+
+PAYG
+= Flexible, useful for unpredictable or temporary workloads
+
+
+Reserved / Commitment
+= Suitable to evaluate for stable and predictable workloads
+
+
+Spot
+= Discounted spare capacity for workloads that tolerate
+  interruption
+
+
+Right-Sizing
+= Select resources based on actual requirements
+
+
+Auto-Scaling
+= Adjust resources according to demand
+
+
+IaC
+= Define and manage infrastructure using code
+
+
+Cost Management
+= Monitor, analyze and control cloud spending
+
+
+============================================================
+37. FINAL MENTAL MODEL
+============================================================
+
+                 CLOUD ECONOMICS
+
+                        |
+        +---------------+---------------+
+        |               |               |
+        v               v               v
+
+     CONSUME         MONITOR          OPTIMIZE
+        |               |               |
+        v               v               v
+
+   PAYG/Reserved      Usage Data     Right-Size
+      /Spot              Costs        Auto-Scale
+                                      Cleanup
+
+
+COMPLETE FLOW:
+
+Workload Requirements
+        |
+        v
+Understand Usage Pattern
+        |
+        v
+Choose Correct Architecture
+        |
+        v
+Choose Appropriate Pricing Model
+        |
+        v
+Monitor Usage and Cost
+        |
+        v
+Right-Size
+        |
+        v
+Automate Scaling
+        |
+        v
+Clean Up Unused Resources
+        |
+        v
+Continuously Optimize
+
+
+========================= END ===============================
