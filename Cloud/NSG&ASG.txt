@@ -1,0 +1,1761 @@
+AZURE NETWORKING - SECURITY LAYER COMPLETE NOTES
+=================================================
+
+Topics Covered
+--------------
+1. Network Security Group (NSG)
+2. How NSG rules work
+3. Inbound rules
+4. Outbound rules
+5. NSG statefulness
+6. Rule priority
+7. First matching rule
+8. Default NSG rules
+9. NSG at subnet level
+10. NSG at NIC level
+11. Subnet NSG vs NIC NSG
+12. Application Security Group (ASG)
+13. Problem solved by ASG
+14. Grouping VMs logically instead of by IP
+15. Using ASGs inside NSG rules
+16. NSG vs ASG
+17. How NSGs and ASGs work together
+18. Three-tier application example
+19. Routing vs security
+20. Common mistakes and troubleshooting
+
+=================================================
+1. THE BIG PICTURE - ROUTING VS SECURITY
+=================================================
+
+When a packet travels through an Azure network, two major questions must be answered:
+
+1. Where should the packet go?
+2. Is the packet allowed to go there?
+
+ROUTING answers:
+
+    Where should the traffic go?
+
+Routing components include:
+
+    - System Routes
+    - User Defined Routes (UDRs)
+    - Route Tables
+    - VNet Peering routes
+    - VPN propagated routes
+    - ExpressRoute propagated routes
+    - Virtual Network Gateway routing
+
+SECURITY answers:
+
+    Is the traffic allowed?
+
+Security controls can include:
+
+    - Network Security Groups (NSGs)
+    - Azure Firewall
+    - Network Virtual Appliances (NVAs)
+    - Other security controls
+
+Conceptual flow:
+
+    Application
+        |
+        v
+    +------------------+
+    | ROUTING          |
+    | Where does it go?|
+    +--------+---------+
+             |
+             v
+    +------------------+
+    | SECURITY         |
+    | Is it allowed?   |
+    +--------+---------+
+             |
+             v
+       Destination
+
+
+IMPORTANT:
+
+    Routes determine the PATH.
+    Security controls determine whether traffic is ALLOWED.
+
+
+=================================================
+2. WHAT IS A NETWORK SECURITY GROUP (NSG)?
+=================================================
+
+A Network Security Group, or NSG, is an Azure security resource containing
+rules that allow or deny network traffic.
+
+An NSG acts as a network traffic filter.
+
+An NSG rule can evaluate traffic based on:
+
+    - Source
+    - Source port
+    - Destination
+    - Destination port
+    - Protocol
+    - Direction
+    - Allow or Deny action
+    - Priority
+
+Conceptually:
+
+    Traffic
+       |
+       v
+    +------------------+
+    |       NSG        |
+    |                  |
+    | Allow or Deny?   |
+    +--------+---------+
+             |
+        +----+----+
+        |         |
+      Allow      Deny
+        |         |
+        v         v
+     Forward    Block
+
+
+Example rule:
+
+    Name:             Allow-HTTPS
+    Source:           Internet
+    Destination:      Web Server
+    Protocol:         TCP
+    Destination Port: 443
+    Direction:        Inbound
+    Action:           Allow
+    Priority:         100
+
+Meaning:
+
+    Allow HTTPS traffic from the Internet to the web server.
+
+
+=================================================
+3. WHERE CAN AN NSG BE ASSOCIATED?
+=================================================
+
+An NSG can be associated with:
+
+    1. A subnet
+    2. A Network Interface (NIC)
+
+Example - Subnet NSG:
+
+    VNet
+      |
+      +-- WebSubnet
+            |
+            +-- NSG-WebSubnet
+            |
+            +-- VM-1
+            +-- VM-2
+            +-- VM-3
+
+
+Example - NIC NSG:
+
+    VM
+     |
+     v
+    NIC
+     |
+     v
+    NSG-NIC
+
+
+Both a subnet and a NIC can have applicable NSGs.
+
+
+=================================================
+4. COMPONENTS OF AN NSG RULE
+=================================================
+
+An NSG rule contains important matching criteria.
+
+    +----------------------------------+
+    | Source                           |
+    | Source Port                      |
+    | Destination                      |
+    | Destination Port                 |
+    | Protocol                         |
+    | Direction                        |
+    | Access: Allow / Deny             |
+    | Priority                         |
+    +----------------------------------+
+
+
+4.1 SOURCE
+----------
+
+The source identifies where traffic is coming from.
+
+Examples:
+
+    10.0.1.0/24
+    Internet
+    VirtualNetwork
+    AzureLoadBalancer
+    Application Security Group (ASG)
+
+Example:
+
+    Source: 10.0.1.0/24
+
+Meaning:
+
+    Apply this rule to traffic originating from the 10.0.1.x network.
+
+
+4.2 DESTINATION
+---------------
+
+The destination identifies where traffic is going.
+
+Examples:
+
+    10.0.2.0/24
+    Internet
+    VirtualNetwork
+    ASG-Web
+    ASG-App
+
+Example:
+
+    Destination: 10.0.2.0/24
+
+Meaning:
+
+    Apply this rule to traffic going to that network.
+
+
+4.3 DESTINATION PORT
+--------------------
+
+The destination port identifies the application or service.
+
+Common ports:
+
+    22      SSH
+    80      HTTP
+    443     HTTPS
+    3389    RDP
+    1433    Microsoft SQL Server
+
+Example:
+
+    Destination Port: 443
+
+Meaning:
+
+    Apply this rule to HTTPS traffic.
+
+
+4.4 PROTOCOL
+------------
+
+Common options include:
+
+    TCP
+    UDP
+    ICMP
+    Any
+
+Example:
+
+    Protocol: TCP
+
+
+4.5 ACCESS
+----------
+
+The action is usually:
+
+    Allow
+
+or:
+
+    Deny
+
+
+4.6 PRIORITY
+------------
+
+Priority determines the order in which rules are evaluated.
+
+Lower priority number = evaluated first.
+
+For example:
+
+    Priority 100
+    Priority 200
+    Priority 300
+
+Evaluation order:
+
+    100 -> 200 -> 300
+
+
+=================================================
+5. INBOUND RULES
+=================================================
+
+Inbound rules control traffic entering the protected resource.
+
+Example:
+
+    Internet
+        |
+        | TCP 443
+        v
+       VM
+
+From the VM's perspective, this is:
+
+    INBOUND TRAFFIC
+
+
+Example rule:
+
+    Name:             Allow-HTTPS-Inbound
+    Source:           Internet
+    Destination:      Web VM
+    Protocol:         TCP
+    Destination Port: 443
+    Direction:        Inbound
+    Action:           Allow
+    Priority:         100
+
+Flow:
+
+    Internet
+        |
+        | TCP 443
+        v
+      NSG
+        |
+        | Allowed
+        v
+     Web VM
+
+
+=================================================
+6. OUTBOUND RULES
+=================================================
+
+Outbound rules control traffic leaving the protected resource.
+
+Example:
+
+    VM
+     |
+     | HTTPS TCP 443
+     v
+    Internet
+
+From the VM's perspective, this is:
+
+    OUTBOUND TRAFFIC
+
+
+Example:
+
+    Source:           VM
+    Destination:      Internet
+    Protocol:         TCP
+    Destination Port: 443
+    Direction:        Outbound
+    Action:           Allow
+    Priority:         100
+
+
+Organizations may restrict outbound communication.
+
+Example policy:
+
+    Web VM
+       |
+       +-- HTTPS -> Allowed
+       |
+       +-- SQL -> Allowed only to approved database
+       |
+       +-- Other destinations -> Denied
+
+
+=================================================
+7. UNDERSTANDING INBOUND AND OUTBOUND DIRECTIONS
+=================================================
+
+Assume:
+
+    Client:  10.1.1.10
+    Web VM:  10.0.1.4
+
+Client sends:
+
+    10.1.1.10
+        |
+        | TCP 443
+        v
+    10.0.1.4
+
+For the Web VM:
+
+    This is INBOUND traffic.
+
+The Web VM sends a response:
+
+    10.0.1.4
+        |
+        | Response
+        v
+    10.1.1.10
+
+For the Web VM:
+
+    This is OUTBOUND traffic.
+
+Direction is viewed relative to the protected resource/interface.
+
+
+=================================================
+8. NSGs ARE STATEFUL
+=================================================
+
+NSGs are stateful.
+
+Suppose an inbound connection is allowed:
+
+    Client
+       |
+       | TCP 443
+       v
+      NSG
+       |
+       | Allowed
+       v
+    Web Server
+
+The response associated with that established connection is automatically
+allowed as return traffic.
+
+Conceptually:
+
+    Client
+       |
+       | Request
+       v
+      NSG -> ALLOW
+       |
+       v
+    Server
+       |
+       | Response
+       v
+    Allowed as return traffic
+    because it belongs to the established flow
+
+
+IMPORTANT:
+
+You do not need to create a separate opposite-direction rule merely to allow
+return traffic for an established allowed flow.
+
+However, a NEW connection initiated by the VM is evaluated as new outbound
+traffic.
+
+Example:
+
+    VM -> Internet
+
+This is a new outbound flow and is evaluated against applicable outbound rules.
+
+
+=================================================
+9. RULE PRIORITY
+=================================================
+
+An NSG can contain many rules.
+
+Priority determines which rule is checked first.
+
+Example:
+
+    Priority 100 -> Deny
+    Priority 200 -> Allow
+    Priority 300 -> Allow
+
+Azure evaluates:
+
+    100 first
+    200 second
+    300 third
+
+
+IMPORTANT RULE:
+
+    Lower number = higher priority.
+
+Therefore:
+
+    100 has higher priority than 200.
+    200 has higher priority than 300.
+
+
+=================================================
+10. FIRST MATCHING RULE WINS
+=================================================
+
+Consider these rules:
+
+Rule 1:
+
+    Priority: 100
+    Source: *
+    Destination: *
+    Port: 3389
+    Action: Deny
+
+Rule 2:
+
+    Priority: 200
+    Source: 10.1.0.0/16
+    Destination: *
+    Port: 3389
+    Action: Allow
+
+
+Traffic:
+
+    Source: 10.1.1.10
+    Destination: VM
+    Port: 3389
+
+Both rules could match.
+
+Evaluation:
+
+    Priority 100
+        |
+        v
+    Matches
+        |
+        v
+    DENY
+
+Azure stops evaluating matching rules.
+
+The Priority 200 Allow rule is not used for that packet.
+
+KEY PRINCIPLE:
+
+    FIRST MATCHING RULE WINS.
+
+
+=================================================
+11. DEFAULT NSG RULES
+=================================================
+
+Every NSG contains default rules that provide baseline Azure networking
+behavior.
+
+Default rules cannot be deleted.
+
+Custom rules can use priorities that are evaluated before the default rules.
+
+Conceptually:
+
+    CUSTOM RULES
+
+    Priority 100
+    Priority 200
+    Priority 500
+          |
+          v
+
+    DEFAULT RULES
+
+    Priority 65000+
+    ...
+
+
+IMPORTANT DEFAULT INBOUND CONCEPTS
+---------------------------------
+
+Common default inbound rules include conceptually:
+
+    65000 AllowVnetInBound
+
+    65001 AllowAzureLoadBalancerInBound
+
+    65500 DenyAllInBound
+
+
+Simplified meaning:
+
+1. Allow appropriate traffic from the VirtualNetwork service tag.
+2. Allow Azure Load Balancer-related traffic.
+3. Deny remaining inbound traffic that has not matched an earlier allow rule.
+
+
+Example:
+
+You create:
+
+    Priority: 200
+    Source: Internet
+    Destination: Web VM
+    Port: 443
+    Action: Allow
+
+Traffic:
+
+    Internet -> TCP 443 -> Web VM
+
+Evaluation:
+
+    Priority 200 -> Match -> ALLOW
+
+Azure does not continue to the default deny for this packet.
+
+
+If traffic is:
+
+    Internet -> TCP 3389 -> Web VM
+
+and no earlier custom rule allows it:
+
+    Custom rules -> No matching allow
+          |
+          v
+    Default DenyAllInBound
+          |
+          v
+        DENY
+
+
+IMPORTANT DEFAULT OUTBOUND CONCEPTS
+----------------------------------
+
+Common default outbound rules include conceptually:
+
+    65000 AllowVnetOutBound
+
+    65001 AllowInternetOutBound
+
+    65500 DenyAllOutBound
+
+
+Simplified meaning:
+
+    Appropriate VNet traffic is allowed by the default rule.
+    Internet outbound traffic is allowed by the default rule.
+    Remaining unmatched traffic is denied.
+
+
+Example:
+
+Custom rule:
+
+    Priority: 100
+    Destination: Internet
+    Action: Deny
+
+The custom deny is evaluated before the default Internet allow.
+
+Result:
+
+    VM -> Internet -> DENY
+
+
+IMPORTANT:
+
+Always inspect the actual Azure NSG configuration and effective security
+rules for the specific resource because real environments may contain custom
+rules and other applicable controls.
+
+
+=================================================
+12. NSG AT SUBNET LEVEL
+=================================================
+
+An NSG can be associated with an entire subnet.
+
+Example:
+
+    VNet
+      |
+      +-- WebSubnet
+            |
+            +-- NSG-WebSubnet
+            |
+            +-- VM-1
+            +-- VM-2
+            +-- VM-3
+
+
+The subnet-level NSG provides a common security policy for workloads in that
+subnet.
+
+Example rules:
+
+    Allow TCP 443 from Internet
+    Deny TCP 3389 from Internet
+
+
+Conceptually:
+
+    Internet
+       |
+       +-- TCP 443 -> Allowed
+       |
+       +-- TCP 3389 -> Denied
+
+
+Why use subnet-level NSGs?
+
+    - Common workload security boundary
+    - Easier policy management
+    - One policy can protect multiple VMs
+    - Useful for tier-based segmentation
+
+
+Example:
+
+All web servers in WebSubnet should have:
+
+    Allow HTTP/HTTPS
+    Deny direct RDP from Internet
+
+A subnet-level NSG can enforce this common policy.
+
+
+=================================================
+13. NSG AT NIC LEVEL
+=================================================
+
+An NSG can also be associated directly with a Network Interface (NIC).
+
+Example:
+
+    WebSubnet
+       |
+       +-- VM-1
+       |     |
+       |     +-- NIC
+       |           |
+       |           +-- NSG-VM1
+       |
+       +-- VM-2
+             |
+             +-- NIC
+                   |
+                   +-- NSG-VM2
+
+
+NIC-level NSGs provide more granular control.
+
+Example:
+
+    VM-1:
+        Allow SSH from Admin Network
+
+    VM-2:
+        Do not allow SSH
+
+
+Both VMs can be in the same subnet but have different NIC-level policies.
+
+
+=================================================
+14. SUBNET NSG VS NIC NSG
+=================================================
+
+Comparison:
+
+    +----------------+---------------------------+-------------------------+
+    | Feature        | Subnet NSG                | NIC NSG                 |
+    +----------------+---------------------------+-------------------------+
+    | Scope          | Entire subnet             | Specific NIC            |
+    | Resources      | Multiple resources        | One NIC/resource        |
+    | Management     | Centralized/common policy | Granular control        |
+    | Common use     | Workload security tier    | Per-VM exceptions       |
+    +----------------+---------------------------+-------------------------+
+
+
+Recommended mental model:
+
+    Subnet NSG = Main security boundary for a group of workloads.
+
+    NIC NSG = Additional granular policy when genuinely needed.
+
+
+=================================================
+15. WHAT IF BOTH SUBNET AND NIC NSGs APPLY?
+=================================================
+
+Both the subnet-level and NIC-level NSGs can participate in security
+evaluation.
+
+Conceptually:
+
+    Traffic
+       |
+       v
+    Subnet-level security
+       |
+       v
+    NIC-level security
+       |
+       v
+    VM
+
+
+Practical rule:
+
+    The traffic must be permitted by the applicable security controls.
+
+If an applicable NSG denies the traffic, the traffic is blocked.
+
+Example:
+
+    Subnet NSG:
+        Allow TCP 443
+
+    NIC NSG:
+        Deny TCP 443
+
+Result:
+
+    DENY
+
+
+Another example:
+
+    Subnet NSG:
+        Deny TCP 22
+
+    NIC NSG:
+        Allow TCP 22
+
+The NIC-level allow does not magically bypass the subnet-level deny.
+
+Result:
+
+    DENY
+
+
+IMPORTANT DESIGN PRINCIPLE:
+
+Using both subnet and NIC NSGs can make security troubleshooting more complex.
+
+A common approach is:
+
+    Use subnet-level NSGs for primary workload security boundaries.
+
+    Use NIC-level NSGs only for specific per-NIC requirements or exceptions.
+
+
+=================================================
+16. APPLICATION SECURITY GROUP (ASG)
+=================================================
+
+An Application Security Group, or ASG, allows you to group Azure network
+interfaces logically according to application role.
+
+Example workload:
+
+WEB SERVERS:
+
+    10.0.1.4
+    10.0.1.5
+    10.0.1.6
+
+APPLICATION SERVERS:
+
+    10.0.2.4
+    10.0.2.5
+    10.0.2.6
+
+DATABASE SERVERS:
+
+    10.0.3.4
+    10.0.3.5
+
+
+Instead of thinking only:
+
+    "Which IP addresses are these?"
+
+ASGs allow you to think:
+
+    "Which application tier do these workloads belong to?"
+
+
+=================================================
+17. WHAT PROBLEM DOES ASG SOLVE?
+=================================================
+
+Without ASGs, security rules can become heavily dependent on IP addresses.
+
+Example:
+
+    Source:
+
+        10.0.1.4
+        10.0.1.5
+        10.0.1.6
+
+    Destination:
+
+        10.0.2.4
+        10.0.2.5
+        10.0.2.6
+
+
+This becomes difficult to manage when workloads are:
+
+    - Created
+    - Deleted
+    - Replaced
+    - Autoscaled
+    - Moved to different IPs
+
+
+Suppose a new web server is created:
+
+    10.0.1.20
+
+If your security model depends on specific individual IP addresses, rules may
+need to be updated.
+
+But the real business/security requirement might be:
+
+    Only Web Tier should communicate with Application Tier on TCP 8080.
+
+
+That requirement is based on APPLICATION ROLE, not individual IP addresses.
+
+ASGs help express the logical requirement.
+
+
+=================================================
+18. GROUPING VMS LOGICALLY INSTEAD OF BY IP
+=================================================
+
+Create an ASG:
+
+    ASG-Web
+
+Associate the NICs of web VMs:
+
+    Web VM-1 --+
+               |
+    Web VM-2 --+--> ASG-Web
+               |
+    Web VM-3 --+
+
+
+Create:
+
+    ASG-App
+
+Associate:
+
+    App VM-1 --+
+               |
+    App VM-2 --+--> ASG-App
+               |
+    App VM-3 --+
+
+
+Create:
+
+    ASG-Database
+
+Associate:
+
+    DB VM-1 --+
+              +--> ASG-Database
+    DB VM-2 --+
+
+
+Now the logical application architecture is:
+
+    ASG-Web
+       |
+       | TCP 8080
+       v
+    ASG-App
+       |
+       | TCP 1433
+       v
+    ASG-Database
+
+
+This is easier to understand than a long list of individual IP addresses.
+
+
+=================================================
+19. USING ASG INSIDE NSG RULES
+=================================================
+
+This is the main benefit of ASGs.
+
+Example NSG rule:
+
+    Source:           ASG-Web
+    Destination:      ASG-App
+    Protocol:         TCP
+    Destination Port: 8080
+    Action:           Allow
+
+
+Meaning:
+
+    Allow workloads belonging to the Web application group to communicate
+    with workloads belonging to the App application group on TCP port 8080.
+
+
+Conceptually:
+
+    +-------------------+
+    | ASG-Web           |
+    |                   |
+    | Web VM-1          |
+    | Web VM-2          |
+    +---------+---------+
+              |
+              | TCP 8080
+              v
+    +-------------------+
+    | NSG RULE          |
+    |                   |
+    | ASG-Web           |
+    |      ->           |
+    | ASG-App           |
+    | TCP 8080          |
+    | ALLOW             |
+    +---------+---------+
+              |
+              v
+    +-------------------+
+    | ASG-App           |
+    |                   |
+    | App VM-1          |
+    | App VM-2          |
+    +-------------------+
+
+
+The rule is based on logical application membership.
+
+
+=================================================
+20. ASG AND SCALING
+=================================================
+
+Suppose:
+
+    ASG-Web
+
+contains:
+
+    Web-1 -> 10.0.1.4
+    Web-2 -> 10.0.1.5
+
+
+The NSG rule is:
+
+    ASG-Web -> ASG-App
+    TCP 8080
+    ALLOW
+
+
+Autoscaling creates:
+
+    Web-3 -> 10.0.1.20
+    Web-4 -> 10.0.1.21
+
+
+When the new workload NICs are associated with ASG-Web, the logical security
+model continues to work without rewriting the NSG rule around every individual
+IP address.
+
+This is especially useful for dynamic environments.
+
+
+=================================================
+21. THREE-TIER APPLICATION EXAMPLE
+=================================================
+
+Architecture:
+
+                    Internet
+                       |
+                       | HTTPS TCP 443
+                       v
+                +--------------+
+                | ASG-Web      |
+                | Web Tier     |
+                +------+-------+
+                       |
+                       | TCP 8080
+                       v
+                +--------------+
+                | ASG-App      |
+                | App Tier     |
+                +------+-------+
+                       |
+                       | TCP 1433
+                       v
+                +--------------+
+                | ASG-Database |
+                | Database Tier|
+                +--------------+
+
+
+Security rules:
+
+RULE 1:
+
+    Source:      Internet
+    Destination: ASG-Web
+    Port:        443
+    Action:      Allow
+
+
+RULE 2:
+
+    Source:      ASG-Web
+    Destination: ASG-App
+    Port:        8080
+    Action:      Allow
+
+
+RULE 3:
+
+    Source:      ASG-App
+    Destination: ASG-Database
+    Port:        1433
+    Action:      Allow
+
+
+Allowed flow:
+
+    Internet
+       |
+       | HTTPS 443
+       v
+    ASG-Web
+       |
+       | TCP 8080
+       v
+    ASG-App
+       |
+       | TCP 1433
+       v
+    ASG-Database
+
+
+Unwanted direct access can remain blocked.
+
+For example:
+
+    Internet
+       |
+       +------X------> ASG-App
+       |
+       +------X------> ASG-Database
+
+
+This is called application-tier segmentation.
+
+
+=================================================
+22. NSG VS ASG
+=================================================
+
+NSG:
+
+    Main purpose:
+        Enforce network traffic rules.
+
+    Contains:
+        Allow/Deny rules.
+
+    Can:
+        Allow or deny traffic.
+
+    Associated with:
+        Subnets and NICs.
+
+    Examples:
+
+        Allow Internet -> TCP 443
+        Deny Internet -> TCP 3389
+        Allow ASG-Web -> ASG-App TCP 8080
+
+
+ASG:
+
+    Main purpose:
+        Logically group workloads according to application role.
+
+    Contains:
+        NIC memberships.
+
+    Does NOT:
+        Allow or deny traffic by itself.
+
+    Used as:
+        Source or destination identity inside supported NSG rules.
+
+
+Simple memory rule:
+
+    NSG = Security policy enforcement
+
+    ASG = Logical application grouping
+
+
+=================================================
+23. HOW NSG AND ASG WORK TOGETHER
+=================================================
+
+ASG answers:
+
+    WHO is communicating?
+
+Examples:
+
+    ASG-Web
+    ASG-App
+    ASG-Database
+
+
+NSG answers:
+
+    WHAT traffic is allowed?
+
+Examples:
+
+    Allow Web -> App on TCP 8080
+    Allow App -> Database on TCP 1433
+
+
+Together:
+
+    +---------------------------------------+
+    | ASG                                   |
+    |                                       |
+    | Defines logical workload identity     |
+    |                                       |
+    | "Web Tier"                            |
+    | "App Tier"                            |
+    | "Database Tier"                       |
+    +--------------------+------------------+
+                         |
+                         | Used in
+                         v
+    +---------------------------------------+
+    | NSG RULE                              |
+    |                                       |
+    | Source:      ASG-Web                  |
+    | Destination: ASG-App                  |
+    | Port:        TCP 8080                 |
+    | Action:      Allow                    |
+    +---------------------------------------+
+
+
+ASG = WHO
+
+NSG = WHAT TRAFFIC IS ALLOWED
+
+
+=================================================
+24. NSG RULE PROCESSING WITH ASG
+=================================================
+
+Suppose an NSG contains:
+
+Rule 1:
+
+    Priority:    100
+    Source:      ASG-Web
+    Destination: ASG-App
+    Port:        8080
+    Action:      Allow
+
+
+Rule 2:
+
+    Priority:    200
+    Source:      Any
+    Destination: ASG-App
+    Port:        8080
+    Action:      Deny
+
+
+Traffic from a member of ASG-Web:
+
+    Web VM -> App VM -> TCP 8080
+
+
+Evaluation:
+
+    Priority 100
+        |
+        +-- Is source in ASG-Web? YES
+        |
+        +-- Is destination in ASG-App? YES
+        |
+        +-- Is destination port 8080? YES
+        |
+        v
+      ALLOW
+
+
+Traffic from a VM not in ASG-Web:
+
+    Random VM -> App VM -> TCP 8080
+
+
+Evaluation:
+
+    Priority 100
+        |
+        +-- Source in ASG-Web? NO
+        |
+        v
+      No match
+
+    Priority 200
+        |
+        v
+      Matches
+        |
+        v
+      DENY
+
+
+=================================================
+25. ASG DOES NOT ROUTE TRAFFIC
+=================================================
+
+ASGs are not routing components.
+
+ASG does NOT answer:
+
+    Where should the traffic go?
+
+Routing is still handled by:
+
+    - System Routes
+    - UDRs
+    - Route Tables
+    - Gateway routes
+    - VNet Peering routes
+
+
+ASG is used for security rule matching.
+
+Mental model:
+
+    ROUTING:
+        Where does traffic go?
+
+        System Routes
+        UDRs
+        Route Tables
+
+
+    SECURITY:
+        Is Web Tier allowed to reach App Tier?
+
+        NSG rules
+        potentially using ASGs
+
+
+=================================================
+26. COMPLETE FLOW - ROUTING + NSG + ASG
+=================================================
+
+Example:
+
+                         INTERNET
+                             |
+                             | TCP 443
+                             v
+                    +-----------------+
+                    | ROUTING         |
+                    | Determines path |
+                    +--------+--------+
+                             |
+                             v
+                    +-----------------+
+                    | NSG RULE        |
+                    |                 |
+                    | Internet ->     |
+                    | ASG-Web : 443   |
+                    | ALLOW           |
+                    +--------+--------+
+                             |
+                             v
+                       +-----------+
+                       | ASG-Web   |
+                       | Web VMs   |
+                       +-----+-----+
+                             |
+                             | TCP 8080
+                             v
+                    +-----------------+
+                    | NSG RULE        |
+                    |                 |
+                    | ASG-Web ->      |
+                    | ASG-App : 8080  |
+                    | ALLOW           |
+                    +--------+--------+
+                             |
+                             v
+                       +-----------+
+                       | ASG-App   |
+                       | App VMs   |
+                       +-----+-----+
+                             |
+                             | TCP 1433
+                             v
+                    +-----------------+
+                    | NSG RULE        |
+                    |                 |
+                    | ASG-App ->      |
+                    | ASG-Database    |
+                    | TCP 1433 ALLOW  |
+                    +--------+--------+
+                             |
+                             v
+                       +-------------+
+                       | ASG-Database |
+                       | Database VMs |
+                       +-------------+
+
+
+=================================================
+27. COMMON MISTAKES
+=================================================
+
+MISTAKE 1: THINKING NSG IS A ROUTER
+-----------------------------------
+
+Wrong:
+
+    NSG decides where traffic goes.
+
+Correct:
+
+    Route decides where traffic goes.
+    NSG decides whether traffic is allowed.
+
+
+MISTAKE 2: THINKING NSG IS STATELESS
+------------------------------------
+
+Wrong.
+
+NSGs are stateful.
+
+Return traffic for an established allowed flow is handled as part of that flow.
+
+
+MISTAKE 3: THINKING A HIGHER NUMBER HAS HIGHER PRIORITY
+-------------------------------------------------------
+
+Wrong.
+
+Correct:
+
+    Priority 100 is evaluated before Priority 200.
+
+Memory rule:
+
+    Lower number = higher priority.
+
+
+MISTAKE 4: THINKING "ALLOW ALWAYS BEATS DENY"
+---------------------------------------------
+
+NSG processing is not based on a simple universal "allow wins" or "deny wins"
+statement.
+
+Correct principle:
+
+    Rules are evaluated by priority.
+    The first matching rule determines the result.
+
+
+MISTAKE 5: THINKING ASG BLOCKS TRAFFIC
+--------------------------------------
+
+Wrong.
+
+ASG:
+
+    Groups workloads logically.
+
+NSG:
+
+    Enforces Allow/Deny rules.
+
+
+MISTAKE 6: USING INDIVIDUAL IP ADDRESSES FOR EVERYTHING
+-------------------------------------------------------
+
+Difficult model:
+
+    10.0.1.4
+    10.0.1.5
+    10.0.1.6
+
+Better logical model where appropriate:
+
+    ASG-Web
+
+
+Then:
+
+    ASG-Web -> ASG-App -> TCP 8080
+
+
+=================================================
+28. SECURITY TROUBLESHOOTING CHECKLIST
+=================================================
+
+If traffic is not working, check the following:
+
+1. Is there a valid route to the destination?
+
+2. Is a UDR sending traffic to an unexpected next hop?
+
+3. Is a subnet-level NSG blocking the traffic?
+
+4. Is a NIC-level NSG blocking the traffic?
+
+5. Does the source/destination match the expected NSG rule?
+
+6. Is the correct protocol being used?
+
+7. Is the correct destination port being used?
+
+8. Does a higher-priority rule match first?
+
+9. Is the traffic being affected by the default deny rule?
+
+10. If ASGs are used, are the correct NICs members of the correct ASGs?
+
+11. Is another security device involved?
+
+    Examples:
+
+        Azure Firewall
+        NVA
+        OS firewall
+        Application firewall
+
+12. Is the return path correct?
+
+13. Is the application actually listening on the expected port?
+
+
+Useful troubleshooting concept:
+
+    EFFECTIVE SECURITY =
+
+        Applicable Subnet NSG Rules
+                +
+        Applicable NIC NSG Rules
+                +
+        Other security controls in the path
+
+
+=================================================
+29. FINAL SUMMARY
+=================================================
+
+NETWORK SECURITY GROUP (NSG)
+
+    NSG = Azure network traffic filter.
+
+    It contains Allow/Deny rules based on:
+
+        - Source
+        - Destination
+        - Ports
+        - Protocol
+        - Direction
+        - Priority
+
+
+INBOUND RULES
+
+    Control traffic entering the resource.
+
+Example:
+
+    Internet -> Web VM -> TCP 443
+
+
+OUTBOUND RULES
+
+    Control traffic leaving the resource.
+
+Example:
+
+    VM -> Internet -> TCP 443
+
+
+STATEFUL
+
+    NSGs are stateful.
+
+    Return traffic belonging to an established allowed flow does not require
+    a separate opposite-direction rule merely for the response.
+
+
+RULE PRIORITY
+
+    Lower number = evaluated first.
+
+    First matching rule wins.
+
+
+DEFAULT RULES
+
+    Azure provides baseline default rules.
+
+    Custom rules can be evaluated before default rules.
+
+
+SUBNET NSG
+
+    One security policy applied at subnet scope.
+
+    Useful for:
+
+        - Common workload policy
+        - Application tiers
+        - Centralized subnet-level security
+
+
+NIC NSG
+
+    Security policy applied to a specific NIC.
+
+    Useful for:
+
+        - Granular control
+        - Per-VM exceptions
+
+
+BOTH SUBNET AND NIC NSGs
+
+    Applicable security controls must permit the traffic.
+
+    A deny at an applicable layer can block the flow.
+
+
+APPLICATION SECURITY GROUP (ASG)
+
+    ASG = Logical grouping of NICs by application role.
+
+Examples:
+
+    ASG-Web
+    ASG-App
+    ASG-Database
+
+
+ASG SOLVES
+
+    The problem of managing security based only on changing or numerous
+    individual IP addresses.
+
+
+NSG + ASG
+
+    ASG answers:
+
+        WHO is communicating?
+
+    NSG answers:
+
+        WHAT traffic is allowed?
+
+
+Example:
+
+    Source: ASG-Web
+    Destination: ASG-App
+    Port: TCP 8080
+    Action: Allow
+
+
+=================================================
+30. MASTER MENTAL MODEL
+=================================================
+
+                     APPLICATION
+                          |
+                          v
+                 Destination identified
+                          |
+                          v
+                +--------------------+
+                | ROUTING            |
+                |                    |
+                | System Routes      |
+                | UDRs               |
+                | Route Tables       |
+                | Gateway Routes     |
+                +---------+----------+
+                          |
+                          v
+                  Where does it go?
+                          |
+                          v
+                +--------------------+
+                | SECURITY           |
+                |                    |
+                | NSG Rules          |
+                |                    |
+                | ASGs identify      |
+                | logical workloads  |
+                +---------+----------+
+                          |
+                          v
+                 Is traffic allowed?
+                     |           |
+                    YES          NO
+                     |           |
+                     v           v
+                 Forwarded     Blocked
+
+
+ONE-LINE MEMORY SUMMARY
+-----------------------
+
+    ROUTES decide WHERE traffic goes.
+
+    NSGs decide WHETHER traffic is allowed.
+
+    ASGs identify WHO the workloads are.
+
+=================================================
+END OF NOTES
+=================================================
