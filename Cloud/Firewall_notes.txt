@@ -1,0 +1,813 @@
+AZURE NETWORKING - FIREWALLS COMPLETE NOTES
+==========================================
+
+TOPICS
+------
+1. Azure Firewall overview
+2. Stateful firewall
+3. Firewall as a Service
+4. Azure Firewall vs NSG
+5. Network Rules
+6. Application Rules
+7. NAT Rules
+8. DNAT and SNAT
+9. Routing traffic through Azure Firewall
+10. NSG and Azure Firewall together
+11. Hub-and-spoke architecture
+12. Troubleshooting
+13. Final summary
+
+==================================================
+1. WHAT IS AZURE FIREWALL?
+==================================================
+
+Azure Firewall is a managed, cloud-native firewall service in Microsoft Azure.
+
+Its purpose is to provide centralized network security and traffic control for
+traffic routed through the firewall.
+
+Conceptually:
+
+    Source
+       |
+       v
+    +----------------------+
+    |    AZURE FIREWALL    |
+    | Inspect traffic      |
+    | Apply rules          |
+    | Allow or Deny        |
+    | Log activity         |
+    +----------+-----------+
+               |
+          +----+----+
+          |         |
+        Allow      Deny
+          |         |
+          v         X
+    Destination   Blocked
+
+Azure Firewall acts as a centralized security checkpoint.
+
+==================================================
+2. WHY USE AZURE FIREWALL IF WE ALREADY HAVE NSGs?
+==================================================
+
+NSGs and Azure Firewall solve different problems.
+
+NSG:
+
+    Distributed network traffic filtering close to workloads.
+    Associated with subnets or NICs.
+
+Azure Firewall:
+
+    Centralized, managed firewall service.
+    Inspects traffic that is routed through it.
+
+Simple mental model:
+
+    NSG = Local/distributed security filter
+
+    Azure Firewall = Centralized security checkpoint
+
+They can work together.
+
+==================================================
+3. AZURE FIREWALL IS STATEFUL
+==================================================
+
+A stateful firewall tracks information about active connections.
+
+Example:
+
+    VM
+     |
+     | Request TCP 443
+     v
+    Azure Firewall
+     |
+     v
+    Internet Server
+
+The firewall evaluates the new connection.
+
+If allowed:
+
+    NEW CONNECTION
+          |
+          v
+    Evaluate firewall rules
+          |
+      +---+---+
+      |       |
+    Allow    Deny
+      |
+      v
+    Track connection state
+      |
+      v
+    Associated return traffic can be recognized as part of the flow.
+
+Therefore, associated return traffic for an established allowed flow does not
+need to be treated like an unrelated new connection.
+
+A new connection initiated later is evaluated as a new flow.
+
+==================================================
+4. FIREWALL AS A SERVICE
+==================================================
+
+Traditional firewall model may require managing:
+
+    - Firewall appliance/VM
+    - Operating system
+    - Patching
+    - Capacity
+    - High availability
+    - Scaling
+    - Lifecycle management
+
+With a managed firewall service, your main focus is on:
+
+    - Security policies
+    - Firewall rules
+    - Traffic design
+    - Logging
+    - Monitoring
+
+Azure manages the underlying managed service infrastructure.
+
+Simple idea:
+
+    You manage the security configuration.
+
+    Azure manages the firewall service infrastructure.
+
+==================================================
+5. ROUTING TRAFFIC THROUGH AZURE FIREWALL
+==================================================
+
+Azure Firewall does not automatically inspect every packet in Azure.
+
+Traffic must be directed through the firewall if it needs inspection.
+
+Example:
+
+    VM
+     |
+     v
+    Route Table / UDR
+     |
+     | Route directs traffic to firewall
+     v
+    Azure Firewall
+     |
+     v
+    Internet
+
+Important relationship:
+
+    ROUTING decides whether traffic reaches the firewall.
+
+    FIREWALL decides whether traffic passing through it is allowed.
+
+If traffic does not reach Azure Firewall, Azure Firewall cannot inspect it.
+
+==================================================
+6. AZURE FIREWALL VS NSG
+==================================================
+
+NSG:
+
+    Primary role:
+        Distributed network traffic filtering.
+
+    Scope:
+        Subnet and NIC.
+
+    Typical use:
+        Workload segmentation and local security boundaries.
+
+Azure Firewall:
+
+    Primary role:
+        Centralized managed firewall and traffic inspection.
+
+    Scope:
+        Traffic routed through the firewall.
+
+    Basic rule concepts:
+        Network Rules
+        Application Rules
+        NAT Rules
+
+Comparison:
+
+    NSG
+        - Distributed filtering
+        - Subnet/NIC scope
+        - Workload segmentation
+        - Stateful
+
+    Azure Firewall
+        - Centralized managed firewall
+        - Inspects routed traffic
+        - Network/application/NAT rule capabilities
+        - Stateful
+
+NSGs and Azure Firewall are not necessarily replacements.
+
+==================================================
+7. NSG AND AZURE FIREWALL TOGETHER
+==================================================
+
+Example:
+
+    Internet
+       |
+       v
+    Azure Firewall
+       |
+       v
+    WebSubnet
+       |
+       v
+    NSG-Web
+       |
+       v
+    Web VM
+
+Azure Firewall provides centralized inspection.
+
+NSG provides additional filtering at subnet/NIC level.
+
+Example:
+
+    Azure Firewall -> Allows
+
+    NSG -> Denies
+
+Final result:
+
+    Traffic is blocked.
+
+This is defense in depth.
+
+==================================================
+8. NETWORK RULES
+==================================================
+
+A network rule controls traffic using network-level information.
+
+Common concepts:
+
+    - Source
+    - Destination
+    - Protocol
+    - Destination Port
+    - Allow/Deny
+
+Example:
+
+    Source:           10.0.1.0/24
+    Destination:      10.50.10.20
+    Protocol:         TCP
+    Destination Port: 1433
+    Action:           Allow
+
+Meaning:
+
+    Allow the specified source network to connect to the destination using
+    TCP port 1433.
+
+Think:
+
+    Network/IP
+        +
+    Protocol
+        +
+    Port
+        +
+    Allow/Deny
+
+==================================================
+9. APPLICATION RULES
+==================================================
+
+Application rules provide application-aware control for supported application
+traffic.
+
+Simple comparison:
+
+    Network Rule:
+        "Allow traffic to this IP/network on this port."
+
+    Application Rule:
+        "Allow access to this approved application destination."
+
+Conceptual example:
+
+    Source:      AppSubnet
+    Protocol:    HTTPS
+    Destination: approved-service.example.com
+    Action:      Allow
+
+Flow:
+
+    VM
+     |
+     | HTTPS
+     v
+    Azure Firewall
+     |
+     | Is this approved application destination?
+     |
+     +---- YES ----> Allow
+     |
+     +---- NO -----> Block
+
+Application rules are useful when services have:
+
+    - Multiple IP addresses
+    - Changing IP addresses
+    - Large cloud-hosted infrastructure
+
+Application-aware policy can be expressed closer to the intended destination,
+depending on supported protocols and firewall capabilities.
+
+==================================================
+10. NETWORK RULES VS APPLICATION RULES
+==================================================
+
+NETWORK RULE:
+
+    Source:      10.0.1.0/24
+    Destination: 20.50.60.70
+    Protocol:    TCP
+    Port:        443
+    Action:      Allow
+
+Meaning:
+
+    Allow TCP port 443 to that network destination.
+
+APPLICATION RULE:
+
+    Source:      10.0.1.0/24
+    Destination: approved.example.com
+    Protocol:    HTTPS
+    Action:      Allow
+
+Meaning:
+
+    Allow supported application traffic to the approved application
+    destination.
+
+Memory model:
+
+    NETWORK RULE
+        Network/IP + Protocol + Port
+
+    APPLICATION RULE
+        Application-aware policy + supported application protocol +
+        domain/FQDN-oriented destination where supported
+
+==================================================
+11. NAT RULES
+==================================================
+
+NAT means:
+
+    Network Address Translation
+
+NAT translates address and/or port information.
+
+The most important starting concept is DNAT.
+
+==================================================
+12. DNAT
+==================================================
+
+DNAT means:
+
+    Destination Network Address Translation
+
+DNAT changes destination address and/or destination port.
+
+Common use:
+
+    Publish an internal private service through a public firewall address.
+
+Example:
+
+    Firewall Public IP:
+
+        52.x.x.x
+
+    Internal Web Server:
+
+        10.0.1.4
+
+External user connects to:
+
+    52.x.x.x:443
+
+DNAT translates the destination to:
+
+    10.0.1.4:443
+
+Flow:
+
+    Internet User
+          |
+          | HTTPS
+          v
+    Firewall Public IP
+    52.x.x.x:443
+          |
+          | DNAT translation
+          v
+    Private Server
+    10.0.1.4:443
+
+Simple meaning:
+
+    Traffic arrives at the firewall public address.
+    The destination is translated to the correct internal private server.
+
+==================================================
+13. SNAT
+==================================================
+
+SNAT means:
+
+    Source Network Address Translation
+
+SNAT changes source address and/or source port information.
+
+Simple distinction:
+
+    DNAT = Changes destination information
+
+    SNAT = Changes source information
+
+==================================================
+14. COMPLETE OUTBOUND FLOW
+==================================================
+
+    Web VM
+    10.0.1.4
+        |
+        | Route via UDR
+        v
+    Azure Firewall
+        |
+        | Network/Application rules
+        v
+    Internet
+
+STEP 1 - ROUTING
+
+    Routing/UDR determines whether traffic goes to Azure Firewall.
+
+STEP 2 - FIREWALL INSPECTION
+
+    Azure Firewall evaluates applicable policy and rules.
+
+STEP 3 - RESULT
+
+    YES -> Forward traffic
+
+    NO  -> Block traffic
+
+Full model:
+
+    VM
+     |
+     v
+    ROUTE / UDR
+     |
+     v
+    AZURE FIREWALL
+     |
+     +---- Rule Match? ----+
+     |                     |
+    YES                   NO
+     |                     |
+     v                     v
+    Forward              Block
+
+==================================================
+15. COMPLETE INBOUND FLOW
+==================================================
+
+    Internet
+       |
+       v
+    Azure Firewall Public IP
+       |
+       | DNAT
+       v
+    Private Web Server
+
+Example:
+
+    Internet
+       |
+       | HTTPS TCP 443
+       v
+    Firewall Public IP
+       |
+       | DNAT
+       v
+    10.0.1.4
+       |
+       v
+    Web Server
+
+The internal workload can also have NSG protection.
+
+Multiple security layers may participate.
+
+==================================================
+16. HUB-AND-SPOKE ARCHITECTURE
+==================================================
+
+Azure Firewall is commonly used as a centralized security component.
+
+                    ON-PREMISES
+                         |
+                    VPN / ExpressRoute
+                         |
+                         v
+                  +-------------+
+                  | HUB VNET    |
+                  |             |
+                  | Azure       |
+                  | Firewall    |
+                  +------+------+ 
+                         |
+           +-------------+-------------+
+           |             |             |
+           v             v             v
+        Spoke-1       Spoke-2       Spoke-3
+        Web Apps      App Apps      Data Apps
+
+Traffic requiring centralized inspection can be routed through the firewall.
+
+Example:
+
+    Spoke
+      |
+      | UDR
+      v
+    Azure Firewall
+      |
+      v
+    Internet
+
+Important:
+
+    The exact architecture depends on routing and security requirements.
+
+==================================================
+17. FIREWALL RULE TYPES - QUICK COMPARISON
+==================================================
+
+NETWORK RULE
+
+    Controls network traffic.
+
+    Uses concepts such as:
+
+        Source
+        Destination
+        Protocol
+        Port
+
+APPLICATION RULE
+
+    Controls supported application traffic using application-aware concepts.
+
+    Example:
+
+        Allow HTTPS to approved.example.com
+
+NAT RULE
+
+    Translates addresses and/or ports.
+
+    Example:
+
+        Public IP:443 -> Private IP:443
+
+==================================================
+18. BASIC TROUBLESHOOTING CHECKLIST
+==================================================
+
+1. Is traffic reaching the firewall?
+
+    Check effective routes and UDRs.
+
+2. Does the correct rule match?
+
+    Check:
+
+        - Source
+        - Destination
+        - Protocol
+        - Port
+        - Domain/FQDN where relevant
+        - Rule type
+
+3. Is another rule or policy affecting traffic?
+
+4. Is another security layer blocking traffic?
+
+    Check:
+
+        - NSG
+        - OS firewall
+        - Application configuration
+        - Other security appliances
+
+5. Is the return path correct?
+
+    Complex stateful designs require correct traffic paths.
+
+==================================================
+19. COMMON MISTAKES
+==================================================
+
+MISTAKE 1:
+
+    "Azure Firewall automatically sees all traffic."
+
+Correct:
+
+    Traffic must be routed through it.
+
+MISTAKE 2:
+
+    "Azure Firewall and NSG are the same."
+
+Correct:
+
+    NSG = Distributed subnet/NIC-level filtering.
+
+    Azure Firewall = Centralized managed firewall service.
+
+MISTAKE 3:
+
+    "Azure Firewall replaces routing."
+
+Correct:
+
+    Routing decides where traffic goes.
+
+    Firewall decides whether routed traffic is allowed.
+
+MISTAKE 4:
+
+    "If the firewall allows traffic, connectivity must work."
+
+Incorrect.
+
+Other layers may still block traffic:
+
+    - NSG
+    - OS firewall
+    - Application
+    - Routing
+    - DNS
+    - Other appliances
+
+==================================================
+20. MASTER MENTAL MODEL
+==================================================
+
+                     SOURCE
+                        |
+                        v
+              +------------------+
+              | ROUTING          |
+              | System Routes    |
+              | UDRs             |
+              | Route Tables     |
+              +--------+---------+
+                       |
+                       v
+              Where should it go?
+                       |
+                       v
+              +------------------+
+              | AZURE FIREWALL   |
+              | Centralized      |
+              | Stateful         |
+              | Managed Service  |
+              |                  |
+              | Network Rules    |
+              | Application Rules|
+              | NAT Rules        |
+              +--------+---------+
+                       |
+                  Allow / Deny
+                       |
+                       v
+              +------------------+
+              | NSG              |
+              | Local filtering  |
+              | Subnet / NIC     |
+              +--------+---------+
+                       |
+                       v
+                  WORKLOAD
+
+Note:
+
+The exact packet path varies by architecture. This is a learning model showing
+the relationship between routing, centralized firewall inspection, and NSG
+filtering.
+
+==================================================
+21. FINAL SUMMARY
+==================================================
+
+AZURE FIREWALL
+
+    Managed, centralized, cloud-native firewall service.
+
+    It inspects and controls traffic routed through it.
+
+STATEFUL
+
+    Tracks connection state and recognizes associated return traffic for
+    established flows.
+
+FIREWALL AS A SERVICE
+
+    You manage policies and rules.
+
+    Azure manages the underlying firewall service infrastructure.
+
+NSG
+
+    Provides distributed traffic filtering at subnet and NIC level.
+
+NETWORK RULES
+
+    Source + Destination + Protocol + Port + Allow/Deny
+
+APPLICATION RULES
+
+    Application-aware control for supported application traffic.
+
+NAT RULES
+
+    Translate addresses and/or ports.
+
+DNAT
+
+    Public destination -> translated private destination.
+
+SNAT
+
+    Changes source information.
+
+MOST IMPORTANT RELATIONSHIP
+
+    ROUTING
+        |
+        v
+    Decides whether traffic reaches Azure Firewall
+        |
+        v
+    AZURE FIREWALL
+        |
+        v
+    Decides whether routed traffic is allowed
+        |
+        v
+    NSG
+        |
+        v
+    Provides additional subnet/NIC-level filtering
+
+ONE-LINE MEMORY SUMMARY
+
+    Routes decide WHERE traffic goes.
+
+    Azure Firewall centrally inspects and controls traffic routed through it.
+
+    NSGs provide distributed filtering close to workloads.
+
+    Network Rules control network/IP/protocol/port traffic.
+
+    Application Rules control supported application traffic using
+    application-aware concepts.
+
+    NAT Rules translate addresses and/or ports.
+
+==========================================
+END OF AZURE FIREWALL NOTES
+==========================================
