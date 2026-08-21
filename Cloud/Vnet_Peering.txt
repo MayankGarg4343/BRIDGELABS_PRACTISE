@@ -1,0 +1,646 @@
+AZURE NETWORKING - VNET PEERING COMPLETE NOTES
+==============================================
+
+1. WHAT IS VNET PEERING?
+==================================================
+
+VNet Peering is an Azure networking feature that connects two separate
+Azure Virtual Networks (VNets).
+
+After peering is configured, resources in the VNets can communicate using
+private IP addresses, subject to routing and security controls.
+
+Example:
+
+    VNet-A: 10.0.0.0/16
+          |
+          | VNet Peering
+          |
+    VNet-B: 10.1.0.0/16
+
+Simple definition:
+
+    VNet Peering connects separate Azure VNets and enables private network
+    communication between them.
+
+
+2. WHY DOES VNET PEERING EXIST?
+==================================================
+
+Separate VNets are separate network boundaries.
+
+Example:
+
+    +---------------------+
+    | VNet-A              |
+    | 10.0.0.0/16         |
+    | VM-A: 10.0.1.4      |
+    +---------------------+
+
+              |
+              | Peering
+              |
+
+    +---------------------+
+    | VNet-B              |
+    | 10.1.0.0/16         |
+    | VM-B: 10.1.1.4      |
+    +---------------------+
+
+VNet Peering provides connectivity so VM-A can communicate with VM-B using
+private addressing.
+
+
+3. WHY MULTIPLE VNETS?
+==================================================
+
+For small environments, one VNet with multiple subnets may be enough:
+
+    VNet
+      |
+      +-- WebSubnet
+      +-- AppSubnet
+      +-- DBSubnet
+
+Larger or more modular environments may use:
+
+    Web VNet
+       |
+       | Peering
+       v
+    App VNet
+       |
+       | Peering
+       v
+    Data VNet
+
+Benefits can include:
+
+    - Architectural separation
+    - Modular design
+    - Environment separation
+    - Team or ownership boundaries
+    - Security design flexibility
+    - Future connectivity planning
+    - Hub-and-spoke architectures
+
+
+4. PRIVATE IP COMMUNICATION
+==================================================
+
+Example:
+
+    Web VM: 10.0.1.4
+          |
+          | Private IP communication
+          v
+    App VM: 10.1.1.4
+
+Peering enables internal communication without unnecessarily exposing the
+destination workload to the public Internet.
+
+
+5. NON-OVERLAPPING ADDRESS SPACES
+==================================================
+
+Good planning:
+
+    VNet-A = 10.0.0.0/16
+    VNet-B = 10.1.0.0/16
+    VNet-C = 10.2.0.0/16
+
+Bad planning:
+
+    VNet-A = 10.0.0.0/16
+    VNet-B = 10.0.0.0/16
+
+Overlapping address spaces create routing ambiguity.
+
+Important rule:
+
+    Plan address spaces in advance and avoid overlaps for direct peering
+    scenarios.
+
+
+6. VNET PEERING VS VPN
+==================================================
+
+VNet Peering:
+
+    Connects Azure VNets through Azure networking.
+
+VPN:
+
+    Provides encrypted connectivity and is commonly used for remote access
+    or site-to-site connectivity.
+
+They are different connectivity mechanisms.
+
+
+7. PEERING AND ROUTING
+==================================================
+
+VNet Peering:
+
+    Provides connectivity between VNets.
+
+Routing:
+
+    Determines where traffic should be sent and which path it should take.
+
+You have already studied:
+
+    - System Routes
+    - User Defined Routes (UDRs)
+    - Route Tables
+
+Important relationship:
+
+    Peering gives connectivity capability.
+
+    Routing influences the traffic path.
+
+
+8. PEERING AND NSGS
+==================================================
+
+Peering does not automatically allow all traffic.
+
+Example:
+
+    Web VNet
+       |
+       | Peering
+       v
+    App VNet
+       |
+       v
+    NSG
+       |
+       +---- Allow or Deny
+       v
+    App VM
+
+Example rule:
+
+    Source: Web VNet
+    Destination: App Subnet
+    Protocol: TCP
+    Port: 8080
+    Action: Allow
+
+Key idea:
+
+    Peering provides the path.
+
+    NSGs filter traffic using security rules.
+
+
+9. PEERING AND AZURE FIREWALL
+==================================================
+
+Example:
+
+    Web VNet
+       |
+       | Peering
+       v
+    Hub VNet
+       |
+       | Azure Firewall
+       v
+    App VNet
+
+VNet Peering provides connectivity.
+
+Routing must be designed so traffic goes through Azure Firewall when
+centralized inspection is required.
+
+Important:
+
+    Azure Firewall does not automatically inspect all traffic merely because
+    VNets are peered.
+
+    Traffic must be routed through the firewall.
+
+
+10. MULTI-TIER ARCHITECTURE
+==================================================
+
+A multi-tier application can contain:
+
+    Web Tier
+        Handles web requests.
+
+    Application Tier
+        Handles business logic and application processing.
+
+    Data Tier
+        Handles databases and data services.
+
+Example:
+
+    Internet
+       |
+       v
+    +-------------------+
+    | WEB VNET          |
+    | 10.0.0.0/16       |
+    | Web Servers       |
+    +---------+---------+
+              |
+           Peering
+              |
+              v
+    +-------------------+
+    | APP VNET          |
+    | 10.1.0.0/16       |
+    | App Servers       |
+    +---------+---------+
+              |
+           Peering
+              |
+              v
+    +-------------------+
+    | DATA VNET         |
+    | 10.2.0.0/16       |
+    | Databases         |
+    +-------------------+
+
+Example traffic:
+
+    Internet -> Web Tier       HTTPS 443
+    Web Tier -> App Tier       TCP 8080
+    App Tier -> Database Tier  TCP 1433
+
+Example security policy:
+
+    Web -> App       Allow TCP 8080
+    App -> Database  Allow TCP 1433
+    Web -> Database  Deny
+
+
+11. ONE VNET WITH SUBNETS VS MULTIPLE PEERED VNETS
+==================================================
+
+ONE VNET:
+
+    VNet
+      |
+      +-- WebSubnet
+      +-- AppSubnet
+      +-- DBSubnet
+
+Advantages:
+
+    - Simpler design
+    - Suitable for many applications
+
+MULTIPLE VNETS:
+
+    Web VNet
+       |
+       | Peering
+       v
+    App VNet
+       |
+       | Peering
+       v
+    Data VNet
+
+Potential benefits:
+
+    - Greater modularity
+    - Larger architectural boundaries
+    - Support for complex enterprise designs
+    - Hub-and-spoke compatibility
+
+There is no universal rule. Choose based on requirements.
+
+
+12. PEERING IS NOT AUTOMATICALLY TRANSITIVE
+==================================================
+
+Suppose:
+
+    VNet-A <--> VNet-B <--> VNet-C
+
+Do not assume:
+
+    VNet-A automatically reaches VNet-C through VNet-B.
+
+Simple rule:
+
+    Peering is a direct connectivity relationship between the VNets that are
+    peered.
+
+Do not assume automatic transit through an intermediate VNet.
+
+
+13. HUB-AND-SPOKE ARCHITECTURE
+==================================================
+
+                       +----------------------+
+                       | HUB VNET             |
+                       | Azure Firewall       |
+                       | VPN Gateway          |
+                       | ExpressRoute Gateway |
+                       | Shared Services      |
+                       +----------+-----------+
+                                  |
+                 +----------------+----------------+
+                 |                |                |
+              Peering          Peering          Peering
+                 |                |                |
+                 v                v                v
+             Spoke-1          Spoke-2          Spoke-3
+             Web              App              Data
+
+The Hub can centralize shared connectivity and security services.
+
+Spokes contain application workloads.
+
+VNet Peering is an important building block for connecting hub and spokes.
+
+
+14. VNET PEERING DOES NOT REPLACE SECURITY
+==================================================
+
+VNet Peering = Connectivity
+
+Routing = Traffic path
+
+NSG / Firewall = Security enforcement
+
+Conceptual flow:
+
+    VNet Peering
+           |
+           v
+    Connectivity available
+           |
+           v
+    Routing / Traffic path
+           |
+           v
+    NSG / Firewall
+           |
+           v
+    Allow or Deny
+
+
+15. COMMON MISTAKES
+==================================================
+
+MISTAKE 1:
+
+    "Peering merges two VNets into one VNet."
+
+Correct:
+
+    The VNets remain separate. Peering creates connectivity between them.
+
+
+MISTAKE 2:
+
+    "Peering automatically allows all traffic."
+
+Correct:
+
+    NSGs, firewalls, and other controls can still allow or deny traffic.
+
+
+MISTAKE 3:
+
+    "Peering automatically gives Internet access."
+
+Correct:
+
+    Peering connects VNets. Internet access depends on the overall network
+    and routing architecture.
+
+
+MISTAKE 4:
+
+    "VNet Peering is the same as a VPN."
+
+Correct:
+
+    They are different connectivity technologies.
+
+
+MISTAKE 5:
+
+    "A <--> B and B <--> C means A automatically reaches C."
+
+Correct:
+
+    Do not assume peering is automatically transitive.
+
+
+MISTAKE 6:
+
+    "Peering replaces routing."
+
+Correct:
+
+    Peering provides connectivity capability. Routing determines the path.
+
+
+MISTAKE 7:
+
+    "Peering replaces a firewall."
+
+Correct:
+
+    Peering provides connectivity. Firewalls inspect and control traffic.
+
+
+16. MASTER MENTAL MODEL
+==================================================
+
+                    CONNECTIVITY
+                         |
+                         v
+                  VNET PEERING
+                         |
+                         v
+            Can the VNets reach each other?
+                         |
+                         v
+                     ROUTING
+                         |
+                         v
+            What path should traffic take?
+                         |
+                         v
+                 NSG / FIREWALL
+                         |
+                         v
+              Is the traffic allowed?
+
+
+Short version:
+
+    VNet Peering = CONNECTIVITY
+    Routing      = PATH
+    NSG/Firewall = SECURITY
+
+
+17. VNET PEERING VS OTHER CONCEPTS
+==================================================
+
+VNet:
+
+    Private logical network boundary in Azure.
+
+Subnet:
+
+    Smaller network segment inside a VNet.
+
+VNet Peering:
+
+    Connects separate VNets.
+
+Route Table:
+
+    Contains routes used for traffic forwarding decisions.
+
+UDR:
+
+    A custom route created by the user.
+
+NSG:
+
+    Filters traffic at subnet or NIC level.
+
+Azure Firewall:
+
+    Centralized managed firewall for traffic routed through it.
+
+VPN Gateway:
+
+    Provides VPN connectivity.
+
+ExpressRoute Gateway:
+
+    Provides connectivity for ExpressRoute circuits.
+
+
+18. FINAL SUMMARY
+==================================================
+
+VNET PEERING
+
+    Connects two separate Azure VNets and enables private communication
+    between their resources.
+
+WHY IT MATTERS
+
+    Helps build modular, scalable architectures such as multi-tier and
+    hub-and-spoke environments.
+
+ADDRESS PLANNING
+
+    Use non-overlapping address spaces.
+
+Example:
+
+    VNet-A = 10.0.0.0/16
+    VNet-B = 10.1.0.0/16
+    VNet-C = 10.2.0.0/16
+
+PEERING
+
+    Provides connectivity.
+
+ROUTING
+
+    Determines the traffic path.
+
+NSG
+
+    Filters traffic at subnet/NIC level.
+
+AZURE FIREWALL
+
+    Centrally inspects and controls traffic routed through it.
+
+IMPORTANT LIMITATION
+
+    Do not assume peering is automatically transitive.
+
+    A <--> B <--> C
+
+does not automatically mean:
+
+    A <--> C
+
+
+ONE-LINE MEMORY RULE
+==================================================
+
+    VNet Peering connects networks.
+
+    Routing chooses the path.
+
+    NSGs and Firewalls enforce security.
+
+
+19. EXAM/INTERVIEW RECAP
+==================================================
+
+Q: What is VNet Peering?
+
+A:
+
+    A feature that connects separate Azure VNets and enables private
+    communication between them.
+
+Q: Why use it?
+
+A:
+
+    To connect modular network environments and support multi-tier or
+    hub-and-spoke architectures.
+
+Q: Do peered VNets become one VNet?
+
+A:
+
+    No. They remain separate VNets.
+
+Q: Does peering automatically allow all traffic?
+
+A:
+
+    No. Security controls still apply.
+
+Q: Does peering replace routing?
+
+A:
+
+    No. Peering provides connectivity; routing determines the path.
+
+Q: Does peering replace NSGs or Azure Firewall?
+
+A:
+
+    No. Peering provides connectivity; security controls filter traffic.
+
+Q: What address planning principle is important?
+
+A:
+
+    Avoid overlapping address spaces for direct peering scenarios.
+
+Q: Is peering automatically transitive?
+
+A:
+
+    No. Do not assume traffic can automatically transit through an
+    intermediate peered VNet.
+
+==============================================
+END OF VNET PEERING COMPLETE NOTES
+==============================================
