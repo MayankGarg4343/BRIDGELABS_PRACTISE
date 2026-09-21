@@ -1,0 +1,825 @@
+AZURE CLI — LAB 1 DETAILED NOTES
+
+TOPIC: Resource Groups, CRUD, Tags, Locks, Queries, Output Formats &
+Verification
+
+1. LAB 1 OBJECTIVE
+
+The objective of Lab 1 was to become comfortable with the basic Azure
+CLI workflow before creating actual infrastructure.
+
+We practiced:
+
+-   Azure CLI authentication
+-   Subscription management
+-   CLI variables
+-   Resource Group creation
+-   Resource Group inspection
+-   Resource Group updates
+-   Tags
+-   Resource discovery
+-   Resource locks
+-   Resource Group deletion
+-   Deletion verification
+-   JMESPath –query
+-   Output formats
+
+The core administration pattern is:
+
+CREATE ↓ READ ↓ UPDATE ↓ READ / VERIFY ↓ DELETE ↓ VERIFY
+
+2. AZURE CLI
+
+Azure CLI is Microsoft’s command-line interface for managing Azure
+resources.
+
+General syntax:
+
+az
+
+Example:
+
+az group create –name rg-cli-lab –location eastus
+
+Breakdown:
+
+az | +– group -> Azure resource/service | +– create -> operation | +–
+–name -> parameter | +– –location -> parameter
+
+3. AUTHENTICATION
+
+Before managing Azure resources, we need an authenticated Azure CLI
+session.
+
+Login:
+
+az login
+
+Check the currently selected subscription:
+
+az account show
+
+Cleaner output:
+
+az account show –output table
+
+If using Azure Cloud Shell, you may already be authenticated.
+
+4. AZURE SUBSCRIPTIONS
+
+A subscription is an important Azure management boundary.
+
+Conceptually:
+
+Tenant | +– Subscription A | +– Resource Groups | +– Resources | +–
+Subscription B | +– Resource Groups | +– Resources | +– Subscription C
++– Resource Groups +– Resources
+
+List subscriptions:
+
+az account list –output table
+
+Check current subscription:
+
+az account show –output table
+
+Change active subscription:
+
+az account set –subscription “”
+
+Verify:
+
+az account show –output table
+
+IMPORTANT: Always know which subscription you are currently operating
+on. Otherwise, you may accidentally create resources in the wrong
+subscription.
+
+5. VARIABLES IN AZURE CLI
+
+Instead of repeatedly typing resource names, create variables.
+
+Example:
+
+RESOURCE_GROUP=“rg-cli-lab” LOCATION=“eastus”
+
+Check a variable:
+
+echo $RESOURCE_GROUP
+
+Output:
+
+rg-cli-lab
+
+Check location:
+
+echo $LOCATION
+
+Output:
+
+eastus
+
+Use variables in commands:
+
+az group create
+–name $RESOURCE_GROUP
+–location $LOCATION
+
+Instead of:
+
+az group create
+–name rg-cli-lab
+–location eastus
+
+Variables become very useful as our labs get larger.
+
+Example:
+
+RESOURCE_GROUP=“rg-cli-lab” LOCATION=“eastus”
+
+VNET_NAME=“vnet-cli-lab” SUBNET_NAME=“subnet-cli” NSG_NAME=“nsg-cli-lab”
+
+VM_NAME=“vm-cli-lab” NIC_NAME=“nic-cli-lab” PUBLIC_IP_NAME=“pip-cli-lab”
+
+6. RESOURCE GROUPS
+
+A Resource Group is a logical container for Azure resources.
+
+Example:
+
+rg-cli-lab | +– VNet +– Subnet +– NSG +– Public IP +– NIC +– VM +–
+Storage Account +– Key Vault
+
+Resource Groups help organize and manage Azure resources.
+
+7. CREATE — RESOURCE GROUP
+
+Command:
+
+az group create
+–name $RESOURCE_GROUP
+–location $LOCATION
+
+Example:
+
+az group create
+–name rg-cli-lab
+–location eastus
+
+Important parameters:
+
+az group Work with Resource Groups
+
+create Create operation
+
+–name Resource Group name
+
+–location Azure region
+
+A successful response contains something similar to:
+
+“provisioningState”: “Succeeded”
+
+The important part is:
+
+provisioningState = Succeeded
+
+8. READ — RESOURCE GROUP
+
+Retrieve a Resource Group:
+
+az group show
+–name $RESOURCE_GROUP
+
+Example:
+
+az group show
+–name rg-cli-lab
+
+This returns detailed JSON information.
+
+9. GET SPECIFIC PROPERTIES WITH –QUERY
+
+Instead of reading the entire JSON response, use –query.
+
+Get the name:
+
+az group show
+–name $RESOURCE_GROUP
+–query name
+
+Remove quotes with TSV:
+
+az group show
+–name $RESOURCE_GROUP
+–query name
+–output tsv
+
+Output:
+
+rg-cli-lab
+
+10. GET RESOURCE GROUP LOCATION
+
+az group show
+–name $RESOURCE_GROUP
+–query location
+–output tsv
+
+Example output:
+
+eastus
+
+11. GET PROVISIONING STATE
+
+az group show
+–name $RESOURCE_GROUP
+–query properties.provisioningState
+–output tsv
+
+Expected:
+
+Succeeded
+
+12. CUSTOM QUERIES
+
+A very useful pattern is:
+
+az group show
+–name $RESOURCE_GROUP
+–query “{Name:name, Location:location,
+State:properties.provisioningState}”
+–output table
+
+Example output:
+
+  Name         Location   State
+  ------------ ---------- -----------
+  rg-cli-lab   eastus     Succeeded
+
+The syntax:
+
+{FriendlyName:AzureProperty}
+
+means that we can create a custom output field.
+
+Example:
+
+Name:name
+
+means:
+
+Display Azure’s “name” property using the output name “Name”.
+
+Similarly:
+
+Location:location State:properties.provisioningState
+
+13. LIST RESOURCE GROUPS
+
+List all Resource Groups:
+
+az group list –output table
+
+JSON output:
+
+az group list –output json
+
+14. FILTERING WITH –QUERY
+
+We can filter results using JMESPath.
+
+Example:
+
+az group list
+–query “[?name==‘$RESOURCE_GROUP’]”
+–output table
+
+Important pattern:
+
+[?condition]
+
+This filters objects based on a condition.
+
+This becomes very important later.
+
+Example:
+
+az vm list
+–query “[?name==‘vm-cli-lab’]”
+–output table
+
+15. UPDATE — RESOURCE GROUP
+
+Resource Groups can be updated.
+
+Example:
+
+az group update
+–name $RESOURCE_GROUP
+–set tags.environment=practice
+
+This adds:
+
+environment = practice
+
+16. AZURE TAGS
+
+Tags are key-value metadata attached to Azure resources.
+
+Example:
+
+environment = practice owner = azure-cli-training project = cli-labs
+
+Tags are useful for:
+
+-   Organization
+-   Cost management
+-   Automation
+-   Filtering
+-   Governance
+-   Identifying environments
+
+17. ADDING MULTIPLE TAGS
+
+Add environment:
+
+az group update
+–name $RESOURCE_GROUP
+–set tags.environment=practice
+
+Add owner:
+
+az group update
+–name $RESOURCE_GROUP
+–set tags.owner=azure-cli-training
+
+Add project:
+
+az group update
+–name $RESOURCE_GROUP
+–set tags.project=cli-labs
+
+18. READ TAGS
+
+az group show
+–name $RESOURCE_GROUP
+–query tags
+–output json
+
+Example:
+
+{ “environment”: “practice”, “owner”: “azure-cli-training”, “project”:
+“cli-labs” }
+
+19. UPDATE A TAG
+
+Suppose:
+
+environment = lab
+
+We want:
+
+environment = practice
+
+Run:
+
+az group update
+–name $RESOURCE_GROUP
+–set tags.environment=practice
+
+This is an example of updating an existing property.
+
+20. RESOURCE DISCOVERY
+
+To see resources inside a Resource Group:
+
+az resource list
+–resource-group $RESOURCE_GROUP
+–output table
+
+At the beginning, it may return no resources.
+
+That is normal.
+
+Once infrastructure is created, you may see:
+
+  Name           ResourceType
+  -------------- -----------------------------------
+  vnet-cli-lab   Microsoft.Network/virtualNetworks
+  vm-cli-lab     Microsoft.Compute/virtualMachines
+  …              
+
+This command answers:
+
+“What resources currently exist inside this Resource Group?”
+
+21. RESOURCE LOCKS
+
+Azure provides resource locks to prevent accidental changes or deletion.
+
+Two important lock types are:
+
+CanNotDelete ReadOnly
+
+CanNotDelete: Users can modify the resource but cannot delete it while
+the lock exists.
+
+ReadOnly: The resource becomes read-only for operations affected by the
+lock.
+
+22. LIST LOCKS
+
+az lock list
+–resource-group $RESOURCE_GROUP
+–output table
+
+23. CREATE A CanNotDelete LOCK
+
+az lock create
+–name protect-cli-lab
+–lock-type CanNotDelete
+–resource-group $RESOURCE_GROUP
+
+Conceptually:
+
+Resource Group | +– CanNotDelete Lock | +– Prevent deletion
+
+24. READ A LOCK
+
+az lock show
+–name protect-cli-lab
+–resource-group $RESOURCE_GROUP
+
+Or retrieve only important information:
+
+az lock show
+–name protect-cli-lab
+–resource-group $RESOURCE_GROUP
+–query “{Name:name, Level:properties.level}”
+–output table
+
+Example output:
+
+  Name              Level
+  ----------------- --------------
+  protect-cli-lab   CanNotDelete
+
+25. DELETE A LOCK
+
+Remove the lock:
+
+az lock delete
+–name protect-cli-lab
+–resource-group $RESOURCE_GROUP
+
+Verify:
+
+az lock list
+–resource-group $RESOURCE_GROUP
+–output table
+
+26. RESOURCE GROUP DELETE
+
+Delete the entire Resource Group:
+
+az group delete
+–name $RESOURCE_GROUP
+–yes
+
+IMPORTANT: Deleting a Resource Group deletes the resources contained
+inside it.
+
+Conceptually:
+
+Delete Resource Group | +– Delete resources contained within it
+
+Therefore, be very careful with az group delete in production.
+
+For training environments, it is very useful because an entire lab can
+be cleaned up with one command.
+
+27. DELETE VERIFICATION
+
+Never assume deletion succeeded.
+
+Use:
+
+az group exists
+–name $RESOURCE_GROUP
+
+Expected:
+
+false
+
+This is an important verification technique.
+
+28. RECREATE THE LAB RESOURCE GROUP
+
+After deletion, recreate it:
+
+az group create
+–name $RESOURCE_GROUP
+–location $LOCATION
+
+Verify:
+
+az group show
+–name $RESOURCE_GROUP
+–query “{Name:name, Location:location,
+State:properties.provisioningState}”
+–output table
+
+Expected:
+
+  Name         Location   State
+  ------------ ---------- -----------
+  rg-cli-lab   eastus     Succeeded
+
+29. OUTPUT FORMATS
+
+Azure CLI supports several output formats.
+
+TABLE: Best for humans.
+
+-o table
+
+Example:
+
+az group list -o table
+
+JSON: Best for detailed structured information.
+
+-o json
+
+Example:
+
+az group show -o json
+
+TSV: Very useful for shell scripting.
+
+-o tsv
+
+Example:
+
+az group show
+–name $RESOURCE_GROUP
+–query location
+-o tsv
+
+Output:
+
+eastus
+
+YAML: Can also be used:
+
+-o yaml
+
+30. –QUERY + –OUTPUT
+
+This combination is one of the most important Azure CLI skills.
+
+Example:
+
+az group show
+–name $RESOURCE_GROUP
+–query “{Name:name, Location:location,
+State:properties.provisioningState}”
+–output table
+
+Mental model:
+
+Azure API | v Large JSON response | v –query | v Select only what you
+need | v –output | v Display in desired format
+
+31. COMPLETE LAB 1 COMMAND SHEET
+
+AUTHENTICATION:
+
+az login
+
+SUBSCRIPTION:
+
+az account list -o table
+
+az account show -o table
+
+az account set –subscription “”
+
+VARIABLES:
+
+RESOURCE_GROUP=“rg-cli-lab” LOCATION=“eastus”
+
+CREATE:
+
+az group create
+–name $RESOURCE_GROUP
+–location $LOCATION
+
+READ:
+
+az group show
+–name $RESOURCE_GROUP
+
+LIST:
+
+az group list -o table
+
+UPDATE:
+
+az group update
+–name $RESOURCE_GROUP
+–set tags.environment=practice
+
+READ TAGS:
+
+az group show
+–name $RESOURCE_GROUP
+–query tags
+-o json
+
+LIST RESOURCES:
+
+az resource list
+–resource-group $RESOURCE_GROUP
+-o table
+
+LIST LOCKS:
+
+az lock list
+–resource-group $RESOURCE_GROUP
+-o table
+
+CREATE LOCK:
+
+az lock create
+–name protect-cli-lab
+–lock-type CanNotDelete
+–resource-group $RESOURCE_GROUP
+
+SHOW LOCK:
+
+az lock show
+–name protect-cli-lab
+–resource-group $RESOURCE_GROUP
+
+DELETE LOCK:
+
+az lock delete
+–name protect-cli-lab
+–resource-group $RESOURCE_GROUP
+
+DELETE RESOURCE GROUP:
+
+az group delete
+–name $RESOURCE_GROUP
+–yes
+
+VERIFY DELETION:
+
+az group exists
+–name $RESOURCE_GROUP
+
+Expected:
+
+false
+
+32. CRUD MAPPING
+
+For Resource Groups:
+
+CREATE: az group create
+
+READ: az group show
+
+LIST: az group list
+
+UPDATE: az group update
+
+DELETE: az group delete
+
+VERIFY EXISTENCE: az group exists
+
+This CRUD pattern will repeat throughout Azure CLI.
+
+For networking:
+
+az network vnet create az network vnet show az network vnet update az
+network vnet delete
+
+For virtual machines:
+
+az vm create az vm show az vm update az vm delete
+
+For storage accounts:
+
+az storage account create az storage account show az storage account
+update az storage account delete
+
+33. IMPORTANT MENTAL MODEL
+
+Do not memorize Azure CLI as thousands of independent commands.
+
+Think of Azure CLI as a hierarchy:
+
+az | +– group | +– create | +– show | +– list | +– update | +– delete |
++– network | +– vnet | +– subnet | +– nsg | +– public-ip | +– nic | +–
+route-table | +– vm | +– create | +– show | +– update | +– start | +–
+stop | +– delete | +– storage +– account +– container +– blob +– share
+
+34. LAB 1 FINAL TAKEAWAYS
+
+Azure CLI basic syntax:
+
+az
+
+Authentication:
+
+az login
+
+Subscription context:
+
+az account show az account set
+
+Variables:
+
+RESOURCE_GROUP=“rg-cli-lab”
+
+CRUD:
+
+CREATE -> READ -> UPDATE -> DELETE
+
+Querying:
+
+–query
+
+Output formatting:
+
+-o table -o json -o tsv -o yaml
+
+Tags:
+
+–set tags.key=value
+
+Resource discovery:
+
+az resource list
+
+Locks:
+
+az lock create az lock show az lock delete
+
+Verification:
+
+az group exists
+
+35. IMPORTANT DISTINCTION FOR FUTURE LABS
+
+Resource Group CRUD is not representative of every Azure resource’s
+exact CLI syntax.
+
+Networking has relationships:
+
+VNet | +– Subnet | +– NSG association
+
+Compute has dependencies:
+
+VM | +– NIC | | | +– Private IP | +– Public IP | +– NSG | +– OS Disk |
++– Data Disk
+
+Therefore, future labs will cover not only CRUD, but also:
+
+-   Resource dependencies
+-   Resource associations
+-   Configuration
+-   Attachments
+-   Detachments
+-   Verification
+-   Troubleshooting
+-   Practical administration scenarios
+
+36. NEXT LAB
+
+LAB 2 — AZURE NETWORKING
+
+We will build:
+
+Resource Group | +– VNet | +– Subnet | +– NSG | | | +– Security Rules |
++– Public IP | +– NIC
+
+We will practice CRUD on each resource and learn:
+
+-   VNet creation
+-   Address spaces
+-   Subnets
+-   NSGs
+-   NSG rules
+-   Public IPs
+-   NICs
+-   Associations
+-   Disassociations
+-   Updating network configuration
+-   Inspecting resource relationships
+-   Deleting resources safely
+
+END OF LAB 1 NOTES

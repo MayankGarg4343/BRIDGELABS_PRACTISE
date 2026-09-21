@@ -2,7 +2,8 @@ SUBNET AND SUBNETTING - COMPLETE IN-DEPTH NOTES
 ================================================
 
 Authoring goal:
-These notes are designed for direct use in VS Code. They cover IPv4 subnetting from fundamentals through practical networking, Linux, cloud, DevOps, and troubleshooting perspectives.
+These notes are designed for direct use in VS Code. They cover IPv4 subnetting from fundamentals through practical networking, 
+Linux, cloud, DevOps, and troubleshooting perspectives.
 
 ================================================
 1. WHAT IS A SUBNET?
